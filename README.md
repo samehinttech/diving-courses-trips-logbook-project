@@ -1,5 +1,5 @@
 # DiveXplore_Project
-A full-stack web application for managing dive courses, trips, and digital dive logs, designed to meet the requirements of the **FHNW Internet Technology module**.
+A full-stack web application for managing dive courses, trips, and digital dive logs, designed to meet the requirements of the **Internet Technology module** at **FHNW**.
 
 [![License](https://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
