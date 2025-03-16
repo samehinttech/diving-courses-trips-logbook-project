@@ -12,8 +12,18 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"vscjava.vscode-java-pack"
-			]
+				"vscjava.vscode-java-pack",
+				"github.copilot"
+			],
+			"settings": {
+				"java.configuration.runtimes": [
+					{
+						"name": "JavaSE-23",
+						"path": "/usr/local/temurin",
+						"default": true
+					}
+				]
+			}
 		}
 	}
 }
