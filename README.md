@@ -97,18 +97,18 @@ including the ability to delete dive logs permanently.
 ![image](https://github.com/user-attachments/assets/e23be216-8a6a-4195-935c-68e23742584e)
 
 
-UC-1 [Create Account] – A user creates an account to access personalized features.
-UC-2 [Login] – A user logs into the system.
-UC-3 [Manage Dive Log (View, Update, Delete)] – A user can view, update, or delete their dive logs.
-UC-4 [Book Dive Trip] – A guest or user books a dive trip.
-UC-5 [Select Dive Certification (or No Certification)] – A user must select a valid dive certification when booking trips.
-UC-6 [Book Dive Course] – A guest or user books a dive course.
-UC-7 [Browse Courses & Trips] – A guest or user can browse available dive courses and trips.
-UC-8 [Delete Account] – A user deletes their account.
-UC-9 [Manage Courses & Trips (Add, Update, Delete)] – An admin manages courses and trips.
-UC-10 [Manage Trip Availability] – An admin updates trip availability.
-UC-11 [Manage User Accounts] – An admin manages user accounts.
-UC-12 [Ensure User Data Control] – Ensures users can manage and control their data.
+1. UC-1 [Create Account] – A user creates an account to access personalized features. 
+2. UC-2 [Login] – A user logs into the system.
+3. UC-3 [Manage Dive Log (View, Update, Delete)] – A user can view, update, or delete their dive logs.
+4. UC-4 [Book Dive Trip] – A guest or user books a dive trip.
+5. UC-5 [Select Dive Certification (or No Certification)] – A user must select a valid dive certification when booking trips.
+6. UC-6 [Book Dive Course] – A guest or user books a dive course.
+7. UC-7 [Browse Courses & Trips] – A guest or user can browse available dive courses and trips.
+8. UC-8 [Delete Account] – A user deletes their account.
+9. UC-9 [Manage Courses & Trips (Add, Update, Delete)] – An admin manages courses and trips.
+10. UC-10 [Manage Trip Availability] – An admin updates trip availability.
+11. UC-11 [Manage User Accounts] – An admin manages user accounts.
+12. UC-12 [Ensure User Data Control] – Ensures users can manage and control their data.
 
 
 
