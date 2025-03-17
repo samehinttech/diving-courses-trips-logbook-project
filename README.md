@@ -94,6 +94,23 @@ including the ability to delete dive logs permanently.
    data.
 
 ### Use Cases
+![image](https://github.com/user-attachments/assets/e23be216-8a6a-4195-935c-68e23742584e)
+
+
+UC-1 [Create Account] – A user creates an account to access personalized features.
+UC-2 [Login] – A user logs into the system.
+UC-3 [Manage Dive Log (View, Update, Delete)] – A user can view, update, or delete their dive logs.
+UC-4 [Book Dive Trip] – A guest or user books a dive trip.
+UC-5 [Select Dive Certification (or No Certification)] – A user must select a valid dive certification when booking trips.
+UC-6 [Book Dive Course] – A guest or user books a dive course.
+UC-7 [Browse Courses & Trips] – A guest or user can browse available dive courses and trips.
+UC-8 [Delete Account] – A user deletes their account.
+UC-9 [Manage Courses & Trips (Add, Update, Delete)] – An admin manages courses and trips.
+UC-10 [Manage Trip Availability] – An admin updates trip availability.
+UC-11 [Manage User Accounts] – An admin manages user accounts.
+UC-12 [Ensure User Data Control] – Ensures users can manage and control their data.
+
+
 
 ## Design
 
