@@ -30,13 +30,11 @@ A full-stack web application for managing dive courses, trips, and digital dive 
 
 ## Analysis
 ### Scenario
-As a team, we designed the web app DiveXplore Dive Club to offer dive courses, dive trips, and additional service “digital dive log”.
-A new user visits the platform as a guest, browses available dive courses, and books a course without mandatory login. Similarly, guests can explore and book dive trips without needing an account.
-To enforce safety protocols, users are prompted to provide valid dive certification when booking restricted trips or courses, ensuring only qualified divers can participate.
+As a team, we designed the website DiveXplore Dive Club to offer dive courses, dive trips, and additional service “digital dive log”. 
 
-Users can optionally create an account to access the digital dive log service, where they securely log dive details (depth, time, location, notes, ....) and upload photos via free-tier cloud storage. Once registered, they can view and/or edit their dive logs by adding, updating, or deleting entries. Additionally, users can delete their accounts.
-
-On the administrative side, admins manage the platform by adding/updating courses, trips, and general content. They adjust trip availability, enforce certification requirements, and maintain user accounts (e.g., deactivating suspicious accounts or resetting passwords). User autonomy is prioritized: divers retain full control over their data, including the ability to delete dive logs permanently.
+A new user visits the platform as a guest, browses available dive courses, and books a course without mandatory login. Similarly, guests can explore and book dive trips without needing an account. Users are prompted to choose a valid option of the dive certifications provided on the web when booking "dive trips or advanced courses" or being non-divers otherwise, ensuring only qualified divers can participate. 
+Users can optionally create an account to access the digital dive log service, where they securely log dive details (depth, time, location, notes, ....). Once registered, they can view and/or edit their dive logs by adding, updating, or deleting entries. Additionally, users can delete their accounts. 
+On the administrative side, admins manage the platform by adding/updating courses, trips, and general content. They adjust trip availability, and maintain user accounts (e.g., deactivating suspicious accounts or resetting passwords). User autonomy is prioritized: divers retain full control over their data, including the ability to delete dive logs permanently. 
 
 ### User Stories
 
