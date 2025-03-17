@@ -53,7 +53,7 @@ deleting entries. Additionally, users can delete their accounts.
 
 On the administrative side, admins manage the platform by adding/updating
 courses, trips, and general content. They adjust trip availability, and maintain
-user accounts (e.g., deactivating suspicious accounts or resetting passwords).
+user accounts (deactivating suspicious accounts or resetting passwords).
 User autonomy is prioritized: divers retain full control over their data,
 including the ability to delete dive logs permanently.
 
@@ -65,9 +65,9 @@ including the ability to delete dive logs permanently.
    the platform stays up to date.
 2. As an admin, I want to manage trip availability so that users see only
    currently available trips.
-3. As an admin, I want to edit website content (e.g., Terms and Conditions,
-   Privacy policies) to keep information accurate and relevant.
-4. As an admin, I want to manage user accounts (e.g., deactivate suspicious
+3. As an admin, I want to edit website content (Terms and Conditions,
+   Privacy Policies) to keep information accurate and relevant.
+4. As an admin, I want to manage user accounts (deactivate suspicious
    accounts, reset passwords) so that I can maintain platform security.
 5. As an admin, I want to ensure users retain full control over their dive logs
    so that they can delete or modify their entries at any time.
