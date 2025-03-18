@@ -27,7 +27,8 @@
   "customizations": {
     "vscode": {
       "settings": {
-        "java.jdt.ls.java.home": "/usr/local/temurin-23.0.2", // Change this to the path of your JDK installation
+        "java.jdt.ls.java.home": "/usr/local/temurin-23.0.2",
+        // Change this to the path of your JDK installation
         "java.compile.nullAnalysis.mode": "automatic",
         "java.configuration.updateBuildConfiguration": "interactive"
       },
@@ -39,7 +40,6 @@
       ]
     }
   },
-
   // Uncomment to connect as a non-root user instead. More info: https://aka.ms/dev-containers-non-root.
   "remoteUser": "sameh"
 
