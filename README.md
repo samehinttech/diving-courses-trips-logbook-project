@@ -36,9 +36,9 @@ A website for managing dive courses, trips, and digital dive logs, designed to m
 
 ### Scenario
 
-As a team, we designed the website DiveXplore Dive Club to offer dive courses,
+As a team, we designed the website DiveXplore that to offers dive courses,
 dive trips, and additional service “digital dive log”.
-A new user visits the platform as a guest, browses available dive courses, and
+A new user visits the website as a guest, browses available dive courses, and
 books a course without mandatory login. Similarly, guests can explore and book
 dive trips without needing an account. Users are prompted to choose a valid
 option of the dive certifications provided on the web when booking "dive trips
