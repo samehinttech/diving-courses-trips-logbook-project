@@ -153,18 +153,18 @@ The ch.fhnw.pizza.data.domain package contains the following domain objects / en
 
 ### Milestones
 
-### Maintainers 
+## Maintainers 
 
 - Iulia Mara Udrea
 - Mehak Khan
 - Sameh Ahmed
 
-### Contributors
+## Contributors
 
 - Charuta Pande
 - Devid Montecchiari
 
-### License
+## License
 
 - [Apache License, Version 2.0](blob/master/LICENSE)
 
