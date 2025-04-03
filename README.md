@@ -46,7 +46,8 @@ or advanced courses" or being non-divers otherwise, ensuring only qualified
 divers can participate.
 
 Users can optionally create an account to access the digital dive log service,
-where they securely log dive details (depth, time, location, notes, ....). Once
+where they securely log dive details (dive number, dive date, dive location, air temperature, 
+surface temperature, dive start time & end time, dive max depth and notes). Once
 registered, they can view and/or edit their dive logs by adding, updating, or
 deleting entries. Additionally, users can delete their accounts.
 
