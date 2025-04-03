@@ -8,21 +8,21 @@ A website for managing dive courses, trips, and digital dive logs, designed to m
 <!-- TOC -->
 
 * # [DiveXplore_Project](#divexplore_project) 
-    * [Analysis](#analysis) 
+    * **[Analysis](#analysis)** 
         * [Scenario](#scenario)
         * [User Stories](#user-stories)
         * [Use Cases](#use-cases)
-    * [Design](#design)
+    * **[Design](#design)**
         * [Wireframe Design](#wireframe-design)
         * [Prototype Design](#prototype-design)
         * [Domain Design](#domain-design)
         * [Business Logic](#business-logic)
-    * [Implementation](#implementation)  
+    * **[Implementation](#implementation)**  
         * [Backend Technology](#backend-technology)
         * [Frontend Technology](#frontend-technology)
-    * [Execution](#execution)
+    * **[Execution](#execution)**
         * [Deployment to a Paas](#deployment-to-a-paas)
-    * [Project Management](#project-management)
+    * **[Project Management](#project-management)**
         * [Roles](#roles)
         * [Milestones](#milestones)
             * [Maintainer](#maintainer)
@@ -153,24 +153,24 @@ The ch.fhnw.pizza.data.domain package contains the following domain objects / en
 
 ### Milestones
 
-#### Maintainer
+### Maintainer
 
 - Iulia Mara Udrea
 - Mehak Khan
 - Sameh Ahmed
 
-#### Contributors
+### Contributors
 
 - Charuta Pande
 - Devid Montecchiari
 
-#### License
+### License
 
 - [Apache License, Version 2.0](blob/master/LICENSE)
 
 ---
 
-### **Note**
+## **Note**
 
 *Built for learning, not profit — but hey, maybe one day? 🌟*
 
