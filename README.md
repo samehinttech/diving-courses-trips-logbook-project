@@ -1,38 +1,37 @@
 # DiveXplore_Project
 
-A website for managing dive courses, trips, and digital dive logs, designed to meet the requirements of the **Internet Technology module** at
+A website for managing dive courses, trips, and digital dive logs, designed to
+meet the requirements of the **Internet Technology module** at
 **FHNW**.
 
 [![License](https://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 <!-- TOC -->
-
 * [DiveXplore_Project](#divexplore_project)
-    * [Analysis](#analysis)
-        * [Scenario](#scenario)
-        * [User Stories](#user-stories)
-            * [- Admin User Stories](#--admin-user-stories)
-            * [- Guest stories (non-registered users)](#--guest-stories-non-registered-users)
-            * [- Registered User Stories](#--registered-user-stories)
-        * [Use Cases](#use-cases)
-    * [Design](#design)
-        * [Wireframe Design](#wireframe-design)
-        * [Prototype Design](#prototype-design)
-        * [Domain Design](#domain-design)
-        * [Business Logic](#business-logic)
-    * [Implementation](#implementation)
-        * [Backend Technology](#backend-technology)
-        * [Frontend Technology](#frontend-technology)
-    * [Execution](#execution)
-        * [Deployment to a Paas](#deployment-to-a-paas)
-    * [Project Management](#project-management)
-        * [Roles](#roles)
-        * [Milestones](#milestones)
-    * [Maintainers](#maintainers-)
-    * [Contributors](#contributors)
-    * [License](#license)
-    * [Note](#note)
-
+  * [Analysis](#analysis)
+    * [Scenario](#scenario)
+    * [User Stories](#user-stories)
+      * [- Admin User Stories](#--admin-user-stories)
+      * [- Guest stories (non-registered users)](#--guest-stories-non-registered-users)
+      * [- Registered User Stories](#--registered-user-stories)
+    * [Use Cases](#use-cases)
+  * [Design](#design)
+    * [Wireframe Design](#wireframe-design)
+    * [Prototype Design](#prototype-design)
+    * [Domain Design](#domain-design)
+    * [Business Logic](#business-logic)
+  * [Implementation](#implementation)
+    * [Backend Technology](#backend-technology)
+    * [Frontend Technology](#frontend-technology)
+  * [Execution](#execution)
+    * [Deployment to a Paas](#deployment-to-a-paas)
+  * [Project Management](#project-management)
+    * [Roles](#roles)
+    * [Milestones](#milestones)
+  * [Maintainers](#maintainers)
+  * [Contributors](#contributors)
+  * [License](#license)
+  * [Note](#note)
 <!-- TOC -->
 
 ## Analysis
@@ -49,7 +48,8 @@ or advanced courses" or being non-divers otherwise, ensuring only qualified
 divers can participate.
 
 Users can optionally create an account to access the digital dive log service,
-where they securely log dive details (dive number, dive date, dive location, air temperature, 
+where they securely log dive details (dive number, dive date, dive location, air
+temperature,
 surface temperature, dive start time & end time, dive max depth and notes). Once
 registered, they can view and/or edit their dive logs by adding, updating, or
 deleting entries. Additionally, users can delete their accounts.
@@ -97,22 +97,27 @@ including the ability to delete dive logs permanently.
    data.
 
 ### Use Cases
+
 ![Use cases Diagram](https://github.com/user-attachments/assets/c55d76bc-de80-48cf-9857-8daf89263b6e)
 
-1. UC-1 [Create Account] – A user creates an account to access personalized features. 
+1. UC-1 [Create Account] – A user creates an account to access personalized
+   features.
 2. UC-2 [Login] – A user logs into the system.
-3. UC-3 [Manage Dive Log (View, Update, Delete)] – A user can view, update, or delete their dive logs.
+3. UC-3 [Manage Dive Log (View, Update, Delete)] – A user can view, update, or
+   delete their dive logs.
 4. UC-4 [Book Dive Trip] – A guest or user books a dive trip.
-5. UC-5 [Select Dive Certification (or No Certification)] – A user must select a valid dive certification when booking trips.
+5. UC-5 [Select Dive Certification (or No Certification)] – A user must select a
+   valid dive certification when booking trips.
 6. UC-6 [Book Dive Course] – A guest or user books a dive course.
-7. UC-7 [Browse Courses & Trips] – A guest or user can browse available dive courses and trips.
+7. UC-7 [Browse Courses & Trips] – A guest or user can browse available dive
+   courses and trips.
 8. UC-8 [Delete Account] – A user deletes their account.
-9. UC-9 [Manage Courses & Trips (Add, Update, Delete)] – An admin manages courses and trips.
+9. UC-9 [Manage Courses & Trips (Add, Update, Delete)] – An admin manages
+   courses and trips.
 10. UC-10 [Manage Trip Availability] – An admin updates trip availability.
 11. UC-11 [Manage User Accounts] – An admin manages user accounts.
-12. UC-12 [Ensure User Data Control] – Ensures users can manage and control their data.
-
-
+12. UC-12 [Ensure User Data Control] – Ensures users can manage and control
+    their data.
 
 ## Design
 
@@ -120,6 +125,7 @@ including the ability to delete dive logs permanently.
  Keep in mind the Corporate Identity (CI); you shall decide appropriately the color schema, graphics, typography, layout, User Experience (UX), and so on. -->
 
 ### Wireframe Design
+
 ![DiveExploreWireFrame drawio](https://github.com/user-attachments/assets/3e6a24ff-88e4-45b2-82f2-6a68750d4941)
 
 <!-- Repo Owner Notes:
@@ -156,7 +162,7 @@ The ch.fhnw.pizza.data.domain package contains the following domain objects / en
 
 ### Milestones
 
-## Maintainers 
+## Maintainers
 
 - Iulia Mara Udrea
 - Mehak Khan
@@ -176,4 +182,5 @@ The ch.fhnw.pizza.data.domain package contains the following domain objects / en
 ## Note
 
 *Built for learning, not profit — but hey, maybe one day? 🌟*
+
 *P.S. Open to feedback! We’re still students, after all.*
