@@ -8,31 +8,30 @@ meet the requirements of the **Internet Technology module** at
 
 <!-- TOC -->
 
-* **[DiveXplore_Project](#divexplore_project)**
-    * **[Analysis](#analysis)**
-        * [Scenario](#scenario)
-        * [User Stories](#user-stories)
-            * [- Admin User Stories](#--admin-user-stories)
-            * [- Guest stories (non-registered users)](#--guest-stories-non-registered-users)
-            * [- Registered User Stories](#--registered-user-stories)
-        * [Use Cases](#use-cases)
-    * **[Design](#design)**
-        * [Wireframe Design](#wireframe-design)
-        * [Prototype Design](#prototype-design)
-        * [Domain Design](#domain-design)
-        * [Business Logic](#business-logic)
-    * **[Implementation](#implementation)**
-        * [Backend Technology](#backend-technology)
-        * [Frontend Technology](#frontend-technology)
-    * **[Execution](#execution)**
-        * [Deployment to a Paas](#deployment-to-a-paas)
-    * **[Project Management](#project-management)**
-        * [Roles](#roles)
-        * [Milestones](#milestones)
-    * **[Maintainers](#maintainers)**
-    * **[Contributors](#contributors)**
-    * **[License](#license)**
-    * **[Note](#note)**
+* **[Analysis](#analysis)**
+  * [Scenario](#scenario)
+  * [User Stories](#user-stories)
+    * [- Admin User Stories](#--admin-user-stories)
+    * [- Guest stories (non-registered users)](#--guest-stories-non-registered-users)
+    * [- Registered User Stories](#--registered-user-stories)
+  * [Use Cases](#use-cases)
+* **[Design](#design)**
+  * [Wireframe Design](#wireframe-design)
+  * [Prototype Design](#prototype-design)
+  * [Domain Design](#domain-design)
+  * [Business Logic](#business-logic)
+* **[Implementation](#implementation)**
+  * [Backend Technology](#backend-technology)
+  * [Frontend Technology](#frontend-technology)
+* **[Execution](#execution)**
+  * [Deployment to a Paas](#deployment-to-a-paas)
+* **[Project Management](#project-management)**
+  * [Roles](#roles)
+  * [Milestones](#milestones)
+* **[Maintainers](#maintainers)**
+* **[Contributors](#contributors)**
+* **[License](#license)**
+* **[Note](#note)**
 
 <!-- TOC -->
 
