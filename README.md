@@ -7,28 +7,31 @@ A website for managing dive courses, trips, and digital dive logs, designed to m
 
 <!-- TOC -->
 
-* # [DiveXplore_Project](#divexplore_project) 
-    * **[Analysis](#analysis)** 
+* [DiveXplore_Project](#divexplore_project)
+    * [Analysis](#analysis)
         * [Scenario](#scenario)
         * [User Stories](#user-stories)
+            * [- Admin User Stories](#--admin-user-stories)
+            * [- Guest stories (non-registered users)](#--guest-stories-non-registered-users)
+            * [- Registered User Stories](#--registered-user-stories)
         * [Use Cases](#use-cases)
-    * **[Design](#design)**
+    * [Design](#design)
         * [Wireframe Design](#wireframe-design)
         * [Prototype Design](#prototype-design)
         * [Domain Design](#domain-design)
         * [Business Logic](#business-logic)
-    * **[Implementation](#implementation)**  
+    * [Implementation](#implementation)
         * [Backend Technology](#backend-technology)
         * [Frontend Technology](#frontend-technology)
-    * **[Execution](#execution)**
+    * [Execution](#execution)
         * [Deployment to a Paas](#deployment-to-a-paas)
-    * **[Project Management](#project-management)**
+    * [Project Management](#project-management)
         * [Roles](#roles)
         * [Milestones](#milestones)
-    * **[Maintainer](#maintainer)**
-    * **[Contributors](#contributors)**
-    * **[License](#license)**
-    * **[Note](#note)**
+    * [Maintainers](#maintainers-)
+    * [Contributors](#contributors)
+    * [License](#license)
+    * [Note](#note)
 
 <!-- TOC -->
 
@@ -173,5 +176,4 @@ The ch.fhnw.pizza.data.domain package contains the following domain objects / en
 ## Note
 
 *Built for learning, not profit — but hey, maybe one day? 🌟*
-
 *P.S. Open to feedback! We’re still students, after all.*
