@@ -25,10 +25,10 @@ A website for managing dive courses, trips, and digital dive logs, designed to m
     * **[Project Management](#project-management)**
         * [Roles](#roles)
         * [Milestones](#milestones)
-            * [Maintainer](#maintainer)
-            * [Contributors](#contributors)
-            * [License](#license)
-        * [Note](#note)
+    * **[Maintainer](#maintainer)**
+    * **[Contributors](#contributors)**
+    * **[License](#license)**
+    * **[Note](#note)**
 
 <!-- TOC -->
 
@@ -153,7 +153,7 @@ The ch.fhnw.pizza.data.domain package contains the following domain objects / en
 
 ### Milestones
 
-### Maintainer
+### Maintainers 
 
 - Iulia Mara Udrea
 - Mehak Khan
@@ -170,7 +170,7 @@ The ch.fhnw.pizza.data.domain package contains the following domain objects / en
 
 ---
 
-## **Note**
+## Note
 
 *Built for learning, not profit — but hey, maybe one day? 🌟*
 
