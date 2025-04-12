@@ -1,0 +1,40 @@
+
+// This file defines the development container configuration for the DiveXplore project.
+// It specifies the Dockerfile to use, customizations for VS Code, and other settings.
+
+{
+    // Use the Dockerfile in the parent directory
+"dockerFile": "../Dockerfile",
+  // Use the Docker Compose file in the parent directory
+// Context for the Docker build
+"context": "..",
+// Customizations for VS Code
+"name": "DiveXplore Dev Container",
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "editor.formatOnSave": true
+            },
+            "extensions": [
+                "vscjava.vscode-java-pack",       // Java support
+                "pivotal.vscode-spring-boot",    // Spring Boot support
+                "dbaeumer.vscode-eslint",        // JavaScript linting
+                "esbenp.prettier-vscode",        // Code formatting
+                "ms-azuretools.vscode-docker"    // Docker support
+            ]
+        }
+    },
+    "postCreateCommand": "mvn verify -DskipTests",
+    "remoteUser": "vscode",
+    "mounts": [
+        "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+    ],
+    // Forward Spring Boot application port
+    "forwardPorts": [8080],
+    "portsAttributes": {
+        "8080": {
+            "label": "Spring Boot App"
+        }
+    }
+}
