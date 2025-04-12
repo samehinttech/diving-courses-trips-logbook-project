@@ -98,8 +98,7 @@ including the ability to delete dive logs permanently.
    data.
 
 ### Use Cases
-
-![Use cases Diagram](https://github.com/user-attachments/assets/c55d76bc-de80-48cf-9857-8daf89263b6e)
+![Use Case Diagram](docs/images/use-case-diagram.png)
 
 1. UC-1 [Create Account] – A user creates an account to access personalized
    features.
