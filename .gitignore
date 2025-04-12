@@ -56,3 +56,4 @@ mvnw.cmd              # Maven wrapper script for Windows
 
 
 # Gradle files
+dir_structure.sh
