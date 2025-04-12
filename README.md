@@ -126,7 +126,7 @@ including the ability to delete dive logs permanently.
 
 ### Wireframe Design
 
-![DiveExploreWireFrame drawio](https://github.com/user-attachments/assets/3e6a24ff-88e4-45b2-82f2-6a68750d4941)
+![DiveExploreWireFrame drawio](assets/images/wireframe-design.png)
 
 <!-- Repo Owner Notes:
 It is suggested to start with a wireframe. The wireframe focuses on the website structure (Sitemap planning), sketching the pages using Wireframe components (e.g., header, menu, footer) and UX. You can create a wireframe already with draw.io or similar tools.-->
