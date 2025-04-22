@@ -1,0 +1,15 @@
+version: '3.8'
+name: oceandive
+
+services:
+  oceandive:
+    image: oceandive:latest
+    container_name: oceandive
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - oceandive_data:/data
+
+volumes:
+  oceandive_data:
