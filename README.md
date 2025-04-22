@@ -11,9 +11,9 @@ meet the requirements of the **Internet Technology module** at
   * [Analysis](#analysis)
     * [Scenario](#scenario)
     * [User Stories](#user-stories)
-      * [- Admin User Stories](#--admin-user-stories)
-      * [- Guest stories (non-registered users)](#--guest-stories-non-registered-users)
-      * [- Registered User Stories](#--registered-user-stories)
+      * [Admin User Stories](#admin-user-stories)
+      * [Guest stories (non-registered users)](#guest-stories-non-registered-users)
+      * [Registered User Stories](#registered-user-stories)
     * [Use Cases](#use-cases)
   * [Design](#design)
     * [Wireframe Design](#wireframe-design)
@@ -62,7 +62,7 @@ including the ability to delete dive logs permanently.
 
 ### User Stories
 
-#### - Admin User Stories
+#### Admin User Stories
 
 1. As an admin, I want to add, update, and delete dive courses and trips so that
    the platform stays up to date.
@@ -75,14 +75,14 @@ including the ability to delete dive logs permanently.
 5. As an admin, I want to ensure users retain full control over their dive logs
    so that they can delete or modify their entries at any time.
 
-#### - Guest stories (non-registered users)
+#### Guest stories (non-registered users)
 
 1. As a guest, I want to browse available dive courses and trips without logging
    in so that I can explore options freely.
 2. As a guest, I want to book a dive course or trip without needing an account
    so that I can make quick reservations.
 
-#### - Registered User Stories
+#### Registered User Stories
 
 1. As a user, I want to select a valid dive certification when booking diving
    trips or advanced courses so that I can comply with safety requirements.
@@ -174,7 +174,7 @@ The ch.fhnw.pizza.data.domain package contains the following domain objects / en
 
 ## License
 
-- [Apache License, Version 2.0]https://www.apache.org/licenses/LICENSE-2.0.html
+- [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.html)
 
 ---
 
