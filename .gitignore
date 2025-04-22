@@ -52,3 +52,6 @@ mvnw.cmd              # Maven wrapper script for Windows
 # Ignore local documentation folder
 /my-docx/
 !/target/
+
+# Ignore Springboot HELP.me
+/HELP.md
