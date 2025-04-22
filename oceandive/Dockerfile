@@ -1,3 +1,6 @@
+# Intial Dockerfile for the OceanDive project
+
+
 # Use a Maven image to build the JAR
 FROM maven:3.9.9-eclipse-temurin-21-alpine AS builder
 
