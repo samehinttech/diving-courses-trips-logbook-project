@@ -1,4 +1,4 @@
-package com.oceandive.model;
+package ch.oceandive.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

@@ -1,4 +1,4 @@
-package com.oceandive;
+package ch.oceandive;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

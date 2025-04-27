@@ -1,4 +1,4 @@
-package com.oceandive;
+package ch.oceandive;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

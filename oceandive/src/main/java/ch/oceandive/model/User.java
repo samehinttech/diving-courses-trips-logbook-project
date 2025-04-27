@@ -1,4 +1,4 @@
-package com.oceandive.model;
+package ch.oceandive.model;
 /**
  * User model class.
  */
@@ -19,150 +19,144 @@ public class User {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
-  @NotBlank
-  @Size(max = 50)
-  @Column(name = "first_name")
+  @NotBlank(message = "First name is required")
+  @Column(nullable = false)
   private String firstName;
 
-  @NotBlank
-  @Size(max = 50)
-  @Column(name = "last_name")
+  @NotBlank(message = "Last name is required")
+  @Column(nullable = false)
   private String lastName;
 
-  @NotBlank
-  @Size(max = 50)
-  @Column(unique = true)
-  private String username;
 
-  @Email
-  @NotBlank
-  @Size(max = 100)
-  @Column(unique = true)
+  @NotBlank(message = "Email is required")
+  @Email(message = "Email should be valid")
+  @Column(unique = true, nullable = false)
   private String email;
 
+  @NotBlank(message = "Username is required")
+  @Size(min = 5, max = 20, message = "Username must be between 5 and 20 characters")
+  @Column(unique = true, nullable = false)
+  private String username;
 
-  @NotBlank
-  @Size(max = 100)
+  @NotBlank(message = "Password is required")
+  @Size(min = 8, max = 50, message = "Password must be between 6 and 50 characters")
+  @Column(nullable = false)
   private String password;
 
   @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private DiveCertification diveCertification;
 
-
-  // Each user can have multiple dive logs
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-  private Set<DiveLog> diveLogs = new HashSet<>();
-
   @ElementCollection(fetch = FetchType.EAGER)
-  @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+  @CollectionTable(name = "userRoles", joinColumns = @JoinColumn(name = "user_id"))
   @Column(name = "role")
   private Set<String> roles = new HashSet<>();
+
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<DiveLog> diveLogs = new HashSet<>();
 
   // Default constructor
   public User() {
   }
-
   // Parameterized constructor
-  public User(String firstName, String lastName, String username, String email, String password, ) {
+  public User(String firstName, String lastName, String email, String username, String password,
+      DiveCertification diveCertification, Set<String> roles) {
     this.firstName = firstName;
     this.lastName = lastName;
-    this.username = username;
     this.email = email;
+    this.username = username;
     this.password = password;
-    this.roles.add("ROLE_USER"); // Default role
+    this.diveCertification = diveCertification;
+    this.roles = roles;
   }
-
   // Getters and Setters
   public Long getId() {
     return id;
   }
-
   public void setId(Long id) {
     this.id = id;
   }
-
   public String getFirstName() {
     return firstName;
   }
-
   public void setFirstName(String firstName) {
     this.firstName = firstName;
   }
-
   public String getLastName() {
     return lastName;
   }
-
   public void setLastName(String lastName) {
     this.lastName = lastName;
   }
-
-  public String getUsername() {
-    return username;
-  }
-
-  public void setUsername(String username) {
-    this.username = username;
-  }
-
   public String getEmail() {
     return email;
   }
-
   public void setEmail(String email) {
     this.email = email;
   }
-
+  public String getUsername() {
+    return username;
+  }
+  public void setUsername(String username) {
+    this.username = username;
+  }
   public String getPassword() {
     return password;
   }
-
   public void setPassword(String password) {
     this.password = password;
   }
-
   public DiveCertification getDiveCertification() {
     return diveCertification;
   }
-
   public void setDiveCertification(DiveCertification diveCertification) {
     this.diveCertification = diveCertification;
   }
-
-  public Set<DiveLog> getDiveLogs() {
-    return diveLogs;
-  }
-
-  public void setDiveLogs(Set<DiveLog> diveLogs) {
-    this.diveLogs = diveLogs;
-  }
-
   public Set<String> getRoles() {
     return roles;
   }
-
   public void setRoles(Set<String> roles) {
     this.roles = roles;
   }
-
-  // Helper methods to be removed if not needed later
+  public void addRole(String role) {
+    this.roles.add(role);
+  }
+  public Set<DiveLog> getDiveLogs() {
+    return diveLogs;
+  }
+  public void setDiveLogs(Set<DiveLog> diveLogs) {
+    this.diveLogs = diveLogs;
+  }
   public void addDiveLog(DiveLog diveLog) {
-    diveLogs.add(diveLog);
+    this.diveLogs.add(diveLog);
     diveLog.setUser(this);
   }
-
   public void removeDiveLog(DiveLog diveLog) {
-    diveLogs.remove(diveLog);
+    this.diveLogs.remove(diveLog);
     diveLog.setUser(null);
   }
-
-  public void addRole(String role) {
-    roles.add(role);
+  @Override
+  public String toString() {
+    return "User{" +
+        "id=" + id +
+        ", firstName='" + firstName + '\'' +
+        ", lastName='" + lastName + '\'' +
+        ", email='" + email + '\'' +
+        ", username='" + username + '\'' +
+        ", password='" + password + '\'' +
+        ", diveCertification=" + diveCertification +
+        ", roles=" + roles +
+        '}';
   }
 
-  public boolean hasRole(String role) {
-    return roles.contains(role);
-  }
+
+
+
+
+
+
+
 }
 
 

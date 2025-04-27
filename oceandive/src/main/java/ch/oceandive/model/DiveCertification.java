@@ -1,4 +1,4 @@
-package com.oceandive.model;
+package ch.oceandive.model;
 
 /**
  * Represents certifications associated with diving, indicating the user's skill level
@@ -20,25 +20,22 @@ public enum DiveCertification {
   DiveCertification(String displayName) {
     this.displayName = displayName;
   }
+
+
   /**
-   * Returns the display name of the certification.
-   * @return the display name
+   * @return and display name of the certification
    */
   public String getDisplayName() {
     return displayName;
   }
-  /**
-   * Returns the DiveCertification enum constants that matches the given string.
-   * @param certification string representation of the certification
-   * @return the corresponding DiveCertification enum constant, or null if not found
-   */
+
   public static DiveCertification fromString(String certification) {
     for (DiveCertification cert : DiveCertification.values()) {
       if (cert.displayName.equalsIgnoreCase(certification)) {
         return cert;
       }
     }
-    return null;
+    return null; // Return null if not found
   }
 
 }
