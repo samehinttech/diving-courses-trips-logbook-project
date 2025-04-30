@@ -1,0 +1,29 @@
+
+services:
+  oceandive:
+    image: oceandive-image:v1.0
+    container_name: oceandive-container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - oceandive-data:/app/data
+    environment:
+      - JAVA_OPTS=${JAVA_OPTS}
+      - APP_USERNAME=${APP_USERNAME}
+      - APP_PASSWORD=${APP_PASSWORD}
+      - DB_URL=${DB_URL}
+      - DB_DRIVER=${DB_DRIVER}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+
+    ports:
+        - "8080:8080"
+    networks:
+      - oceandive-network
+volumes:
+  oceandive-data:
+
+networks:
+  oceandive-network:
+    name: oceandive-network

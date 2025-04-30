@@ -1,0 +1,28 @@
+{
+    "name": "OceanDive Development",
+    "image": "mcr.microsoft.com/devcontainers/java:21",
+    "forwardPorts": [8080],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "vscjava.vscode-java-pack",
+                "vmware.vscode-spring-boot",
+                "pivotal.vscode-spring-boot",
+                "redhat.vscode-yaml",
+                "ms-azuretools.vscode-docker"
+            ]
+        }
+    },
+    "features": {
+        "ghcr.io/devcontainers/features/java:1": {
+            "version": "none",
+            "installMaven": true,
+            "mavenVersion": "3.9.9"
+        }
+    },
+    "mounts": [
+        "source=${localWorkspaceFolder}/data,target=/workspaces/oceandive/data,type=bind,consistency=cached",
+        "source=${localEnv:HOME}/.m2,target=/home/vscode/.m2,type=bind,consistency=cached"
+    ],
+    "postCreateCommand": "java -version && mvn -version"
+}
