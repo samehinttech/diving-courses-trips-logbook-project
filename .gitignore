@@ -43,4 +43,9 @@ my-docx/
 .env
 data
 
+### Dev Tools ###
+.dockerignore
+docker-compose.yml
+.devcontainer
+
 

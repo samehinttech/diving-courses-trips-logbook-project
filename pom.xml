@@ -54,12 +54,6 @@
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-oauth2-jose</artifactId>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-jwt -->
-    <dependency>
-      <groupId>org.springframework.security</groupId>
-      <artifactId>spring-security-jwt</artifactId>
-      <version>1.1.1.RELEASE</version>
-    </dependency>
 
     <!-- Template Engine -->
     <dependency>
@@ -111,7 +105,7 @@
       <artifactId>springdoc-openapi-data-rest</artifactId>
       <version>1.7.0</version>
     </dependency>
-<!-- 1. JAX-WS or SOAP-based web services-->
+    <!-- 1. JAX-WS or SOAP-based web services-->
     <dependency>
       <groupId>org.glassfish.jaxb</groupId>
       <artifactId>jaxb-runtime</artifactId>
@@ -180,4 +174,30 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <!-- Production profile for optimized builds -->
+    <profile>
+      <id>dev</id>
+      <properties>
+        <spring.profiles.active>dev</spring.profiles.active>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <configuration>
+              <excludes>
+                <exclude>
+                  <groupId>org.springframework.boot</groupId>
+                  <artifactId>spring-boot-devtools</artifactId>
+                </exclude>
+              </excludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

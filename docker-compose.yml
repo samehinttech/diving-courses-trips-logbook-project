@@ -1,38 +1,28 @@
 services:
   oceandive:
     # Define the service for the OceanDive application
-    image: oceandive-image:v1.0  # Use the specified image for the container
-    container_name: oceandive-container  # Name the container for easier identification
+    image: oceandive-dev:v1
+    container_name: oceandive-dev
     build:
       context: .  # Set the build context to the current directory
-      dockerfile: Dockerfile  # Specify the Dockerfile to use for building the image
-    volumes:
-      - ./data:/app/data  # Bind mounts the local ./data directory to /app/data in the container
-      - ~/.m2:/root/.m2  # Bind mounts the local Maven cache to the container for dependency reuse
-    environment:
-      # Pass environment variables to the container
-      - JAVA_OPTS=${JAVA_OPTS}  # Java options for runtime configuration
-      - APP_USERNAME=${APP_USERNAME}  # Application username
-      - APP_PASSWORD=${APP_PASSWORD}  # Application password
-      - DB_URL=${DB_URL}  # Database connection URL
-      - DB_DRIVER=${DB_DRIVER}  # Database driver class name
-      - DB_USERNAME=${DB_USERNAME}  # Database username
-      - DB_PASSWORD=${DB_PASSWORD}  # Database password
-    ports:
-      - "8080:8080"  # Map port 8080 on the host to port 8080 in the container
+      dockerfile: Dockerfile.dev
     networks:
-      - oceandive-network  # Connect the service to the specified network
+      - oceandive-network  # Connect to the oceandive-network (internal network)
+    volumes:
+      - ./src:/app/src  # Mount the entire project directory for live development
+      - ./pom.xml:/app/pom.xml  # Mount the Maven POM file
+      - ./data:/app/data  # Bind mounts the local ./data directory to /app/data in the container
+      - ${HOME}/.m2:/home/devuser/.m2:cached  # Mount Maven cache to the non-root user's home
+    ports:
+      - "8080:8080"  # Map port 8080 of the host to port 8080 of the container
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev  # Set Spring profile to development
+    # Keep the container running for development
+    tty: true
+    stdin_open: true
 
-volumes:
-  oceandive-data:
-    # Define a named volume for persistent data storage
-    driver: local  # Use the local driver for the volume
-    driver_opts:
-      type: none  # Specify the type of mount
-      device: ./data  # Map the volume to the local ./data directory
-      o: bind  # Use a bind mount for the volume
-
+# Define the network for the service
 networks:
   oceandive-network:
-    # Define a custom network for the services
-    name: oceandive-network  # Name the network for easier identification
+    driver: bridge
+    internal: true  # Makes this network inaccessible from the internet
