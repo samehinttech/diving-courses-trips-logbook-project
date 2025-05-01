@@ -27,5 +27,5 @@ services:
 
 networks:
   oceandive-network:               # Declare a static network name
-    driver: bridge
+    driver: host            # Use host networking for performance
     internal: true                 # Ensure the network is private and not exposed
