@@ -1,17 +1,17 @@
-
-
-# Use a base image with Java (e.g., OpenJDK)
-FROM openjdk:21-jdk-slim 
-
+# Build stage
+ARG MAVEN_VERSION=4.0.0-eclipse-temurin-21
+FROM maven:${MAVEN_VERSION} AS build-stage
 WORKDIR /app
+COPY pom.xml ./
+COPY src ./src
+RUN mvn clean package -DskipTests
 
- # Copy the packaged application jar into the container, assuming the jar is built in the 'target' folde
-COPY target/oceandive-0.0.1-SNAPSHOT.jar app.jar
-
- # Expose the port your application will use
-EXPOSE 8080
-
- # Run the JAR file when the container starts
+# Runtime stage
+ARG JDK_VERSION=21-jdk
+FROM openjdk:${JDK_VERSION} AS runtime-stage
+WORKDIR /app
+ARG JAR_FILE=oceandive-0.0.1-SNAPSHOT.jar
+COPY --from=build-stage /app/target/${JAR_FILE} app.jar
+ARG APP_PORT=8080
+EXPOSE ${APP_PORT}
 ENTRYPOINT ["java", "-jar", "app.jar"]
-
-
