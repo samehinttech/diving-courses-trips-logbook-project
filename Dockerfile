@@ -1,54 +1,47 @@
-# Build stage
-FROM maven:3.9.9-eclipse-temurin-21 AS build-stage
+# Runtime Stage: lightweight image to run the app
+FROM eclipse-temurin:21-jdk
 
-# Set the working directory
-WORKDIR /app
+# Install useful tools for dev environment
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    vim \
+    sudo \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy the pom.xml and source code
-COPY pom.xml ./
-RUN mvn dependency:go-offline
-COPY src ./src
-RUN mvn clean package
-
-# Runtime stage
-FROM openjdk:21-jdk AS runtime-stage
-
-# Set up environment variables
+# Arguments for user/group creation
 ARG USERNAME=devuser
 ARG USER_UID=1000
 ARG USER_GID=1000
 
-# Install curl and development tools
-RUN apt-get update && apt-get install -y \
-        curl \
-        git \
-        vim \
-        sudo \
-    && rm -rf /var/lib/apt/lists/*
-
-# Create a non-root user
-RUN groupadd --gid $USER_GID $USERNAME || echo "Group already exists" \
-     && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME || echo "User  already exists" \
-     && echo "$USERNAME ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/$USERNAME \
-     && chmod 0440 /etc/sudoers.d/$USERNAME
+# Check if the group or user already exists and create a non-root user if needed
+RUN if ! getent group $USER_GID; then \
+      groupadd --gid $USER_GID $USERNAME; \
+    fi \
+    && if ! id -u $USERNAME > /dev/null 2>&1; then \
+      useradd --uid $USER_UID --gid $USER_GID -m $USERNAME; \
+    fi \
+    && echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/$USERNAME \
+    && chmod 0440 /etc/sudoers.d/$USERNAME
 
 # Set the working directory
 WORKDIR /app
 
-# Give ownership to the non-root user
-RUN mkdir -p /app && chown -R $USERNAME:$USERNAME /app
+# Adjust permissions for the non-root user
+RUN chown -R $USERNAME:$USERNAME /app
 
-# Switch to non-root user
+# Switch to the non-root user
 USER $USERNAME
 
 # Copy the jar file from the build stage
-COPY --from=build-stage /app/target/oceandive-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /app/target/oceandive-0.0.1-SNAPSHOT.jar app.jar
 
-# Expose the application port
+# Expose the app port
 EXPOSE 8080
 
 # Health check
-HEALTHCHECK CMD curl --fail http://localhost:8080/ || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+  CMD curl -f http://localhost:8080/actuator/health || exit 1
 
-# Set the entry point for the container
+# Set the entrypoint
 ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -1,12 +1,6 @@
-# Static constant substitution for network and environment
-x-constants:
-  image_version: oceandive-dev:v1
-  spring_profile: dev
-  network_name: oceandive-network
-
 services:
   oceandive:
-    image: ${x-constants.image_version}
+    image: oceandive-dev-image:v1
     container_name: oceandive-dev
     build:
       context: .
@@ -21,7 +15,7 @@ services:
     ports:
       - "8080:8080"                # Host-to-container port mapping
     environment:
-      SPRING_PROFILES_ACTIVE: ${x-constants.spring_profile}
+      SPRING_PROFILES_ACTIVE: dev
       COMPOSE_BAKE: "true"         # Enable Docker Compose Bake for multi-platform builds
     tty: true
     stdin_open: true
