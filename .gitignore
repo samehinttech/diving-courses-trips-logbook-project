@@ -39,13 +39,15 @@ build/
 
 
 ### Dev Documentation ###
-my-docx/
-.env
+mydocx
 data
+.env
 
 ### Dev Tools ###
 .dockerignore
 docker-compose.yml
 .devcontainer
+Dockerfile
+
 
 
