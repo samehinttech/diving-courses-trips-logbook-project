@@ -96,8 +96,18 @@ including the ability to delete dive logs permanently.
 6. As a user, I want to delete my account so that I have full control over my
    data.
 
-### Use Cases
-![Use Case Diagram](assets/use-cases-diagram.png)
+### Use Case Diagram
+<div align="center">
+  <img 
+    src="assets/use-case-diagram.PNG" 
+    alt="System Interactions for OceanDive" 
+    title="OceanDive System Interactions" 
+    width="1170" 
+  />
+</div>
+<div align="center">
+Use Case Diagram illustrating OceanDive Web Application system interactions.
+</div>
 
 1. UC-1 [Create Account] – A user creates an account to access personalized
    features.
