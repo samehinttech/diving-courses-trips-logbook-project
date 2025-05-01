@@ -38,9 +38,9 @@ meet the requirements of the **Internet Technology module** at
 ### Scenario
 
 As a team, we designed the website OceanDive that offers dive courses,
-dive trips, and additional service “digital dive log”.
+dive trips, and additional service “digital dive log.”
 A new user visits the website as a guest, browses available dive courses, and
-books a course without mandatory login. Similarly, guests can explore and book
+books a course without a mandatory login. Similarly, guests can explore and book
 dive trips without needing an account. Users are prompted to choose a valid
 option of the dive certifications provided on the web when booking "dive trips
 or advanced courses" or being non-divers otherwise, ensuring only qualified
@@ -54,7 +54,7 @@ registered, they can view and/or edit their dive logs by adding, updating, or
 deleting entries. Additionally, users can delete their accounts.
 
 On the administrative side, admins manage the platform by adding/updating
-courses, trips, and general content. They adjust trip availability, and maintain
+courses, trips, and general content. They adjust trip availability and maintain
 user accounts (deactivating suspicious accounts or resetting passwords).
 User autonomy is prioritized: divers retain full control over their data,
 including the ability to delete dive logs permanently.
@@ -131,7 +131,7 @@ Use Case Diagram illustrating OceanDive Web Application system interactions.
 
 ### Wireframe Design
 
-![DiveExploreWireFrame drawio](assets/wireframe-design.png)
+![Wireframe Design](assets/wireframe-design.png)
 
 <!-- Repo Owner Notes:
 It is suggested to start with a wireframe. The wireframe focuses on the website structure (Sitemap planning), sketching the pages using Wireframe components (e.g., header, menu, footer) and UX. You can create a wireframe already with draw.io or similar tools.-->
