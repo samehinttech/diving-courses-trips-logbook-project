@@ -7,33 +7,30 @@ meet the requirements of the **Internet Technology module** at
 [![License](https://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 <!-- TOC -->
-
 * [OceanDive](#oceandive)
-    * [Analysis](#analysis)
-        * [Scenario](#scenario)
-        * [User Stories](#user-stories)
-            * [Admin User Stories](#admin-user-stories)
-            * [Guest stories (non-registered users)](#guest-stories-non-registered-users)
-            * [Registered User Stories](#registered-user-stories)
-        * [Use Case Diagram](#use-case-diagram)
-    * [Design](#design)
-        * [Wireframe Design](#wireframe-design)
-        * [Prototype Design](#prototype-design)
-        * [Domain Design](#domain-design)
-        * [Business Logic](#business-logic)
-    * [Implementation](#implementation)
-        * [Backend Technology](#backend-technology)
-        * [Frontend Technology](#frontend-technology)
-    * [Execution](#execution)
-        * [Deployment to a Paas](#deployment-to-a-paas)
-    * [Project Management](#project-management)
-        * [Roles](#roles)
-        * [Milestones](#milestones)
-    * [Maintainers](#maintainers)
-    * [Contributors](#contributors)
-    * [License](#license)
-    * [Note](#note)
-
+  * [Analysis](#analysis)
+    * [Scenario](#scenario)
+    * [User Stories](#user-stories)
+      * [Admin User Stories](#admin-user-stories)
+      * [Guest stories (non-registered users)](#guest-stories-non-registered-users)
+      * [Registered User Stories](#registered-user-stories)
+    * [Use Case Diagram](#use-case-diagram)
+  * [Design](#design)
+    * [Wireframe Design](#wireframe-design)
+    * [Prototype Design](#prototype-design)
+    * [Domain Design](#domain-design)
+    * [Business Logic](#business-logic)
+  * [Implementation](#implementation)
+    * [Backend Technology](#backend-technology)
+    * [Frontend Technology](#frontend-technology)
+  * [Execution](#execution)
+    * [Deployment to a Paas](#deployment-to-a-paas)
+  * [Project Management](#project-management)
+    * [Roles](#roles)
+    * [Milestones](#milestones)
+  * [Maintainers](#maintainers)
+  * [Contributors](#contributors)
+  * [Note](#note)
 <!-- TOC -->
 
 ## Analysis
@@ -106,7 +103,7 @@ Use Case Diagram illustrating OceanDive Web Application system interactions.
 ![Use Case Diagram](assets/use-case-diagram.png)
 </div>
 
-
+---
 
 1. UC-1 [Create Account] – A user creates an account to access personalized
    features.
@@ -180,10 +177,6 @@ The ch.fhnw.pizza.data.domain package contains the following domain objects / en
 
 - Charuta Pande
 - Devid Montecchiari
-
-## License
-
-- [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.html)
 
 ---
 
