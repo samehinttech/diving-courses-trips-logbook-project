@@ -7,31 +7,33 @@ meet the requirements of the **Internet Technology module** at
 [![License](https://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 <!-- TOC -->
+
 * [OceanDive](#oceandive)
-  * [Analysis](#analysis)
-    * [Scenario](#scenario)
-    * [User Stories](#user-stories)
-      * [Admin User Stories](#admin-user-stories)
-      * [Guest stories (non-registered users)](#guest-stories-non-registered-users)
-      * [Registered User Stories](#registered-user-stories)
-    * [Use Cases](#use-cases)
-  * [Design](#design)
-    * [Wireframe Design](#wireframe-design)
-    * [Prototype Design](#prototype-design)
-    * [Domain Design](#domain-design)
-    * [Business Logic](#business-logic)
-  * [Implementation](#implementation)
-    * [Backend Technology](#backend-technology)
-    * [Frontend Technology](#frontend-technology)
-  * [Execution](#execution)
-    * [Deployment to a Paas](#deployment-to-a-paas)
-  * [Project Management](#project-management)
-    * [Roles](#roles)
-    * [Milestones](#milestones)
-  * [Maintainers](#maintainers)
-  * [Contributors](#contributors)
-  * [License](#license)
-  * [Note](#note)
+    * [Analysis](#analysis)
+        * [Scenario](#scenario)
+        * [User Stories](#user-stories)
+            * [Admin User Stories](#admin-user-stories)
+            * [Guest stories (non-registered users)](#guest-stories-non-registered-users)
+            * [Registered User Stories](#registered-user-stories)
+        * [Use Cases](#use-cases)
+    * [Design](#design)
+        * [Wireframe Design](#wireframe-design)
+        * [Prototype Design](#prototype-design)
+        * [Domain Design](#domain-design)
+        * [Business Logic](#business-logic)
+    * [Implementation](#implementation)
+        * [Backend Technology](#backend-technology)
+        * [Frontend Technology](#frontend-technology)
+    * [Execution](#execution)
+        * [Deployment to a Paas](#deployment-to-a-paas)
+    * [Project Management](#project-management)
+        * [Roles](#roles)
+        * [Milestones](#milestones)
+    * [Maintainers](#maintainers)
+    * [Contributors](#contributors)
+    * [License](#license)
+    * [Note](#note)
+
 <!-- TOC -->
 
 ## Analysis
@@ -97,12 +99,13 @@ including the ability to delete dive logs permanently.
    data.
 
 ### Use Case Diagram
+
 <div align="center">
   <img 
     src="assets/use-case-diagram.PNG" 
     alt="System Interactions for OceanDive" 
     title="OceanDive System Interactions" 
-    width="1170" 
+    style="border: 2px solid black; border-radius: 5px;" 
   />
 </div>
 <div align="center">
