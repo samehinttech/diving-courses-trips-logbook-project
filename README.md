@@ -15,7 +15,7 @@ meet the requirements of the **Internet Technology module** at
             * [Admin User Stories](#admin-user-stories)
             * [Guest stories (non-registered users)](#guest-stories-non-registered-users)
             * [Registered User Stories](#registered-user-stories)
-        * [Use Cases](#use-cases)
+        * [Use Case Diagram](#use-case-diagram)
     * [Design](#design)
         * [Wireframe Design](#wireframe-design)
         * [Prototype Design](#prototype-design)
@@ -100,21 +100,13 @@ including the ability to delete dive logs permanently.
 
 ### Use Case Diagram
 
-<table align="center">
-  <tr>
-    <td style="border: 2px solid black; padding: 5px;">
-      <img 
-        src="assets/use-case-diagram.PNG" 
-        alt="System Interactions for OceanDive" 
-        title="OceanDive System Interactions" 
-        width="1170" 
-      />
-    </td>
-  </tr>
-</table>
-<div align="center">
+<div style="text-align: center;">
 Use Case Diagram illustrating OceanDive Web Application system interactions.
+
+![Use Case Diagram](assets/use-case-diagram.png)
 </div>
+
+
 
 1. UC-1 [Create Account] – A user creates an account to access personalized
    features.
