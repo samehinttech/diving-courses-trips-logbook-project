@@ -1,0 +1,37 @@
+# Static constant substitution for network and environment
+x-constants:
+  image_version: oceandive-dev:v1
+  spring_profile: dev
+  network_name: oceandive-network
+
+services:
+  oceandive:
+    image: ${x-constants.image_version}
+    container_name: oceandive-dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - oceandive-network          # Use the static network name here
+    volumes:
+      - ./src:/app/src             # Mount source code for live development
+      - ./pom.xml:/app/pom.xml     # Maven POM file
+      - ./data:/app/data           # Local data directory
+      - ~/.m2:/home/devuser/.m2:cached # Proper substitution for Maven cache
+    ports:
+      - "8080:8080"                # Host-to-container port mapping
+    environment:
+      SPRING_PROFILES_ACTIVE: ${x-constants.spring_profile}
+      COMPOSE_BAKE: "true"         # Enable Docker Compose Bake for multi-platform builds
+    tty: true
+    stdin_open: true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  oceandive-network:               # Declare a static network name
+    driver: bridge
+    internal: true                 # Ensure the network is private and not exposed

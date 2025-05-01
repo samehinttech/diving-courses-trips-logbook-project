@@ -1,0 +1,32 @@
+{
+  "name": "OceanDive Dev",
+  "build": {
+    "dockerfile": "../Dockerfiledev",
+    "context": ".."
+  },
+  "forwardPorts": [
+    8080
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "vmware.vscode-spring-boot",
+        "pivotal.vscode-spring-boot",
+        "redhat.vscode-yaml",
+        "ms-azuretools.vscode-docker",
+        "eamodio.gitlens",
+        "redhat.java",
+        "vscjava.vscode-java-debug",
+        "vscjava.vscode-spring-initializr"
+      ]
+    }
+  },
+  "remoteUser": "devuser",
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/app,type=bind,consistency=cached",
+    "source=${localWorkspaceFolder}/data,target=/app/data,type=bind,consistency=cached",
+    "source=${localEnv:HOME}/.m2,target=/home/devuser/.m2,type=bind,consistency=cached"
+  ],
+  "postCreateCommand": "java -version && mvn -version && echo 'Development environment ready!'"
+}

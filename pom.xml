@@ -138,7 +138,14 @@
       <artifactId>junit-jupiter</artifactId>
       <scope>test</scope>
     </dependency>
-  </dependencies>
+    <!-- dotenv support -->
+    <dependency>
+      <groupId>io.github.cdimascio</groupId>
+      <artifactId>dotenv-java</artifactId>
+      <version>2.2.0</version>
+      <scope>runtime</scope>
+    </dependency>
+      </dependencies>
 
   <build>
     <plugins>
