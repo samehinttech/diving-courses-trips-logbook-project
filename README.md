@@ -100,14 +100,18 @@ including the ability to delete dive logs permanently.
 
 ### Use Case Diagram
 
-<div align="center">
-  <img 
-    src="assets/use-case-diagram.PNG" 
-    alt="System Interactions for OceanDive" 
-    title="OceanDive System Interactions" 
-    style="border: 2px solid black; border-radius: 5px;" 
-  />
-</div>
+<table align="center">
+  <tr>
+    <td style="border: 2px solid black; padding: 5px;">
+      <img 
+        src="assets/use-case-diagram.PNG" 
+        alt="System Interactions for OceanDive" 
+        title="OceanDive System Interactions" 
+        width="1170" 
+      />
+    </td>
+  </tr>
+</table>
 <div align="center">
 Use Case Diagram illustrating OceanDive Web Application system interactions.
 </div>
