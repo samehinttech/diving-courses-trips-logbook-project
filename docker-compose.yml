@@ -15,7 +15,6 @@ services:
     ports:
       - "8080:8080"                # Host-to-container port mapping
     environment:
-      SPRING_PROFILES_ACTIVE: dev
       COMPOSE_BAKE: "true"         # Enable Docker Compose Bake for multi-platform builds
     tty: true
     stdin_open: true

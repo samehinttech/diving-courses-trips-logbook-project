@@ -125,7 +125,7 @@
       <artifactId>spring-boot-starter-actuator</artifactId>
     </dependency>
 
-    <!-- Configuration Processor (Optional for Metadata Generation) -->
+    <!-- Configuration Processor  -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-configuration-processor</artifactId>
@@ -181,30 +181,4 @@
       </plugin>
     </plugins>
   </build>
-
-  <profiles>
-    <!-- Production profile for optimized builds -->
-    <profile>
-      <id>dev</id>
-      <properties>
-        <spring.profiles.active>dev</spring.profiles.active>
-      </properties>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-maven-plugin</artifactId>
-            <configuration>
-              <excludes>
-                <exclude>
-                  <groupId>org.springframework.boot</groupId>
-                  <artifactId>spring-boot-devtools</artifactId>
-                </exclude>
-              </excludes>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
 </project>
