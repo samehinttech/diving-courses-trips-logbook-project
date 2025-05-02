@@ -127,7 +127,7 @@ Use Case Diagram illustrating OceanDive Web Application system interactions.
 ## Design
 
 <!-- Repo Owner Notes: 
- Keep in mind the Corporate Identity (CI); you shall decide appropriately the color schema, graphics, typography, layout, User Experience (UX), and so on. -->
+ Keep in mind the Corporate Identity (CI); you shall decide appropriately the color schema, graphics, typography, layout, UserEntity Experience (UX), and so on. -->
 
 ### Wireframe Design
 
