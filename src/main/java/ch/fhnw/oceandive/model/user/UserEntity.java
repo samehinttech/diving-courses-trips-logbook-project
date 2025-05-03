@@ -12,7 +12,8 @@ import java.util.Set;
 
 
 
-@Entity(name = "users")
+@Entity
+@Table(name = "users")
 public class UserEntity {
 
   @Id
@@ -65,7 +66,7 @@ public class UserEntity {
   private boolean temporary = false;
 
   @OneToMany
-      (mappedBy = "user", fetch = FetchType.LAZY)
+      (mappedBy = "users", fetch = FetchType.LAZY)
   private Set<DiveLog> diveLogs = new HashSet<>();
 
 

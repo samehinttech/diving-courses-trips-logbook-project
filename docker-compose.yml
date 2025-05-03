@@ -10,12 +10,15 @@ services:
     volumes:
       - ./src:/app/src             # Mount source code for live development
       - ./pom.xml:/app/pom.xml     # Maven POM file
-      - ./data:/app/data           # Local data directory
-      - ~/.m2:/home/devuser/.m2:cached # Proper substitution for Maven cache
+      - ${USERPROFILE}/.m2:/home/devuser/.m2:cached # Proper substitution for Maven cache
     ports:
       - "8080:8080"                # Host-to-container port mapping
     environment:
+      H2_DATABASE_URL: jdbc:h2:mem:devdb
+      H2_DATABASE_USER: sa
+      H2_DATABASE_PASSWORD: password
       COMPOSE_BAKE: "true"         # Enable Docker Compose Bake for multi-platform builds
+
     tty: true
     stdin_open: true
     healthcheck:
