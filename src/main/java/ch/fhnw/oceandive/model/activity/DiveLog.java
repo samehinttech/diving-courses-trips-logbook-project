@@ -4,8 +4,7 @@ import ch.fhnw.oceandive.model.user.UserEntity;
 import jakarta.persistence.*;
 
 
-@Entity
-@Table(name = "DIVE_LOGS")
+@Entity(name = "dive_logs")
 public class DiveLog {
 
   @Id
