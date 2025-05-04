@@ -4,15 +4,17 @@ import ch.fhnw.oceandive.model.activity.DiveLog;
 import ch.fhnw.oceandive.model.activity.DiveCertification;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
 import jakarta.validation.constraints.*;
-import java.util.ListIterator;
-import org.hibernate.annotations.CreationTimestamp;
+import java.util.ArrayList;
+import java.util.List;
+import org.hibernate.annotations.*;
 import io.swagger.v3.oas.annotations.Hidden;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+
 
 @Entity(name = "users")
+
 public class UserEntity {
 
   private static final String DEFAULT_USER_TYPE = "USER";
@@ -54,11 +56,11 @@ public class UserEntity {
 
   @CreationTimestamp
   @Column(updatable = false)
-  private LocalDateTime createdOn;
+  private LocalDateTime issuedOn;
 
-  @CreationTimestamp
-  @Column(updatable = true)
-  private LocalDateTime updatedOn;
+  @UpdateTimestamp
+  @Column(insertable = false)
+  private LocalDateTime modifiedOn;
 
   @Column(name = "user_type")
   private String userType = DEFAULT_USER_TYPE;
@@ -70,16 +72,17 @@ public class UserEntity {
   private boolean temporary;
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-  private Set<DiveLog> diveLogs = new HashSet<>();
+  private List<DiveLog> diveLogs = new ArrayList<>();
 
-  @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+      CascadeType.REFRESH})
   @JoinTable(name = "user_roles",
       joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
       inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
       uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "role_id"}))
-  private Set<Role> roles = new HashSet<>();
+  private List<Role> roles = new ArrayList<>();
 
-  // Default constructor (required by JPA)
+  // Default constructor for JPA
   public UserEntity() {
   }
 
@@ -95,16 +98,19 @@ public class UserEntity {
     this.userType = DEFAULT_USER_TYPE;
   }
 
-
-  // HELPER METHODS, THAT IS DIRECTLY TIGHT TO THE USERS, AND CANNOT BE DECOUPLED
+  // HELPER METHODS THAT IS TIGHT DIRECTLY TO THE USER ENTITY AND CANNOT BE DECOUPLED
   public void addRole(Role role) {
+    if (role == null) {
+      throw new IllegalArgumentException("Role cannot be null");
+    }
     roles.add(role);
-    role.getUsers().add(this);
   }
 
   public void removeRole(Role role) {
-    roles.remove(role);
-    role.getUsers().remove(this);
+    if (role == null) return;
+    if (roles.remove(role)) {
+      role.getUsers().remove(this);
+    }
   }
 
   public void addDiveLog(DiveLog diveLog) {
@@ -122,7 +128,7 @@ public class UserEntity {
   }
 
   public boolean isUserAccount() {
-    return roleExists("USER_ACCOUNT") || "UserAccount".equalsIgnoreCase(userType);
+    return roleExists("USER") || "UserAccount".equalsIgnoreCase(userType);
   }
 
   public boolean isGuest() {
@@ -130,7 +136,9 @@ public class UserEntity {
   }
 
   public boolean roleExists(String roleName) {
-    return roles.stream().anyMatch(role -> role.getRoleName().equalsIgnoreCase(roleName));
+    final String formattedRoleName = !roleName.startsWith(Role.DEFAULT_ROLE_PREFIX) ?
+        Role.DEFAULT_ROLE_PREFIX + roleName : roleName;
+    return roles.stream().anyMatch(role -> role.getRole().equalsIgnoreCase(formattedRoleName));
   }
 
   public void incrementBookingsCount() {
@@ -142,8 +150,108 @@ public class UserEntity {
       bookingsCount--;
     }
   }
-
-  public Set<Role> getRoles() {
+// getters and setters
+  public List<Role> getRoles() {
     return roles;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public String getFirstName() {
+    return firstName;
+  }
+
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
+
+  public String getLastName() {
+    return lastName;
+  }
+
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public String getUsername() {
+    return username;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public DiveCertification getDiveCertification() {
+    return diveCertification;
+  }
+
+  public void setDiveCertification(DiveCertification diveCertification) {
+    this.diveCertification = diveCertification;
+  }
+
+  public LocalDateTime getIssuedOn() {
+    return issuedOn;
+  }
+
+  public LocalDateTime getModifiedOn() {
+    return modifiedOn;
+  }
+
+  public String getUserType() {
+    return userType;
+  }
+
+  public void setUserType(String userType) {
+    this.userType = userType;
+  }
+
+  public Integer getBookingsCount() {
+    return bookingsCount;
+  }
+
+  public void setBookingsCount(Integer bookingsCount) {
+    this.bookingsCount = bookingsCount;
+  }
+
+  public boolean isTemporary() {
+    return temporary;
+  }
+
+  public void setTemporary(boolean temporary) {
+    this.temporary = temporary;
+  }
+
+  public List<DiveLog> getDiveLogs() {
+    return diveLogs;
+  }
+
+  public void setDiveLogs(List<DiveLog> diveLogs) {
+    this.diveLogs = diveLogs;
+  }
+
+  public void setRoles(List<Role> roles) {
+    this.roles = roles;
   }
 }

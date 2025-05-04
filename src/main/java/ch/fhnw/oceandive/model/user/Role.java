@@ -2,13 +2,13 @@ package ch.fhnw.oceandive.model.user;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "roles")
 public class Role {
 
-  private static final String DEFAULT_ROLE_PREFIX = "ROLE_";
+  static final String DEFAULT_ROLE_PREFIX = "ROLE_";
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -16,15 +16,16 @@ public class Role {
 
   @NotBlank
   @Column(unique = true, nullable = false)
-  private String roleName;
+  private String role;
 
   @ManyToMany(mappedBy = "roles")
-  private Set<UserEntity> users = new HashSet<>();
+  private List<UserEntity> users = new ArrayList<>();
 
-  public Role() {}
+  public Role() {
+  }
 
-  public Role(String roleName) {
-    this.roleName = formatRoleName(roleName);
+  public Role(String role) {
+    this.role = formatRoleName(role);
   }
 
 
@@ -36,35 +37,42 @@ public class Role {
     this.id = id;
   }
 
-  public String getRoleName() {
-    return roleName;
+  public String getRole() {
+    return role;
   }
 
-  public void setRoleName(String roleName) {
-    this.roleName = formatRoleName(roleName);
+  public void setRole(String roleName) {
+    this.role = formatRoleName(roleName);
   }
 
-  public Set<UserEntity> getUsers() {
+  public List<UserEntity> getUsers() {
     return users;
   }
 
-  public void setUsers(Set<UserEntity> users) {
-    this.users = users;
+  public void setUsers(List<UserEntity> user) {
+   if (user == null) {
+   throw new IllegalArgumentException("User cannot be null");
+    }
+    this.users = user;
   }
 
   // Helper Methods
   public void addUser(UserEntity user) {
-    users.add(user);
-    user.getRoles().add(this);
+    if (user == null) {
+      throw new IllegalArgumentException("User cannot be null");
+    }
+    this.users.add(user);
+    user.addRole(this);
   }
 
   public void removeUser(UserEntity user) {
-    users.remove(user);
-    user.getRoles().remove(this);
+    if (user == null) return;
+    if (this.users.remove(user)) {
+      user.removeRole(this);
+    }
   }
 
   private String formatRoleName(String roleName) {
-    // Ensures roles follow a consistent naming convention (e.g., "ROLE_ADMIN")
     if (!roleName.startsWith(DEFAULT_ROLE_PREFIX)) {
       return DEFAULT_ROLE_PREFIX + roleName.toUpperCase().replace("ROLE_", "");
     }
