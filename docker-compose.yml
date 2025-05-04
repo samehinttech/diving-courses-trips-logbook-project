@@ -1,0 +1,39 @@
+services:
+  # Note: We're copying the sources into the container instead of mounting them
+  # This approach improves performance on Windows and macOS by avoiding filesystem
+  oceandive:
+    image: oceandive-dev-image:v1
+    container_name: oceandive-dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - oceandive-network          # Use the static network name here
+    # Only mount the Maven cache for better build performance
+    volumes:
+      - ${USERPROFILE}/.m2:/home/devuser/.m2:cached # Maven cache for better build performance
+      - ./.env:/app/.env:cached    # Mount .env file for environment variables
+    ports:
+      - "8080:8080"                # Host-to-container port mapping
+    environment:
+      # H2 database credentials (non-sensitive)
+      H2_DATABASE_URL: jdbc:h2:mem:devdb
+      H2_DATABASE_USER: sa
+      H2_DATABASE_PASSWORD: password
+      # Spring security credentials are loaded from .env file
+      SPRING_SECURITY_USER_NAME: ${SPRING_SECURITY_USER_NAME}
+      SPRING_SECURITY_USER_PASSWORD: ${SPRING_SECURITY_USER_PASSWORD}
+      COMPOSE_BAKE: "true"         # Enable Docker Compose Bake for multi-platform builds
+
+    tty: true
+    stdin_open: true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  oceandive-network:               # Declare a static network name
+    driver: bridge                 # bridge driver for local development
+    internal: true                 # Ensure the network is private and not exposed

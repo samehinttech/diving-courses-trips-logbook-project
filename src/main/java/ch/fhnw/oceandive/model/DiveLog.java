@@ -1,13 +1,21 @@
-package ch.fhnw.oceandive.model.activity;
-import ch.fhnw.oceandive.model.user.UserEntity;
+package ch.fhnw.oceandive.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 
-@Entity(name = "dive_logs")
+@Entity
+@Table(name = "dive_logs",
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"dive_number", "user_id"})
+    },
+    indexes = {
+        @Index(name = "idx_dive_number", columnList = "dive_number"),
+        @Index(name = "idx_dive_date", columnList = "dive_date")
+    })
 public class DiveLog {
 
   @Id
@@ -19,11 +27,12 @@ public class DiveLog {
 
   @NotNull
   @Positive
+  @Column(name = "dive_number", nullable = false)
   private Integer diveNumber;
 
   @NotNull
   @PastOrPresent
-  private LocalDateTime diveDate;
+  private LocalDate diveDate;
 
   @NotNull
   @Size(max = 100)
@@ -53,7 +62,7 @@ public class DiveLog {
 
   public DiveLog() {
   }
-  public DiveLog(Integer diveNumber, LocalDateTime diveDate, String diveLocation, Float airTemperature,
+  public DiveLog(Integer diveNumber, LocalDate diveDate, String diveLocation, Float airTemperature,
       Float surfaceTemperature, LocalTime startTime, LocalTime endTime, Float maxDepth, String notes) {
     this.diveNumber = diveNumber;
     this.diveDate = diveDate;
@@ -77,10 +86,10 @@ public class DiveLog {
   public void setDiveNumber(Integer diveNumber) {
     this.diveNumber = diveNumber;
   }
-  public LocalDateTime getDiveDate() {
+  public LocalDate getDiveDate() {
     return diveDate;
   }
-  public void setDiveDate(LocalDateTime diveDate) {
+  public void setDiveDate(LocalDate diveDate) {
     this.diveDate = diveDate;
   }
   public String getDiveLocation() {

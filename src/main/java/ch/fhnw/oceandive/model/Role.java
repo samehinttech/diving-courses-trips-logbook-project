@@ -1,4 +1,4 @@
-package ch.fhnw.oceandive.model.user;
+package ch.fhnw.oceandive.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

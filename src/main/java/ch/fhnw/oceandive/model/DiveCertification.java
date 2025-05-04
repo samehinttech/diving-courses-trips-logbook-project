@@ -1,4 +1,4 @@
-package ch.fhnw.oceandive.model.activity;
+package ch.fhnw.oceandive.model;
 
 public enum DiveCertification {
   NON_DIVER("Non Diver"),
@@ -20,8 +20,6 @@ public enum DiveCertification {
 
   /**
    * Converts a string to a DiveCertification enum.
-   * 
-   * @param certification the display name of the certification
    * @return the corresponding DiveCertification enum value
    * @throws IllegalArgumentException if no matching certification is found
    */
@@ -36,27 +34,22 @@ public enum DiveCertification {
       }
     }
 
-    throw new IllegalArgumentException("Unknown certification: " + certification);
+    throw new IllegalArgumentException(certification + "is unknown certification");
   }
 
   /**
-   * Safely converts a string to a DiveCertification enum.
-   * Returns NON_DIVER if no matching certification is found.
-   * 
-   * @param certification the display name of the certification
+   * Converts a string to a DiveCertification enum.
    * @return the corresponding DiveCertification enum value, or NON_DIVER if not found
    */
   public static DiveCertification fromStringOrDefault(String certification) {
     if (certification == null || certification.trim().isEmpty()) {
       return NON_DIVER;
     }
-
     for (DiveCertification cert : DiveCertification.values()) {
       if (cert.displayName.equalsIgnoreCase(certification)) {
         return cert;
       }
     }
-
     return NON_DIVER;
   }
 }

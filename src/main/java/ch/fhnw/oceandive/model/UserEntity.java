@@ -1,10 +1,10 @@
-package ch.fhnw.oceandive.model.user;
+package ch.fhnw.oceandive.model;
 
-import ch.fhnw.oceandive.model.activity.DiveLog;
-import ch.fhnw.oceandive.model.activity.DiveCertification;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +13,15 @@ import io.swagger.v3.oas.annotations.Hidden;
 import java.time.LocalDateTime;
 
 
-@Entity(name = "users")
-
+@Entity
+@Table(name = "users",
+uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"username"}),
+        @UniqueConstraint(columnNames = {"email"})
+    },
+indexes = {
+        @Index(name = "idx_username", columnList = "username"),
+        @Index(name = "idx_username", columnList = "username")})
 public class UserEntity {
 
   private static final String DEFAULT_USER_TYPE = "USER";
@@ -37,12 +44,12 @@ public class UserEntity {
   @Email
   @NotBlank
   @Size(max = 100)
-  @Column(unique = true)
+  @Column(name = "email", unique = true)
   private String email;
 
   @NotBlank
   @Size(max = 50)
-  @Column(unique = true)
+  @Column(name = "username", unique = true)
   private String username;
 
   @NotBlank
@@ -73,6 +80,9 @@ public class UserEntity {
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   private List<DiveLog> diveLogs = new ArrayList<>();
+
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  private List<Booking> bookings = new ArrayList<>();
 
   @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
       CascadeType.REFRESH})
