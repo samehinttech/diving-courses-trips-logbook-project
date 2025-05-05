@@ -9,8 +9,8 @@ public class OceandiveApplication {
 
   public static void main(String[] args) {
     // Load environment variables from .env file
-
-
     SpringApplication.run(OceandiveApplication.class, args);
+
+
   }
 }
