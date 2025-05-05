@@ -5,7 +5,7 @@ import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 
-@Entity
+@Entity(name = "Bookings")
 public class Booking {
 
   @Id

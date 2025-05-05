@@ -35,13 +35,8 @@ public class Course {
   private String courseTitle;
 
   @NotBlank
-  @Size(max = 1000)
+  @Column(columnDefinition = "TEXT")
   private String description;
-
-
-  @NotBlank
-  @Size(max = 100)
-  private String location;
 
   @NotNull
   @Positive
@@ -65,52 +60,51 @@ public class Course {
   @Positive
   private Integer maxParticipants;
 
-  @NotNull
-  @Positive
-  private Integer capacity;
-
   @Positive
   private Integer spotsAvailable;
 
   @Enumerated(EnumType.STRING)
-  @Column(name = "prerequisite")
-  private DiveCertification coursePrerequisite;
+  private DiveCertification requiredCertification;
   
   @Enumerated(EnumType.STRING)
   private DiveCertification providedCertification;
-  
-  
+
+  @Enumerated(EnumType.STRING)
+  private DiveCertification awardedCertification;
+
   @ElementCollection
-  @CollectionTable(name = "included",
-      joinColumns = @JoinColumn(name = "course_id"))
-  @Column(name= "prerequisite")
-  private List<String> prerequisite  = new ArrayList<>();
+  @CollectionTable(
+      name = "course_included_items", // Updated table name for clarity
+      joinColumns = @JoinColumn(name = "course_id")
+  )
+  @Column(name = "items") // Updated column name for clarity
+  private List<String> includedItems = new ArrayList<>();
 
   @OneToMany(mappedBy = "course", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<Booking> bookings = new ArrayList<>();
-
 
   private boolean isActive = true;
   private boolean isDeleted = false;
 
   public Course() {
   }
-  public Course(String courseTitle, String description, String location, BigDecimal price,
+
+  public Course(Long id, String courseTitle, String description, BigDecimal price,
       LocalDate startDate, LocalDate endDate, Integer duration, Integer maxParticipants,
-      Integer capacity, Integer spotsAvailable, DiveCertification coursePrerequisite,
-      DiveCertification providedCertification) {
+      Integer spotsAvailable, DiveCertification requiredCertification,
+      DiveCertification providedCertification, DiveCertification awardedCertification) {
+    this.id = id;
     this.courseTitle = courseTitle;
     this.description = description;
-    this.location = location;
     this.price = price;
     this.startDate = startDate;
     this.endDate = endDate;
     this.duration = duration;
     this.maxParticipants = maxParticipants;
-    this.capacity = capacity;
     this.spotsAvailable = spotsAvailable;
-    this.coursePrerequisite = coursePrerequisite;
+    this.requiredCertification = requiredCertification;
     this.providedCertification = providedCertification;
+    this.awardedCertification = awardedCertification;
   }
   public Long getId() {
     return id;
@@ -130,19 +124,12 @@ public class Course {
   public void setDescription(String description) {
     this.description = description;
   }
-  public String getLocation() {
-    return location;
-  }
-  public void setLocation(String location) {
-    this.location = location;
-  }
   public BigDecimal getPrice() {
     return price;
   }
   public void setPrice(BigDecimal price) {
     this.price = price;
   }
-
   public LocalDate getStartDate() {
     return startDate;
   }
@@ -167,23 +154,17 @@ public class Course {
   public void setMaxParticipants(Integer maxParticipants) {
     this.maxParticipants = maxParticipants;
   }
-  public Integer getCapacity() {
-    return capacity;
-  }
-  public void setCapacity(Integer capacity) {
-    this.capacity = capacity;
-  }
   public Integer getSpotsAvailable() {
     return spotsAvailable;
   }
   public void setSpotsAvailable(Integer spotsAvailable) {
     this.spotsAvailable = spotsAvailable;
   }
-  public DiveCertification getCoursePrerequisite() {
-    return coursePrerequisite;
+  public DiveCertification getRequiredCertification() {
+    return requiredCertification;
   }
-  public void setCoursePrerequisite(DiveCertification coursePrerequisite) {
-    this.coursePrerequisite = coursePrerequisite;
+  public void setRequiredCertification(DiveCertification requiredCertification) {
+    this.requiredCertification = requiredCertification;
   }
   public DiveCertification getProvidedCertification() {
     return providedCertification;
@@ -191,11 +172,17 @@ public class Course {
   public void setProvidedCertification(DiveCertification providedCertification) {
     this.providedCertification = providedCertification;
   }
-  public List<String> getPrerequisite() {
-    return prerequisite;
+  public DiveCertification getAwardedCertification() {
+    return awardedCertification;
   }
-  public void setPrerequisite(List<String> prerequisite) {
-    this.prerequisite = prerequisite;
+  public void setAwardedCertification(DiveCertification awardedCertification) {
+    this.awardedCertification = awardedCertification;
+  }
+  public List<Booking> getBookings() {
+    return bookings;
+  }
+  public void setBookings(List<Booking> bookings) {
+    this.bookings = bookings;
   }
   public boolean isActive() {
     return isActive;
@@ -208,5 +195,19 @@ public class Course {
   }
   public void setDeleted(boolean isDeleted) {
     this.isDeleted = isDeleted;
+  }
+  public List<String> getIncludedItems() {
+    return includedItems;
+  }
+  public void setIncludedItems(List<String> includedItems) {
+    this.includedItems = includedItems;
+  }
+  public void addBooking(Booking booking) {
+    this.bookings.add(booking);
+    booking.setCourse(this);
+  }
+  public void removeBooking(Booking booking) {
+    this.bookings.remove(booking);
+    booking.setCourse(null);
   }
 }

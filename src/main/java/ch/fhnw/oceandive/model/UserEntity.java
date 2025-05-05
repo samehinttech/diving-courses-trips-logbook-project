@@ -6,26 +6,23 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.*;
-import java.util.ArrayList;
-import java.util.List;
 import org.hibernate.annotations.*;
 import io.swagger.v3.oas.annotations.Hidden;
-import java.time.LocalDateTime;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "users",
-uniqueConstraints = {
+@Table(
+    name = "users",
+    uniqueConstraints = {
         @UniqueConstraint(columnNames = {"username"}),
         @UniqueConstraint(columnNames = {"email"})
     },
-indexes = {
-        @Index(name = "idx_username", columnList = "username"),
-        @Index(name = "idx_username", columnList = "username")})
+    indexes = @Index(name = "idx_username", columnList = "username")
+)
 public class UserEntity {
-
-  private static final String DEFAULT_USER_TYPE = "USER";
-  private static final int INITIAL_BOOKINGS_COUNT = 0;
 
   @Id
   @Column(unique = true, nullable = false)
@@ -69,51 +66,51 @@ public class UserEntity {
   @Column(insertable = false)
   private LocalDateTime modifiedOn;
 
+  @Enumerated(EnumType.STRING)
   @Column(name = "user_type")
-  private String userType = DEFAULT_USER_TYPE;
+  private Role.RoleName userType = Role.RoleName.ROLE_USER_ACCOUNT; // ROLE_USER_ACCOUNT by default
 
-  @NotNull
-  private Integer bookingsCount = INITIAL_BOOKINGS_COUNT;
+ @Column(nullable = true)
+  private Integer bookingsCount = 0;
 
   @Transient
   private boolean temporary;
 
-  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<DiveLog> diveLogs = new ArrayList<>();
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<Booking> bookings = new ArrayList<>();
 
-  @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
-      CascadeType.REFRESH})
-  @JoinTable(name = "user_roles",
+  @ManyToMany(cascade = {
+      CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH
+  })
+  @JoinTable(
+      name = "user_roles",
       joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
       inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
-      uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "role_id"}))
+      uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "role_id"})
+  )
   private List<Role> roles = new ArrayList<>();
 
   // Default constructor for JPA
-  public UserEntity() {
-  }
+  public UserEntity() {}
 
-  // Main constructor
-  public UserEntity(String id, String firstName, String lastName, String email,
-      String username, String password) {
+  public UserEntity(String id, String firstName, String lastName, String email, String username, String password) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
     this.username = username;
     this.password = password;
-    this.userType = DEFAULT_USER_TYPE;
   }
 
-  // HELPER METHODS THAT IS TIGHT DIRECTLY TO THE USER ENTITY AND CANNOT BE DECOUPLED
   public void addRole(Role role) {
     if (role == null) {
       throw new IllegalArgumentException("Role cannot be null");
     }
     roles.add(role);
+    updateUserType(); // Always update userType when roles change
   }
 
   public void removeRole(Role role) {
@@ -121,46 +118,28 @@ public class UserEntity {
     if (roles.remove(role)) {
       role.getUsers().remove(this);
     }
-  }
-
-  public void addDiveLog(DiveLog diveLog) {
-    diveLogs.add(diveLog);
-    diveLog.setUser(this);
-  }
-
-  public void removeDiveLog(DiveLog diveLog) {
-    diveLogs.remove(diveLog);
-    diveLog.setUser(null);
-  }
-
-  public boolean isAdmin() {
-    return roleExists("ADMIN") || "Admin".equalsIgnoreCase(userType);
-  }
-
-  public boolean isUserAccount() {
-    return roleExists("USER") || "UserAccount".equalsIgnoreCase(userType);
-  }
-
-  public boolean isGuest() {
-    return roleExists("GUEST") || "Guest".equalsIgnoreCase(userType);
+    updateUserType(); // Keep userType in sync
   }
 
   public boolean roleExists(String roleName) {
-    final String formattedRoleName = !roleName.startsWith(Role.DEFAULT_ROLE_PREFIX) ?
-        Role.DEFAULT_ROLE_PREFIX + roleName : roleName;
-    return roles.stream().anyMatch(role -> role.getRole().equalsIgnoreCase(formattedRoleName));
+    return roles.stream()
+        .anyMatch(role -> role.getRole().equalsIgnoreCase(Role.DEFAULT_ROLE_PREFIX + roleName));
   }
 
-  public void incrementBookingsCount() {
-    bookingsCount++;
-  }
-
-  public void decrementBookingsCount() {
-    if (bookingsCount > 0) {
-      bookingsCount--;
+  private void updateUserType() {
+    if (roleExists("ADMIN")) {
+      this.userType = Role.RoleName.ROLE_ADMIN;
+    } else if (roleExists("GUEST")) {
+      this.userType = Role.RoleName.ROLE_GUEST;
+    } else {
+      this.userType = Role.RoleName.ROLE_USER_ACCOUNT; // Default user type
     }
   }
-// getters and setters
+
+  public Role.RoleName getUserType() {
+    return userType;
+  }
+
   public List<Role> getRoles() {
     return roles;
   }
@@ -213,46 +192,6 @@ public class UserEntity {
     this.password = password;
   }
 
-  public DiveCertification getDiveCertification() {
-    return diveCertification;
-  }
-
-  public void setDiveCertification(DiveCertification diveCertification) {
-    this.diveCertification = diveCertification;
-  }
-
-  public LocalDateTime getIssuedOn() {
-    return issuedOn;
-  }
-
-  public LocalDateTime getModifiedOn() {
-    return modifiedOn;
-  }
-
-  public String getUserType() {
-    return userType;
-  }
-
-  public void setUserType(String userType) {
-    this.userType = userType;
-  }
-
-  public Integer getBookingsCount() {
-    return bookingsCount;
-  }
-
-  public void setBookingsCount(Integer bookingsCount) {
-    this.bookingsCount = bookingsCount;
-  }
-
-  public boolean isTemporary() {
-    return temporary;
-  }
-
-  public void setTemporary(boolean temporary) {
-    this.temporary = temporary;
-  }
-
   public List<DiveLog> getDiveLogs() {
     return diveLogs;
   }
@@ -261,7 +200,11 @@ public class UserEntity {
     this.diveLogs = diveLogs;
   }
 
-  public void setRoles(List<Role> roles) {
-    this.roles = roles;
+  public boolean isTemporary() {
+    return temporary;
+  }
+
+  public void setTemporary(boolean temporary) {
+    this.temporary = temporary;
   }
 }

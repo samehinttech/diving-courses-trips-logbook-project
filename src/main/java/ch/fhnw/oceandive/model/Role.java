@@ -15,17 +15,23 @@ public class Role {
   private Long id;
 
   @NotBlank
-  @Column(unique = true, nullable = false)
-  private String role;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false, unique = true)
+  private RoleName roleName;
+
 
   @ManyToMany(mappedBy = "roles")
   private List<UserEntity> users = new ArrayList<>();
 
-  public Role() {
-  }
+  public Role() { }
 
   public Role(String role) {
-    this.role = formatRoleName(role);
+    this.roleName = RoleName.valueOf(formatRoleName(role));
+  }
+  public enum RoleName {
+    ROLE_USER_ACCOUNT,
+    ROLE_ADMIN,
+    ROLE_GUEST
   }
 
 
@@ -38,11 +44,14 @@ public class Role {
   }
 
   public String getRole() {
-    return role;
+    return roleName.name();
   }
 
   public void setRole(String roleName) {
-    this.role = formatRoleName(roleName);
+    if (roleName == null || roleName.isBlank()) {
+      throw new IllegalArgumentException("Role name cannot be null or blank");
+    }
+    this.roleName = RoleName.valueOf(formatRoleName(roleName));
   }
 
   public List<UserEntity> getUsers() {
@@ -56,7 +65,7 @@ public class Role {
     this.users = user;
   }
 
-  // Helper Methods
+  // HELPER METHOD THAT DIRECTLY TIGHT TO ROLE LOGIC
   public void addUser(UserEntity user) {
     if (user == null) {
       throw new IllegalArgumentException("User cannot be null");

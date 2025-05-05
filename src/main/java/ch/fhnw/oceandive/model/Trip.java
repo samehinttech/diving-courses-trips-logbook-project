@@ -29,7 +29,7 @@ public class Trip {
   private String tripTitle;
 
   @NotBlank
-  @Size(max = 1000)
+  @Column(columnDefinition = "TEXT")
   private String description;
 
   @NotBlank
@@ -63,21 +63,19 @@ public class Trip {
   private Integer availableSpots;
 
   @Enumerated(EnumType.STRING)
-  @Column(name  = "requirments")
+  @Column(name = "required_certification")
   private DiveCertification requiredCertification;
 
   @Enumerated(EnumType.STRING)
   private DiveCertification providedCertification;
 
   @ElementCollection
-  @CollectionTable(name = "included", joinColumns = @JoinColumn(name = "trip_id"))
-  @Column(name = "included")
+  @CollectionTable(
+      name = "trip_included_items", // Updated table name for clarity
+      joinColumns = @JoinColumn(name = "trip_id")
+  )
+  @Column(name = "items") // Updated column name for clarity
   private List<String> includedItems = new ArrayList<>();
-
-  @ElementCollection
-  @CollectionTable(name = "requirements", joinColumns = @JoinColumn(name = "trip_id"))
-  @Column(name = "required")
-  private List<String> requirement = new ArrayList<>();
 
 
   @OneToMany(mappedBy = "trip", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -204,14 +202,6 @@ public class Trip {
 
   public void setIncludedItems(List<String> includedItems) {
     this.includedItems = includedItems;
-  }
-
-  public List<String> getRequirement() {
-    return requirement;
-  }
-
-  public void setRequirement(List<String> requirement) {
-    this.requirement = requirement;
   }
 
   public List<Booking> getBookings() {
