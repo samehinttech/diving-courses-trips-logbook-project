@@ -42,8 +42,7 @@ build/
 mydocx
 .env
 
-### My dev files ###
-.devcontainer
-.dockerignore
-docker-compose.yml
-Dockerfile
+### divcontainer fro dev env ###
+/docker-compose.yml
+/Dockerfile
+.devcontainer/
