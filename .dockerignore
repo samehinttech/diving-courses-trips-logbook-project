@@ -35,8 +35,4 @@ data/
 ### Local configuration files ###
 .gitattributes
 
-### My dev files ###
-.devcontainer
-.dockerignore
-docker-compose.yml
-Dockerfile
+

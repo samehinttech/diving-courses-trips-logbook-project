@@ -41,3 +41,9 @@ build/
 ### Dev Documentation ###
 mydocx
 .env
+
+### My dev files ###
+.devcontainer
+.dockerignore
+docker-compose.yml
+Dockerfile
