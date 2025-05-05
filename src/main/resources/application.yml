@@ -9,6 +9,11 @@ spring:
     hikari:
       connection-timeout: 30000
       maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 30000
+      auto-commit: true
+      pool-name: HikariPool-1
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -38,6 +43,10 @@ server:
   port: 8080
   servlet:
     context-path: /oceandive
+logging:
+  level:
+    com.zaxxer.hikari: DEBUG
+    org.springframework.jdbc: DEBUG
 
 
 
