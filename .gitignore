@@ -46,3 +46,4 @@ mydocx
 /docker-compose.yml
 /Dockerfile
 .devcontainer/
+.dockerignore/
