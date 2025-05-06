@@ -47,3 +47,4 @@ mydocx
 /Dockerfile
 .devcontainer/
 .dockerignore/
+META-INF/

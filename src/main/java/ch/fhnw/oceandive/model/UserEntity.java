@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Hidden;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.data.annotation.CreatedBy;
 
 @Entity
 @Table(
@@ -66,6 +67,10 @@ public class UserEntity {
   @Column(insertable = false)
   private LocalDateTime modifiedOn;
 
+  @CreatedBy
+  private String createdBy;
+
+
   @Enumerated(EnumType.STRING)
   @Column(name = "user_type")
   private Role.RoleName userType = Role.RoleName.ROLE_USER_ACCOUNT; // ROLE_USER_ACCOUNT by default
@@ -76,10 +81,10 @@ public class UserEntity {
   @Transient
   private boolean temporary;
 
-  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private List<DiveLog> diveLogs = new ArrayList<>();
 
-  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private List<Booking> bookings = new ArrayList<>();
 
   @ManyToMany(cascade = {
@@ -96,13 +101,16 @@ public class UserEntity {
   // Default constructor for JPA
   public UserEntity() {}
 
-  public UserEntity(String id, String firstName, String lastName, String email, String username, String password) {
+  public UserEntity(String id, String firstName, String lastName, String email,DiveCertification diveCertification,
+      String username, String password, String createdBy) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
+    this.diveCertification = diveCertification;
     this.username = username;
     this.password = password;
+    this.createdBy = createdBy;
   }
 
   public void addRole(Role role) {
