@@ -1,4 +1,4 @@
-package ch.fhnw.oceandive.dto;
+package ch.fhnw.oceandive.dto.admin_side;
 
 import ch.fhnw.oceandive.model.DiveCertification;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -105,6 +105,40 @@ public class CourseDTO implements Serializable {
   public Integer getSpotsAvailable() {
     return spotsAvailable;
   }
+    
+    private String imageUrl;
+    
+    public String getImageUrl() {
+      return imageUrl;
+    }
+    
+    public void setImageUrl(String imageUrl) {
+      this.imageUrl = imageUrl;
+    }
+    
+    // Update constructor to include imageUrl
+    public CourseDTO(Long id, String courseTitle, String description, BigDecimal price,
+        LocalDate startDate, LocalDate endDate, Integer duration, Integer maxParticipants,
+        Integer spotsAvailable, DiveCertification requiredCertification,
+        DiveCertification providedCertification, DiveCertification awardedCertification,
+        List<String> includedItems, boolean isActive, boolean isDeleted, String imageUrl) {
+      this.id = id;
+      this.courseTitle = courseTitle;
+      this.description = description;
+      this.price = price;
+      this.startDate = startDate;
+      this.endDate = endDate;
+      this.duration = duration;
+      this.maxParticipants = maxParticipants;
+      this.spotsAvailable = spotsAvailable;
+      this.requiredCertification = requiredCertification;
+      this.providedCertification = providedCertification;
+      this.awardedCertification = awardedCertification;
+      this.includedItems = includedItems;
+      this.isActive = isActive;
+      this.isDeleted = isDeleted;
+      this.imageUrl = imageUrl;
+    }
 
   public DiveCertification getRequiredCertification() {
     return requiredCertification;
