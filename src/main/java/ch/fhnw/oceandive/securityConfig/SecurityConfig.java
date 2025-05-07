@@ -27,9 +27,11 @@ import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import com.nimbusds.jose.proc.SecurityContext;
 
 import java.nio.charset.StandardCharsets;
+import org.springframework.stereotype.Component;
 
 @Configuration
 @EnableWebSecurity
+@Component("securityConfig")
 public class SecurityConfig {
 
   @Value("${jwt.secret}")
