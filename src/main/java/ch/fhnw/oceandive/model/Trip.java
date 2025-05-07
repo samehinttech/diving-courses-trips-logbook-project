@@ -77,9 +77,15 @@ public class Trip {
   @Column(name = "items") // Updated column name for clarity
   private List<String> includedItems = new ArrayList<>();
 
-
   @OneToMany(mappedBy = "trip", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<Booking> bookings = new ArrayList<>();
+  
+  private boolean isActive = true;
+  private boolean isDeleted = false;
+  
+  @Column(name = "image_url")
+  private String imageUrl;
+  
   public Trip() {
   }
 
@@ -210,5 +216,39 @@ public class Trip {
 
   public void setBookings(List<Booking> bookings) {
     this.bookings = bookings;
+  }
+  
+  public boolean isActive() {
+    return isActive;
+  }
+
+  public void setActive(boolean isActive) {
+    this.isActive = isActive;
+  }
+
+  public boolean isDeleted() {
+    return isDeleted;
+  }
+
+  public void setDeleted(boolean isDeleted) {
+    this.isDeleted = isDeleted;
+  }
+  
+  public String getImageUrl() {
+    return imageUrl;
+  }
+  
+  public void setImageUrl(String imageUrl) {
+    this.imageUrl = imageUrl;
+  }
+  
+  public void addBooking(Booking booking) {
+    this.bookings.add(booking);
+    booking.setTrip(this);
+  }
+  
+  public void removeBooking(Booking booking) {
+    this.bookings.remove(booking);
+    booking.setTrip(null);
   }
 }

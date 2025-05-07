@@ -1,5 +1,6 @@
 package ch.fhnw.oceandive.service;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -18,10 +19,26 @@ import java.util.UUID;
 @Service
 public class ImageService {
 
-    @Value("${app.upload.dir:${user.home}/oceandive/uploads}")
+    @Value("${app.upload.dir:src/main/resources/static/assets/db_assets}")
     private String uploadDir;
     
-    private static final String IMAGE_BASE_URL = "/oceandive/images/";
+    private static final String IMAGE_BASE_URL = "/assets/db_assets/";
+
+    /**
+     * Initialize the image directory when the service starts.
+     */
+    @PostConstruct
+    public void init() {
+        try {
+            File directory = new File(uploadDir);
+            if (!directory.exists()) {
+                directory.mkdirs();
+                System.out.println("Created directory for storing images: " + directory.getAbsolutePath());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Could not create upload directory: " + e.getMessage());
+        }
+    }
 
     /**
      * Save an image file to the server and return its URL path.
@@ -45,7 +62,7 @@ public class ImageService {
         
         String uniqueFilename = UUID.randomUUID().toString() + extension;
         
-        // Create directory if it doesn't exist
+        // Ensure directory exists
         File directory = new File(uploadDir);
         if (!directory.exists()) {
             directory.mkdirs();

@@ -11,7 +11,7 @@ import java.util.List;
  * Data Transfer Object for Trip entity with only public-facing information.
  * This is used for client-side interactions to limit exposure of sensitive data.
  */
-public class PublicTripDTO {
+public class ClientTripDTO {
     private Long id;
     private String tripTitle;
     private String description;
@@ -26,11 +26,11 @@ public class PublicTripDTO {
     private String imageUrl;
 
     // Default constructor
-    public PublicTripDTO() {
+    public ClientTripDTO() {
     }
 
     // Constructor with all fields
-    public PublicTripDTO(Long id, String tripTitle, String description, String location, 
+    public ClientTripDTO(Long id, String tripTitle, String description, String location,
                         BigDecimal price, LocalDate startDate, LocalDate endDate, 
                         BigDecimal duration, Integer availableSpots, 
                         DiveCertification requiredCertification, List<String> includedItems,

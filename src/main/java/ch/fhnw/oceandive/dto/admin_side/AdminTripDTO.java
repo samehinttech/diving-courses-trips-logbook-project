@@ -20,7 +20,7 @@ import java.util.Objects;
  * Contains all trip data for admin operations
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TripDTO implements Serializable {
+public class AdminTripDTO implements Serializable {
 
     private final Long id;
     
@@ -65,7 +65,7 @@ public class TripDTO implements Serializable {
     private String imageUrl;
 
     // Constructor with all fields except imageUrl
-    public TripDTO(Long id, String tripTitle, String description, String location,
+    public AdminTripDTO(Long id, String tripTitle, String description, String location,
                   BigDecimal price, LocalDate startDate, LocalDate endDate,
                   BigDecimal duration, Integer capacity, Integer availableSpots,
                   DiveCertification requiredCertification, DiveCertification providedCertification,
@@ -88,7 +88,7 @@ public class TripDTO implements Serializable {
     }
 
     // Constructor with all fields including imageUrl
-    public TripDTO(Long id, String tripTitle, String description, String location,
+    public AdminTripDTO(Long id, String tripTitle, String description, String location,
                   BigDecimal price, LocalDate startDate, LocalDate endDate,
                   BigDecimal duration, Integer capacity, Integer availableSpots,
                   DiveCertification requiredCertification, DiveCertification providedCertification,
@@ -188,7 +188,7 @@ public class TripDTO implements Serializable {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        TripDTO entity = (TripDTO) obj;
+        AdminTripDTO entity = (AdminTripDTO) obj;
         return Objects.equals(this.id, entity.id) &&
                 Objects.equals(this.tripTitle, entity.tripTitle) &&
                 Objects.equals(this.description, entity.description) &&
