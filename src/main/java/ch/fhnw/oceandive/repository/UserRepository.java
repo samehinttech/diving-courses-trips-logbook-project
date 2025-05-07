@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity, Long> {
+public interface UserRepository extends JpaRepository<UserEntity, String> {
 
   // Find all users that have a count
   @EntityGraph(attributePaths = {"diveLogs", "bookings"})
@@ -24,19 +24,23 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
   // find all admins
   List<UserEntity> findAllByRolesContaining(Role role);
-  UserEntity findById(long userId);
+
+  Optional<UserEntity> findById(String id);
 
   // Find methods by (username, email)
   @EntityGraph(attributePaths = {"diveLogs", "bookings"})
-  UserEntity findByUsername(String username);
-  UserEntity findByEmail(String email);
+  Optional<UserEntity> findByUsername(String username);
+
+  Optional<UserEntity> findByEmail(String email);
 
   // Existence check methods by (username, email)
   boolean existsByUsername(String username);
+
   boolean existsByEmail(String email);
 
   // Delete methods by (username, email)
   void deleteByUsername(String username);
+
   void deleteUserByEmail(String email);
 
   // Update methods
@@ -70,9 +74,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
   @Query("SELECT u FROM UserEntity u WHERE u.userType = :userType OR :userType = 'ROLE_ADMIN'")
   List<UserEntity> fetchUsersByRole(@Param("userType") String userType);
-
-
-
 
 
 }

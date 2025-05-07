@@ -67,8 +67,6 @@ public class UserEntity {
   @Column(insertable = false)
   private LocalDateTime modifiedOn;
 
-  @CreatedBy
-  private String createdBy;
 
 
   @Enumerated(EnumType.STRING)
@@ -102,7 +100,7 @@ public class UserEntity {
   public UserEntity() {}
 
   public UserEntity(String id, String firstName, String lastName, String email,DiveCertification diveCertification,
-      String username, String password, String createdBy) {
+      String username, String password, LocalDateTime issuedOn) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
@@ -110,7 +108,7 @@ public class UserEntity {
     this.diveCertification = diveCertification;
     this.username = username;
     this.password = password;
-    this.createdBy = createdBy;
+    this.issuedOn = issuedOn;
   }
 
   public void addRole(Role role) {
@@ -214,5 +212,51 @@ public class UserEntity {
 
   public void setTemporary(boolean temporary) {
     this.temporary = temporary;
+  }
+  
+  public DiveCertification getDiveCertification() {
+    return diveCertification;
+  }
+  
+  public void setDiveCertification(DiveCertification diveCertification) {
+    this.diveCertification = diveCertification;
+  }
+  
+  public LocalDateTime getIssuedOn() {
+    return issuedOn == null ? LocalDateTime.now() : issuedOn;
+  }
+  
+  public LocalDateTime getModifiedOn() {
+    return modifiedOn;
+  }
+  
+  public void setIssuedOn(LocalDateTime issuedOn) {
+    this.issuedOn = issuedOn;
+
+  }
+  
+  public void setUserType(Role.RoleName userType) {
+    this.userType = userType;
+  }
+  
+  public Integer getBookingsCount() {
+    return bookingsCount;
+  }
+  
+  public void setBookingsCount(Integer bookingsCount) {
+    this.bookingsCount = bookingsCount;
+  }
+  
+  public List<Booking> getBookings() {
+    return bookings;
+  }
+  
+  public void setBookings(List<Booking> bookings) {
+    this.bookings = bookings;
+  }
+  
+  public void setRoles(List<Role> roles) {
+    this.roles = roles;
+    updateUserType(); // Always update userType when roles change
   }
 }
