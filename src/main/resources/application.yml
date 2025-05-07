@@ -18,6 +18,10 @@ spring:
             hibernate:
                 format_sql: true
                 use_sql_comments: true
+                show_sql: false
+                logging:
+                    level:
+                        org.hibernate.SQL: WARN
     thymeleaf:
         enabled: true
         mode: HTML

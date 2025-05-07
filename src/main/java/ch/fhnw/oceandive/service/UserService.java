@@ -154,7 +154,7 @@ public class UserService {
     user.setUsername(username);
     user.setPassword(passwordEncoder.encode(password));
     user.setDiveCertification(DiveCertification.valueOf(diveCertification));
-    user.setIssuedOn(LocalDateTime.now()); // Example for auditing purposes
+    user.setIssuedOn(LocalDateTime.now());
 
     // Assign default user role
     Role userRole = roleRepository.findByRoleName(Role.RoleName.ROLE_USER_ACCOUNT)
