@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -16,7 +17,7 @@ import java.util.Objects;
  * Supports both admin and client views with conditional field visibility
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserDTO {
+public class UserDTO implements Serializable {
 
   private final String id;
   @Size(max = 70)

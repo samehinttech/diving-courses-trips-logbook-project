@@ -129,7 +129,8 @@ public class UserEntity {
 
   public boolean roleExists(String roleName) {
     return roles.stream()
-        .anyMatch(role -> role.getRole().equalsIgnoreCase(Role.DEFAULT_ROLE_PREFIX + roleName));
+        .anyMatch(
+            role -> role.getRoleName().equals(Role.DEFAULT_ROLE_PREFIX + roleName));
   }
 
   private void updateUserType() {

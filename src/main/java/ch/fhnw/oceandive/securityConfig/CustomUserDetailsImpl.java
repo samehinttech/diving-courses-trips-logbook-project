@@ -1,5 +1,6 @@
 package ch.fhnw.oceandive.securityConfig;
 
+import ch.fhnw.oceandive.model.Role;
 import ch.fhnw.oceandive.model.UserEntity;
 import ch.fhnw.oceandive.repository.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -30,7 +31,7 @@ public class CustomUserDetailsImpl implements UserDetailsService {
             .password(userEntity.getPassword())
             .authorities(userEntity.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(
-                    role.getRole().startsWith("ROLE_") ? role.getRole() : "ROLE_" + role.getRole()
+                    role.getRoleName().name().startsWith("ROLE_") ? role.getRoleName().name() : "ROLE_" + role.getRoleName().name()
                 ))
                 .collect(Collectors.toList()))
             .build();

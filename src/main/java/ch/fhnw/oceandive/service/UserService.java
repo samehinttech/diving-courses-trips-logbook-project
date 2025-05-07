@@ -5,6 +5,7 @@ import ch.fhnw.oceandive.exceptionHandler.DuplicateResourceException;
 import ch.fhnw.oceandive.exceptionHandler.ResourceNotFoundException;
 import ch.fhnw.oceandive.model.DiveCertification;
 import ch.fhnw.oceandive.model.Role;
+import ch.fhnw.oceandive.model.Role.RoleName;
 import ch.fhnw.oceandive.model.UserEntity;
 import ch.fhnw.oceandive.repository.RoleRepository;
 import ch.fhnw.oceandive.repository.UserRepository;
@@ -312,8 +313,8 @@ public class UserService {
    */
   private UserDTO convertToDTO(UserEntity user) {
     // Convert roles to role names
-    List<String> roleNames = user.getRoles().stream()
-        .map(Role::getRole)
+    List<RoleName> roleNames = user.getRoles().stream()
+        .map(Role::getRoleName)
         .toList();
 
     return new UserDTO(

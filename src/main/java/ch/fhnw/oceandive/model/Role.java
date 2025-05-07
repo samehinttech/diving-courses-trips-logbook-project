@@ -32,7 +32,12 @@ public class Role {
   public enum RoleName {
     ROLE_USER_ACCOUNT,
     ROLE_ADMIN,
-    ROLE_GUEST
+    ROLE_GUEST;
+
+    public boolean equals(String obj) {
+      if (obj == null) return false;
+      return this.name().equalsIgnoreCase(obj);
+    }
   }
 
 
@@ -44,8 +49,8 @@ public class Role {
     this.id = id;
   }
 
-  public String getRole() {
-    return roleName.name();
+  public RoleName getRoleName() {
+    return roleName;
   }
 
   public void setRole(String roleName) {
