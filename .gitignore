@@ -39,6 +39,7 @@ build/
 
 
 ### Dev Documentation ###
+data/
 mydocx
 .env
 
