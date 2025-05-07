@@ -100,7 +100,7 @@ including the ability to delete dive logs permanently.
 <div style="text-align: center;">
 Use Case Diagram illustrating OceanDive Web Application system interactions.
 
-![Use Case Diagram](assets/use-case-diagram.png)
+![Use Case Diagram](assets/readme_assets/use-case-diagram.png)
 </div>
 
 ---
@@ -131,7 +131,7 @@ Use Case Diagram illustrating OceanDive Web Application system interactions.
 
 ### Wireframe Design
 
-![Wireframe Design](assets/wireframe-design.png)
+![Wireframe Design](assets/readme_assets/wireframe-design.png)
 
 <!-- Repo Owner Notes:
 It is suggested to start with a wireframe. The wireframe focuses on the website structure (Sitemap planning), sketching the pages using Wireframe components (e.g., header, menu, footer) and UX. You can create a wireframe already with draw.io or similar tools.-->
