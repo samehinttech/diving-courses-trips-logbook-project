@@ -6,7 +6,6 @@ import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -86,6 +85,9 @@ public class Course {
   private boolean isActive = true;
   private boolean isDeleted = false;
 
+  @Column(name = "image_url")
+  private String imageUrl;
+  
   public Course() {
   }
 
@@ -209,5 +211,13 @@ public class Course {
   public void removeBooking(Booking booking) {
     this.bookings.remove(booking);
     booking.setCourse(null);
+  }
+  
+  public String getImageUrl() {
+    return imageUrl;
+  }
+  
+  public void setImageUrl(String imageUrl) {
+    this.imageUrl = imageUrl;
   }
 }

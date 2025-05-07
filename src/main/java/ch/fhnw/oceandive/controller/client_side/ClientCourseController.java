@@ -1,6 +1,6 @@
 package ch.fhnw.oceandive.controller.client_side;
 
-import ch.fhnw.oceandive.dto.client_side.PublicCourseDTO;
+import ch.fhnw.oceandive.dto.client_side.ClientCourseDTO;
 import ch.fhnw.oceandive.model.DiveCertification;
 import ch.fhnw.oceandive.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,17 +12,17 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * REST controller for public Course resources.
- * These endpoints are accessible to all users, including unauthenticated ones.
+ * REST controller for public Course views that are accessible to all users,
+ * including unauthenticated ones (GUEST).
  */
 @RestController
 @RequestMapping("/api/courses")
-public class CourseController {
+public class ClientCourseController {
 
     private final CourseService courseService;
 
     @Autowired
-    public CourseController(CourseService courseService) {
+    public ClientCourseController(CourseService courseService) {
         this.courseService = courseService;
     }
 
@@ -32,61 +32,52 @@ public class CourseController {
      * @return the ResponseEntity with status 200 (OK) and the list of active courses in body
      */
     @GetMapping
-    public ResponseEntity<List<PublicCourseDTO>> getAllActiveCourses() {
-        List<PublicCourseDTO> courses = courseService.getAllActiveCoursesForPublic();
+    public ResponseEntity<List<ClientCourseDTO>> getAllActiveCourses() {
+        List<ClientCourseDTO> courses = courseService.getAllActiveCoursesForPublic();
         return ResponseEntity.ok(courses);
     }
 
     /**
      * GET /api/courses/{id} : Get the course with the specified ID for public access.
-     *
-     * @param id the ID of the course to retrieve
-     * @return the ResponseEntity with status 200 (OK) and the course in body,
+     * @return the ResponseEntity with status 200 (OK) and the course in the body,
      *         or with status 404 (Not Found) if the course is not found
      */
     @GetMapping("/{id}")
-    public ResponseEntity<PublicCourseDTO> getCourseById(@PathVariable Long id) {
-        PublicCourseDTO course = courseService.getCourseByIdForPublic(id);
+    public ResponseEntity<ClientCourseDTO> getCourseById(@PathVariable Long id) {
+        ClientCourseDTO course = courseService.getCourseByIdForPublic(id);
         return ResponseEntity.ok(course);
     }
 
     /**
      * GET /api/courses/search: Search for courses by title for public access.
-     *
-     * @param title the title to search for
-     * @return the ResponseEntity with status 200 (OK) and the list of matching courses in body
+     * @return the ResponseEntity with status 200 (OK) and the list of matching courses in the body
      */
     @GetMapping("/search")
-    public ResponseEntity<List<PublicCourseDTO>> searchCoursesByTitle(@RequestParam String title) {
-        List<PublicCourseDTO> courses = courseService.searchCoursesByTitleForPublic(title);
+    public ResponseEntity<List<ClientCourseDTO>> searchCoursesByTitle(@RequestParam String title) {
+        List<ClientCourseDTO> courses = courseService.searchCoursesByTitleForPublic(title);
         return ResponseEntity.ok(courses);
     }
 
     /**
      * GET /api/courses/date-range: Get courses within a date range for public access.
-     *
-     * @param startDate the start date of the range
-     * @param endDate the end date of the range
      * @return the ResponseEntity with status 200 (OK) and the list of courses in the body
      */
     @GetMapping("/date-range")
-    public ResponseEntity<List<PublicCourseDTO>> getCoursesByDateRange(
+    public ResponseEntity<List<ClientCourseDTO>> getCoursesByDateRange(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        List<PublicCourseDTO> courses = courseService.getCoursesByDateRangeForPublic(startDate, endDate);
+        List<ClientCourseDTO> courses = courseService.getCoursesByDateRangeForPublic(startDate, endDate);
         return ResponseEntity.ok(courses);
     }
 
     /**
      * GET /api/courses/certification: Get courses by certification for public access.
-     *
-     * @param certification the certification to search for
-     * @return the ResponseEntity with status 200 (OK) and the list of courses in body
+     * @return the ResponseEntity with status 200 (OK) and the list of courses body
      */
     @GetMapping("/certification")
-    public ResponseEntity<List<PublicCourseDTO>> getCoursesByCertification(
+    public ResponseEntity<List<ClientCourseDTO>> getCoursesByCertification(
             @RequestParam DiveCertification certification) {
-        List<PublicCourseDTO> courses = courseService.getCoursesByCertificationForPublic(certification);
+        List<ClientCourseDTO> courses = courseService.getCoursesByCertificationForPublic(certification);
         return ResponseEntity.ok(courses);
     }
 }

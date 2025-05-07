@@ -17,7 +17,7 @@ import java.util.Objects;
  * DTO for {@link ch.fhnw.oceandive.model.Course}
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CourseDTO implements Serializable {
+public class AdminCourseDTO implements Serializable {
 
   private final Long id;
   @NotBlank(message = "Course title is required")
@@ -48,11 +48,11 @@ public class CourseDTO implements Serializable {
   private final boolean isActive;
   private final boolean isDeleted;
 
-  public CourseDTO(Long id, String courseTitle, String description, BigDecimal price,
+  public AdminCourseDTO(Long id, String courseTitle, String description, BigDecimal price,
       LocalDate startDate, LocalDate endDate, Integer duration, Integer maxParticipants,
       Integer spotsAvailable, DiveCertification requiredCertification,
       DiveCertification providedCertification, DiveCertification awardedCertification,
-      List<String> includedItems, boolean isActive, boolean isDeleted) {
+      List<String> includedItems, boolean isActive, boolean isDeleted, String imageUrl) {
     this.id = id;
     this.courseTitle = courseTitle;
     this.description = description;
@@ -68,6 +68,7 @@ public class CourseDTO implements Serializable {
     this.includedItems = includedItems;
     this.isActive = isActive;
     this.isDeleted = isDeleted;
+    this.imageUrl = imageUrl;
   }
 
   public Long getId() {
@@ -115,30 +116,6 @@ public class CourseDTO implements Serializable {
     public void setImageUrl(String imageUrl) {
       this.imageUrl = imageUrl;
     }
-    
-    // Update constructor to include imageUrl
-    public CourseDTO(Long id, String courseTitle, String description, BigDecimal price,
-        LocalDate startDate, LocalDate endDate, Integer duration, Integer maxParticipants,
-        Integer spotsAvailable, DiveCertification requiredCertification,
-        DiveCertification providedCertification, DiveCertification awardedCertification,
-        List<String> includedItems, boolean isActive, boolean isDeleted, String imageUrl) {
-      this.id = id;
-      this.courseTitle = courseTitle;
-      this.description = description;
-      this.price = price;
-      this.startDate = startDate;
-      this.endDate = endDate;
-      this.duration = duration;
-      this.maxParticipants = maxParticipants;
-      this.spotsAvailable = spotsAvailable;
-      this.requiredCertification = requiredCertification;
-      this.providedCertification = providedCertification;
-      this.awardedCertification = awardedCertification;
-      this.includedItems = includedItems;
-      this.isActive = isActive;
-      this.isDeleted = isDeleted;
-      this.imageUrl = imageUrl;
-    }
 
   public DiveCertification getRequiredCertification() {
     return requiredCertification;
@@ -171,7 +148,7 @@ public class CourseDTO implements Serializable {
     if (obj == null || getClass() != obj.getClass()) {
       return false;
     }
-    CourseDTO entity = (CourseDTO) obj;
+    AdminCourseDTO entity = (AdminCourseDTO) obj;
     return Objects.equals(this.id, entity.id) &&
         Objects.equals(this.courseTitle, entity.courseTitle) &&
         Objects.equals(this.description, entity.description) &&
