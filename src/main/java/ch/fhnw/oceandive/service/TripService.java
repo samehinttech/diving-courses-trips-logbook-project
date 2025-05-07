@@ -54,9 +54,6 @@ public class TripService {
 
     /**
      * Get a trip by ID (admin view).
-     *
-     * @param id the trip ID
-     * @return the trip with the specified ID
      * @throws EntityNotFoundException if the trip is not found
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -68,9 +65,6 @@ public class TripService {
 
     /**
      * Get a trip by ID for public viewing.
-     *
-     * @param id the trip ID
-     * @return the trip with the specified ID and limited information
      * @throws EntityNotFoundException if the trip is not found or not active
      */
     public ClientTripDTO getTripByIdForPublic(Long id) {
@@ -86,9 +80,6 @@ public class TripService {
 
     /**
      * Search for trips by title (admin view).
-     *
-     * @param title the title to search for
-     * @return list of trips matching the title
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<AdminTripDTO> searchTripsByTitle(String title) {
@@ -99,9 +90,6 @@ public class TripService {
 
     /**
      * Search for trips by title for public viewing.
-     *
-     * @param title the title to search for
-     * @return list of active trips matching the title with limited information
      */
     public List<ClientTripDTO> searchTripsByTitleForPublic(String title) {
         return tripRepository.findByTripTitleContainingIgnoreCase(title).stream()
@@ -112,9 +100,6 @@ public class TripService {
     
     /**
      * Search for trips by location (admin view).
-     *
-     * @param location the location to search for
-     * @return list of trips matching the location
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<AdminTripDTO> searchTripsByLocation(String location) {
@@ -125,9 +110,6 @@ public class TripService {
 
     /**
      * Search for trips by location for public viewing.
-     *
-     * @param location the location to search for
-     * @return list of active trips matching the location with limited information
      */
     public List<ClientTripDTO> searchTripsByLocationForPublic(String location) {
         return tripRepository.findByLocationContainingIgnoreCase(location).stream()
@@ -138,10 +120,6 @@ public class TripService {
 
     /**
      * Get trips within a date range (admin view).
-     *
-     * @param startDate the start date of the range
-     * @param endDate the end date of the range
-     * @return list of trips within the date range
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<AdminTripDTO> getTripsByDateRange(LocalDate startDate, LocalDate endDate) {
@@ -152,10 +130,6 @@ public class TripService {
 
     /**
      * Get trips within a date range for public viewing.
-     *
-     * @param startDate the start date of the range
-     * @param endDate the end date of the range
-     * @return list of active trips within the date range with limited information
      */
     public List<ClientTripDTO> getTripsByDateRangeForPublic(LocalDate startDate, LocalDate endDate) {
         return tripRepository.findByStartDateBetween(startDate, endDate).stream()
@@ -166,9 +140,6 @@ public class TripService {
 
     /**
      * Get trips by required certification (admin view).
-     *
-     * @param certification the required certification
-     * @return list of trips requiring the specified certification
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<AdminTripDTO> getTripsByRequiredCertification(DiveCertification certification) {
@@ -179,9 +150,6 @@ public class TripService {
 
     /**
      * Get trips by required certification for public viewing.
-     *
-     * @param certification the required certification
-     * @return list of active trips requiring the specified certification with limited information
      */
     public List<ClientTripDTO> getTripsByRequiredCertificationForPublic(DiveCertification certification) {
         return tripRepository.findByRequiredCertification(certification).stream()
@@ -192,9 +160,6 @@ public class TripService {
 
     /**
      * Create a new trip.
-     *
-     * @param adminTripDTO the trip data
-     * @return the created trip
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional
@@ -208,9 +173,6 @@ public class TripService {
 
     /**
      * Update an existing trip.
-     *
-     * @param id the ID of the trip to update
-     * @param adminTripDTO the updated trip data
      * @return the updated trip
      * @throws EntityNotFoundException if the trip is not found
      */
@@ -227,8 +189,6 @@ public class TripService {
 
     /**
      * Soft delete a trip.
-     *
-     * @param id the ID of the trip to delete
      * @throws EntityNotFoundException if the trip is not found
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -244,8 +204,6 @@ public class TripService {
 
     /**
      * Permanently delete a trip.
-     *
-     * @param id the ID of the trip to permanently delete
      * @throws EntityNotFoundException if the trip is not found
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
