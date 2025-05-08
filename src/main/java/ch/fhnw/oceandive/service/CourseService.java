@@ -30,8 +30,6 @@ public class CourseService {
 
   /**
    * Retrieves all active and non-deleted courses.
-   *
-   * @return a list of AdminCourseDTO objects representing active and non-deleted courses
    */
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   public List<AdminCourseDTO> getAllActiveCourses() {
@@ -42,9 +40,6 @@ public class CourseService {
   
   /**
    * Retrieves all active and non-deleted courses for public/client use.
-   * Contains only information that should be visible to clients.
-   *
-   * @return a list of ClientCourseDTO objects representing active and non-deleted courses
    */
   public List<ClientCourseDTO> getAllActiveCoursesForPublic() {
     return courseRepository.findAllByIsActiveTrueAndIsDeletedFalse().stream()
@@ -54,8 +49,6 @@ public class CourseService {
 
   /**
    * Retrieves a course by its ID.
-   *
-   * @throws ResourceNotFoundException if the course is not found
    */
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   public AdminCourseDTO getCourseById(Long id) {
@@ -66,9 +59,6 @@ public class CourseService {
   
   /**
    * Retrieves a course by its ID for public/client use.
-   * Contains only information that should be visible to clients.
-   *
-   * @throws ResourceNotFoundException if the course is not found or is not active
    */
   public ClientCourseDTO getCourseByIdForPublic(Long id) {
     Course course = courseRepository.findById(id)
@@ -84,8 +74,6 @@ public class CourseService {
 
   /**
    * Searches for courses by title.
-   *
-   * @return a list of AdminCourseDTO objects matching the search criteria
    */
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   public List<AdminCourseDTO> searchCoursesByTitle(String title) {
@@ -96,9 +84,6 @@ public class CourseService {
   
   /**
    * Searches for active courses by title for public/client use.
-   * Contains only information that should be visible to clients.
-   *
-   * @return a list of ClientCourseDTO objects matching the search criteria
    */
   public List<ClientCourseDTO> searchCoursesByTitleForPublic(String title) {
     return courseRepository.findByCourseTitleContainingIgnoreCase(title).stream()
@@ -109,8 +94,6 @@ public class CourseService {
 
   /**
    * Retrieves courses within a date range.
-   *
-   * @return a list of AdminCourseDTO objects within the date range
    */
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   public List<AdminCourseDTO> getCoursesByDateRange(LocalDate startDate, LocalDate endDate) {
@@ -121,9 +104,6 @@ public class CourseService {
   
   /**
    * Retrieves courses within a date range for public/client use.
-   * Contains only information that should be visible to clients.
-   *
-   * @return a list of ClientCourseDTO objects within the date range
    */
   public List<ClientCourseDTO> getCoursesByDateRangeForPublic(LocalDate startDate, LocalDate endDate) {
     return courseRepository.findByStartDateBetween(startDate, endDate).stream()
@@ -134,8 +114,6 @@ public class CourseService {
 
   /**
    * Retrieves courses by awarded certification.
-   *
-   * @return a list of AdminCourseDTO objects with the specified certification
    */
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   public List<AdminCourseDTO> getCoursesByCertification(DiveCertification certification) {
@@ -146,9 +124,6 @@ public class CourseService {
   
   /**
    * Retrieves courses by awarded certification for public/client use.
-   * Contains only information that should be visible to clients.
-   *
-   * @return a list of ClientCourseDTO objects with the specified certification
    */
   public List<ClientCourseDTO> getCoursesByCertificationForPublic(DiveCertification certification) {
     return courseRepository.findCourseByAwardedCertification(certification).stream()
@@ -172,8 +147,6 @@ public class CourseService {
 
   /**
    * Updates an existing course.
-   *
-   * @throws ResourceNotFoundException if the course is not found
    */
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @Transactional
@@ -188,8 +161,6 @@ public class CourseService {
 
   /**
    * Deletes a course by setting its isDeleted flag to true.
-   *
-   * @throws ResourceNotFoundException if the course is not found
    */
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @Transactional
@@ -202,8 +173,6 @@ public class CourseService {
 
   /**
    * Permanently deletes a course from the database.
-   *
-   * @throws ResourceNotFoundException if the course is not found
    */
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @Transactional
@@ -215,8 +184,6 @@ public class CourseService {
 
   /**
    * Converts a Course entity to a AdminCourseDTO.
-   *
-   * @return the converted AdminCourseDTO
    */
   private AdminCourseDTO convertToDTO(Course course) {
     return new AdminCourseDTO(
@@ -241,9 +208,6 @@ public class CourseService {
   
   /**
    * Converts a Course entity to a ClientCourseDTO containing only client-visible information.
-   * 
-   * @param course the Course entity to convert
-   * @return the converted ClientCourseDTO
    */
   private ClientCourseDTO convertToPublicDTO(Course course) {
     return new ClientCourseDTO(
@@ -264,9 +228,6 @@ public class CourseService {
 
   /**
    * Converts a AdminCourseDTO to a Course entity. This ensures the separation of concerns and not
-   * exposing sensitive data.
-   *
-   * @return the converted Course entity
    */
   private Course convertToEntity(AdminCourseDTO adminCourseDTO) {
     Course course = new Course();
@@ -276,8 +237,6 @@ public class CourseService {
 
   /**
    * Updates a Course entity with information from a AdminCourseDTO
-   *
-   * @param adminCourseDTO the AdminCourseDTO with updated information
    */
   private void updateCourseFromDTO(Course course, AdminCourseDTO adminCourseDTO) {
     course.setCourseTitle(adminCourseDTO.getCourseTitle());

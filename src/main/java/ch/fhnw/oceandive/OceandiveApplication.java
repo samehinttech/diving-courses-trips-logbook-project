@@ -1,12 +1,20 @@
 package ch.fhnw.oceandive;
 
+import ch.fhnw.oceandive.service.RoleService;
 import io.github.cdimascio.dotenv.Dotenv;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 
 @SpringBootApplication
 public class OceandiveApplication {
+
+  @Bean
+  public CommandLineRunner initializeRoles(RoleService roleService) {
+    return args -> roleService.initializeDefaultRoles();
+  }
 
   public static void main(String[] args) {
     // Load environment variables from .env file

@@ -31,8 +31,6 @@ public class AdminTripController {
 
     /**
      * GET /api/admin/trips : Get all active trips.
-     *
-     * @return the ResponseEntity with status 200 (OK) and the list of active trips in body
      */
     @GetMapping
     public ResponseEntity<List<AdminTripDTO>> getAllActiveTrips() {
@@ -42,8 +40,6 @@ public class AdminTripController {
 
     /**
      * GET /api/admin/trips/{id} : Get the trip with the specified ID.
-     * @return the ResponseEntity with status 200 (OK) and the trip in body,
-     *         or with status 404 (Not Found) if the trip is not found
      */
     @GetMapping("/{id}")
     public ResponseEntity<AdminTripDTO> getTripById(@PathVariable Long id) {
@@ -53,7 +49,6 @@ public class AdminTripController {
 
     /**
      * GET /api/admin/trips/search: Search for trips by title.
-     * @return the ResponseEntity with status 200 (OK) and the list of matching trips in body
      */
     @GetMapping("/search")
     public ResponseEntity<List<AdminTripDTO>> searchTripsByTitle(@RequestParam String title) {
@@ -63,7 +58,6 @@ public class AdminTripController {
 
     /**
      * GET /api/admin/trips/search-location : Search for trips by location.
-     * @return the ResponseEntity with status 200 (OK) and the list of matching trips in body
      */
     @GetMapping("/search-location")
     public ResponseEntity<List<AdminTripDTO>> searchTripsByLocation(@RequestParam String location) {
@@ -73,10 +67,6 @@ public class AdminTripController {
 
     /**
      * GET /api/admin/trips/date-range : Get trips within a date range.
-     *
-     * @param startDate the start date of the range
-     * @param endDate the end date of the range
-     * @return the ResponseEntity with status 200 (OK) and the list of trips in body
      */
     @GetMapping("/date-range")
     public ResponseEntity<List<AdminTripDTO>> getTripsByDateRange(
@@ -88,9 +78,6 @@ public class AdminTripController {
 
     /**
      * GET /api/admin/trips/certification : Get trips by certification.
-     *
-     * @param certification the certification to search for
-     * @return the ResponseEntity with status 200 (OK) and the list of trips in body
      */
     @GetMapping("/certification")
     public ResponseEntity<List<AdminTripDTO>> getTripsByCertification(
@@ -101,7 +88,6 @@ public class AdminTripController {
 
     /**
      * POST /api/admin/trips: Create a new trip.
-     * @return the ResponseEntity with status 201 (Created) and the new trip in body
      */
     @PostMapping
     public ResponseEntity<AdminTripDTO> createTrip(@Valid @RequestBody AdminTripDTO adminTripDTO) {
@@ -111,8 +97,6 @@ public class AdminTripController {
 
     /**
      * PUT /api/admin/trips/{id}: Update an existing trip.
-     * @return the ResponseEntity with status 200 (OK) and the updated trip in body,
-     *         or with status 404 (Not Found) if the trip is not found
      */
     @PutMapping("/{id}")
     public ResponseEntity<AdminTripDTO> updateTrip(
@@ -123,8 +107,6 @@ public class AdminTripController {
 
     /**
      * DELETE /api/admin/trips/{id} : Delete a trip (soft delete).
-     * @return the ResponseEntity with status 204 (No Content),
-     *         or with status 404 (Not Found) if the trip is not found
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTrip(@PathVariable Long id) {
@@ -134,8 +116,6 @@ public class AdminTripController {
 
     /**
      * DELETE /api/admin/trips/{id}/permanent : Permanently delete a trip.
-     * @return the ResponseEntity with status 204 (No Content),
-     *         or with status 404 (Not Found) if the trip is not found
      */
     @DeleteMapping("/{id}/permanent")
     public ResponseEntity<Void> permanentlyDeleteTrip(@PathVariable Long id) {

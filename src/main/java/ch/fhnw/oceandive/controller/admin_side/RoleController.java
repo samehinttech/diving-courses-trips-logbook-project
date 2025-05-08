@@ -31,7 +31,7 @@ public class RoleController {
     /**
      * GET /api/admin/roles : Get all roles.
      */
-    @GetMapping
+    @GetMapping("retrieve-user-roles")
     public ResponseEntity<List<RoleDTO>> getAllRoles() {
         List<RoleDTO> roles = roleService.findAllRoles();
         return ResponseEntity.ok(roles);
@@ -39,8 +39,6 @@ public class RoleController {
 
     /**
      * GET /api/admin/roles/{id} : Get the role with the specified ID.
-     * @return the ResponseEntity with status 200 (OK) and the role in body,
-     *         or with status 404 (Not Found) if the role is not found
      */
     @GetMapping("/{id}")
     public ResponseEntity<RoleDTO> getRoleById(@PathVariable Long id) {
@@ -50,8 +48,6 @@ public class RoleController {
 
     /**
      * GET /api/admin/roles/name/{roleName} : Get role by name.
-     * @return the ResponseEntity with status 200 (OK) and the role in body,
-     *         or with status 404 (Not Found) if the role is not found
      */
     @GetMapping("/name/{roleName}")
     public ResponseEntity<RoleDTO> getRoleByName(@PathVariable String roleName) {
@@ -66,8 +62,6 @@ public class RoleController {
 
     /**
      * POST /api/admin/roles : Create a new role.
-     * @return the ResponseEntity with status 201 (Created) and the new role in body,
-     *         or with status 400 (Bad Request) if the role name is invalid
      */
     @PostMapping
     public ResponseEntity<?> createRole(@Valid @RequestBody Map<String, String> requestBody) {
@@ -86,8 +80,6 @@ public class RoleController {
 
     /**
      * DELETE /api/admin/roles/{id} : Delete a role.
-     * @return the ResponseEntity with status 204 (No Content),
-     *         or with status 404 (Not Found) if the role is not found
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRole(@PathVariable Long id) {
@@ -97,7 +89,6 @@ public class RoleController {
 
     /**
      * GET /api/admin/roles/check/{roleName} : Check if a role exists.
-     * @return the ResponseEntity with status 200 (OK) and result in body
      */
     @GetMapping("/check/{roleName}")
     public ResponseEntity<Map<String, Boolean>> checkRoleExists(@PathVariable String roleName) {
@@ -112,7 +103,6 @@ public class RoleController {
 
     /**
      * POST /api/admin/roles/initialize : Initialize default roles.
-     * @return the ResponseEntity with status 200 (OK)
      */
     @PostMapping("/initialize")
     public ResponseEntity<Void> initializeDefaultRoles() {

@@ -42,10 +42,6 @@ public class ImageService {
 
     /**
      * Save an image file to the server and return its URL path.
-     *
-     * @param file the image file to save
-     * @return the URL path to access the image
-     * @throws IOException if an error occurs during saving
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String saveImage(MultipartFile file) throws IOException {
@@ -78,9 +74,6 @@ public class ImageService {
     
     /**
      * Delete an image file from the server.
-     *
-     * @param imageUrl the URL of the image to delete
-     * @return true if the image was deleted successfully, false otherwise
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public boolean deleteImage(String imageUrl) {

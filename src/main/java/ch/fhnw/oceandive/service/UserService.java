@@ -9,7 +9,6 @@ import ch.fhnw.oceandive.model.Role.RoleName;
 import ch.fhnw.oceandive.model.UserEntity;
 import ch.fhnw.oceandive.repository.RoleRepository;
 import ch.fhnw.oceandive.repository.UserRepository;
-import ch.fhnw.oceandive.securityConfig.TokenService;
 import java.time.LocalDateTime;
 import java.util.Map;
 import javax.management.relation.RoleNotFoundException;
@@ -318,7 +317,7 @@ public class UserService {
         .toList();
 
     return new UserDTO(
-        user.getId(),
+        user.getId() != null ? user.getId().toString() : null,
         user.getFirstName(),
         user.getLastName(),
         user.getEmail(),
@@ -343,4 +342,48 @@ public class UserService {
         user.getDiveCertification()
     );
   }
+    /**
+     * Create or get a temporary user for guest bookings
+     * If a user with the given email already exists, return that user
+     * Otherwise, create a new temporary user with ROLE_GUEST
+     */
+    @Transactional
+    public UserDTO createOrGetTemporaryUser(String email, String firstName, String lastName, String phoneNumber, DiveCertification diveCertification) {
+        // Check if user with this email already exists
+        if (userRepository.existsByEmail(email)) {
+            UserEntity existingUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
+            return convertToDTO(existingUser);
+        }
+
+        // Create a new temporary user with a GUEST role
+        String randomPassword = generateRandomPassword();
+        String username = email.substring(0, email.indexOf('@')) + "_" + System.currentTimeMillis();
+
+        UserEntity user = new UserEntity();
+        user.setEmail(email);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setUsername(username);
+        user.setPassword(passwordEncoder.encode(randomPassword));
+        user.setTemporary(true);
+        user.setDiveCertification(diveCertification);
+        user.setIssuedOn(LocalDateTime.now());
+        user.setUserType(Role.RoleName.ROLE_GUEST);
+
+        // Add GUEST role
+        Role guestRole = roleRepository.findByRoleName(Role.RoleName.ROLE_GUEST)
+                .orElseThrow(() -> new ResourceNotFoundException("Guest role not found"));
+        user.addRole(guestRole);
+
+        UserEntity savedUser = userRepository.save(user);
+        return convertToDTO(savedUser);
+    }
+
+    /**
+     * Generate a random password for temporary users
+     */
+    private String generateRandomPassword() {
+        return java.util.UUID.randomUUID().toString().substring(0, 8);
+    }
 }

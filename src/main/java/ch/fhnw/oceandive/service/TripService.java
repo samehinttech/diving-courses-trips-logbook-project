@@ -31,8 +31,6 @@ public class TripService {
 
     /**
      * Get all active trips (admin view).
-     *
-     * @return list of all active trips
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<AdminTripDTO> getAllActiveTrips() {
@@ -43,8 +41,6 @@ public class TripService {
 
     /**
      * Get all active trips for public viewing.
-     *
-     * @return list of all active trips with limited information
      */
     public List<ClientTripDTO> getAllActiveTripsForPublic() {
         return tripRepository.findAllByIsActiveTrueAndIsDeletedFalse().stream()
@@ -54,7 +50,6 @@ public class TripService {
 
     /**
      * Get a trip by ID (admin view).
-     * @throws EntityNotFoundException if the trip is not found
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public AdminTripDTO getTripById(Long id) {
@@ -65,7 +60,6 @@ public class TripService {
 
     /**
      * Get a trip by ID for public viewing.
-     * @throws EntityNotFoundException if the trip is not found or not active
      */
     public ClientTripDTO getTripByIdForPublic(Long id) {
         Trip trip = tripRepository.findById(id)
@@ -173,8 +167,6 @@ public class TripService {
 
     /**
      * Update an existing trip.
-     * @return the updated trip
-     * @throws EntityNotFoundException if the trip is not found
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional
@@ -189,7 +181,6 @@ public class TripService {
 
     /**
      * Soft delete a trip.
-     * @throws EntityNotFoundException if the trip is not found
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional
@@ -204,7 +195,6 @@ public class TripService {
 
     /**
      * Permanently delete a trip.
-     * @throws EntityNotFoundException if the trip is not found
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional

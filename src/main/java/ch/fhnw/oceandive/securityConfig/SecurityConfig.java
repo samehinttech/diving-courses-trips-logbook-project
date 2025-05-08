@@ -71,14 +71,17 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    return http
-        .csrf(AbstractHttpConfigurer::disable)
-        .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/","/h2-console/**", "/api/auth/login").permitAll()
-            .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
-            .requestMatchers("/api/user/**").hasAnyAuthority("ROLE_USER_ACCOUNT", "ROLE_ADMIN")
-            .anyRequest().authenticated()
-        )
+      return http
+          .csrf(AbstractHttpConfigurer::disable)
+          .authorizeHttpRequests(auth -> auth
+              .requestMatchers("/","/h2-console/**", "/api/auth/login", "/api/auth/register").permitAll()
+              .requestMatchers("/api/trips/**", "/api/courses/**").permitAll()
+              .requestMatchers("/api/certifications/**").permitAll()
+              .requestMatchers("/api/public/**").permitAll()
+              .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
+              .requestMatchers("/api/user/**").hasAnyAuthority("ROLE_USER_ACCOUNT", "ROLE_ADMIN")
+              .anyRequest().authenticated()
+          )
         .sessionManagement(session -> session
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         )

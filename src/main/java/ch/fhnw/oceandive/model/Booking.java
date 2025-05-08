@@ -17,11 +17,11 @@ public class Booking {
   private UserEntity user;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "trip_id", nullable = false)
+  @JoinColumn(name = "trip_id", nullable = true)
   private Trip trip;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "course_id", nullable = false)
+  @JoinColumn(name = "course_id", nullable = true)
   private Course course;
 
   @Column(name = "number_of_bookings", nullable = false)

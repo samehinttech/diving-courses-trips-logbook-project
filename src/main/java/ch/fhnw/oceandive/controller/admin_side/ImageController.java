@@ -29,7 +29,6 @@ public class ImageController {
 
     /**
      * POST /api/admin/images/upload: Upload a new image for a course.
-     * @return the ResponseEntity with status 200 (OK) and the URL of the uploaded image in body
      */
     @PostMapping("/upload")
     public ResponseEntity<Map<String, String>> uploadImage(@RequestParam("file") MultipartFile file) {
@@ -47,10 +46,8 @@ public class ImageController {
 
     /**
      * DELETE /api/admin/images : Delete an image.
-     * @return the ResponseEntity with status 204 (No Content) if deleted successfully,
-     *         or with status 400 (Bad Request) if the deletion failed
      */
-    @DeleteMapping
+    @DeleteMapping("/delete-image")
     public ResponseEntity<Void> deleteImage(@RequestParam("imageUrl") String imageUrl) {
         boolean deleted = imageService.deleteImage(imageUrl);
         if (deleted) {

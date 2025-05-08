@@ -28,8 +28,6 @@ public class ClientCourseController {
 
     /**
      * GET /api/courses : Get all active courses for public access.
-     *
-     * @return the ResponseEntity with status 200 (OK) and the list of active courses in body
      */
     @GetMapping
     public ResponseEntity<List<ClientCourseDTO>> getAllActiveCourses() {
@@ -39,8 +37,6 @@ public class ClientCourseController {
 
     /**
      * GET /api/courses/{id} : Get the course with the specified ID for public access.
-     * @return the ResponseEntity with status 200 (OK) and the course in the body,
-     *         or with status 404 (Not Found) if the course is not found
      */
     @GetMapping("/{id}")
     public ResponseEntity<ClientCourseDTO> getCourseById(@PathVariable Long id) {
@@ -50,7 +46,6 @@ public class ClientCourseController {
 
     /**
      * GET /api/courses/search: Search for courses by title for public access.
-     * @return the ResponseEntity with status 200 (OK) and the list of matching courses in the body
      */
     @GetMapping("/search")
     public ResponseEntity<List<ClientCourseDTO>> searchCoursesByTitle(@RequestParam String title) {
@@ -60,7 +55,6 @@ public class ClientCourseController {
 
     /**
      * GET /api/courses/date-range: Get courses within a date range for public access.
-     * @return the ResponseEntity with status 200 (OK) and the list of courses in the body
      */
     @GetMapping("/date-range")
     public ResponseEntity<List<ClientCourseDTO>> getCoursesByDateRange(
@@ -72,7 +66,6 @@ public class ClientCourseController {
 
     /**
      * GET /api/courses/certification: Get courses by certification for public access.
-     * @return the ResponseEntity with status 200 (OK) and the list of courses body
      */
     @GetMapping("/certification")
     public ResponseEntity<List<ClientCourseDTO>> getCoursesByCertification(

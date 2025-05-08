@@ -19,29 +19,35 @@ import java.util.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDTO implements Serializable {
 
-  private final String id;
+  private String id;
   @Size(max = 70)
   @NotBlank
-  private final String firstName;
+  private String firstName;
   @Size(max = 70)
   @NotBlank
-  private final String lastName;
+  private String lastName;
   @Size(max = 100)
   @Email
   @NotBlank
-  private final String email;
+  private String email;
   @Size(max = 50)
   @NotBlank
-  private final String username;
+  private String username;
   @Size(min = 8, max = 100)
   @NotBlank
-  private final String password;
-  private final DiveCertification diveCertification;
-  private final LocalDateTime issuedOn;
-  private final LocalDateTime modifiedOn;
-  private final RoleName userType;
-  private final Integer bookingsCount;
-  private final boolean isAdmin; // Controls field visibility
+  private String password;
+  private DiveCertification diveCertification;
+  private LocalDateTime issuedOn;
+  private LocalDateTime modifiedOn;
+  private RoleName userType;
+  private Integer bookingsCount;
+  private boolean isAdmin = false; // Controls field visibility
+
+  /**
+   * Default constructor for JSON deserialization
+   */
+  public UserDTO() {
+  }
 
   /**
    * Admin constructor - includes all fields
@@ -62,7 +68,7 @@ public class UserDTO implements Serializable {
     this.bookingsCount = bookingsCount;
     this.isAdmin = true;
   }
-  
+
   /**
    * Client constructor - includes only client-visible fields
    * Sets restricted fields to null
@@ -88,35 +94,67 @@ public class UserDTO implements Serializable {
     return isAdmin;
   }
 
+  public void setAdmin(boolean admin) {
+    isAdmin = admin;
+  }
+
   @JsonProperty
   public String getId() {
     return isAdmin ? id : null;
+  }
+
+  public void setId(String id) {
+    this.id = id;
   }
 
   public String getFirstName() {
     return firstName;
   }
 
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
+
   public String getLastName() {
     return lastName;
   }
 
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
+
   @JsonProperty
   public String getEmail() {
-    return isAdmin ? email : null;
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
   }
 
   public String getUsername() {
     return username;
   }
 
-  @JsonIgnore
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  @JsonProperty
   public String getPassword() {
-    return isAdmin ? password : null;
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
   }
 
   public DiveCertification getDiveCertification() {
     return diveCertification;
+  }
+
+  public void setDiveCertification(DiveCertification diveCertification) {
+    this.diveCertification = diveCertification;
   }
 
   @JsonProperty
@@ -124,9 +162,17 @@ public class UserDTO implements Serializable {
     return isAdmin ? issuedOn : null;
   }
 
+  public void setIssuedOn(LocalDateTime issuedOn) {
+    this.issuedOn = issuedOn;
+  }
+
   @JsonProperty
   public LocalDateTime getModifiedOn() {
     return isAdmin ? modifiedOn : null;
+  }
+
+  public void setModifiedOn(LocalDateTime modifiedOn) {
+    this.modifiedOn = modifiedOn;
   }
 
   @JsonProperty
@@ -134,9 +180,17 @@ public class UserDTO implements Serializable {
     return isAdmin ? userType : null;
   }
 
+  public void setUserType(RoleName userType) {
+    this.userType = userType;
+  }
+
   @JsonProperty
   public Integer getBookingsCount() {
     return isAdmin ? bookingsCount : null;
+  }
+
+  public void setBookingsCount(Integer bookingsCount) {
+    this.bookingsCount = bookingsCount;
   }
 
   @Override

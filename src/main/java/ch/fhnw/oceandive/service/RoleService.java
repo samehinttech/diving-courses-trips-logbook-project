@@ -28,7 +28,6 @@ public class RoleService {
 
     /**
      * Find Role by name.
-     * @EntityNotFoundException if no role with the given name exists
      */
 
     @Transactional(readOnly = true)
@@ -91,7 +90,6 @@ public class RoleService {
 
     /**
      * Get a role by ID.
-     * @throws EntityNotFoundException if no role with the given ID exists
      */
     @Transactional(readOnly = true)
     public RoleDTO getRoleById(Long id) {
@@ -102,7 +100,6 @@ public class RoleService {
 
     /**
      * Delete a role by ID.
-     * @throws EntityNotFoundException if no role with the given ID exists
      */
     @Transactional
     public void deleteRole(Long id) {

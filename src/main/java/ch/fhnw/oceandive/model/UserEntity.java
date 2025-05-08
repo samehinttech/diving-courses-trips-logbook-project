@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.Hidden;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.data.annotation.CreatedBy;
 
 @Entity
 @Table(
@@ -29,7 +28,8 @@ public class UserEntity {
   @Column(unique = true, nullable = false)
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @Hidden
-  private String id;
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long id;
 
   @NotBlank
   @Size(max = 70)
@@ -79,10 +79,10 @@ public class UserEntity {
   @Transient
   private boolean temporary;
 
-  @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<DiveLog> diveLogs = new ArrayList<>();
 
-  @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<Booking> bookings = new ArrayList<>();
 
   @ManyToMany(cascade = {
@@ -99,7 +99,7 @@ public class UserEntity {
   // Default constructor for JPA
   public UserEntity() {}
 
-  public UserEntity(String id, String firstName, String lastName, String email,DiveCertification diveCertification,
+  public UserEntity(Long id, String firstName, String lastName, String email,DiveCertification diveCertification,
       String username, String password, LocalDateTime issuedOn) {
     this.id = id;
     this.firstName = firstName;
@@ -151,11 +151,11 @@ public class UserEntity {
     return roles;
   }
 
-  public String getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(String id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
@@ -214,48 +214,48 @@ public class UserEntity {
   public void setTemporary(boolean temporary) {
     this.temporary = temporary;
   }
-  
+
   public DiveCertification getDiveCertification() {
     return diveCertification;
   }
-  
+
   public void setDiveCertification(DiveCertification diveCertification) {
     this.diveCertification = diveCertification;
   }
-  
+
   public LocalDateTime getIssuedOn() {
     return issuedOn == null ? LocalDateTime.now() : issuedOn;
   }
-  
+
   public LocalDateTime getModifiedOn() {
     return modifiedOn;
   }
-  
+
   public void setIssuedOn(LocalDateTime issuedOn) {
     this.issuedOn = issuedOn;
 
   }
-  
+
   public void setUserType(Role.RoleName userType) {
     this.userType = userType;
   }
-  
+
   public Integer getBookingsCount() {
     return bookingsCount;
   }
-  
+
   public void setBookingsCount(Integer bookingsCount) {
     this.bookingsCount = bookingsCount;
   }
-  
+
   public List<Booking> getBookings() {
     return bookings;
   }
-  
+
   public void setBookings(List<Booking> bookings) {
     this.bookings = bookings;
   }
-  
+
   public void setRoles(List<Role> roles) {
     this.roles = roles;
     updateUserType(); // Always update userType when roles change

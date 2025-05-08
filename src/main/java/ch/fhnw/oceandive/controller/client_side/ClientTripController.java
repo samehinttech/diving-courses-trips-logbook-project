@@ -28,8 +28,6 @@ public class ClientTripController {
 
     /**
      * GET /api/trips : Get all active trips for public access.
-     *
-     * @return the ResponseEntity with status 200 (OK) and the list of active trips in body
      */
     @GetMapping
     public ResponseEntity<List<ClientTripDTO>> getAllActiveTrips() {
@@ -39,8 +37,6 @@ public class ClientTripController {
 
     /**
      * GET /api/trips/{id} : Get the trip with the specified ID for public access.
-     * @return the ResponseEntity with status 200 (OK) and the trip in body,
-     *         or with status 404 (Not Found) if the trip is not found
      */
     @GetMapping("/{id}")
     public ResponseEntity<ClientTripDTO> getTripById(@PathVariable Long id) {
@@ -50,7 +46,6 @@ public class ClientTripController {
 
     /**
      * GET /api/trips/search: Search for trips by title for public access.
-     * @return the ResponseEntity with status 200 (OK) and the list of matching trips  body
      */
     @GetMapping("/search")
     public ResponseEntity<List<ClientTripDTO>> searchTripsByTitle(@RequestParam String title) {
@@ -60,7 +55,6 @@ public class ClientTripController {
 
     /**
      * GET /api/trips/search-location: Search for trips by location for public access.
-     * @return the ResponseEntity with status 200 (OK) and the list of matching trips in body
      */
     @GetMapping("/search-location")
     public ResponseEntity<List<ClientTripDTO>> searchTripsByLocation(@RequestParam String location) {
@@ -70,7 +64,6 @@ public class ClientTripController {
 
     /**
      * GET /api/trips/date-range: Get trips within a date range for public access.
-     * @return the ResponseEntity with status 200 (OK) and the list of trips in the body
      */
     @GetMapping("/date-range")
     public ResponseEntity<List<ClientTripDTO>> getTripsByDateRange(
@@ -82,7 +75,6 @@ public class ClientTripController {
 
     /**
      * GET /api/trips/certification: Get trips by certification for public access.
-     * @return the ResponseEntity with status 200 (OK) and the list of trips in body
      */
     @GetMapping("/certification")
     public ResponseEntity<List<ClientTripDTO>> getTripsByCertification(

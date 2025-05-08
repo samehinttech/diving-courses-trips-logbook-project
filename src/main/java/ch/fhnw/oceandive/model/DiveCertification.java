@@ -20,8 +20,6 @@ public enum DiveCertification {
 
   /**
    * Converts a string to a DiveCertification enum.
-   * @return the corresponding DiveCertification enum value
-   * @throws IllegalArgumentException if no matching certification is found
    */
   public static DiveCertification fromString(String certification) {
     if (certification == null || certification.trim().isEmpty()) {
@@ -39,7 +37,6 @@ public enum DiveCertification {
 
   /**
    * Converts a string to a DiveCertification enum.
-   * @return the corresponding DiveCertification enum value, or NON_DIVER if not found
    */
   public static DiveCertification fromStringOrDefault(String certification) {
     if (certification == null || certification.trim().isEmpty()) {

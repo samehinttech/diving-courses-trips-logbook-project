@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface UserRepository extends JpaRepository<UserEntity, String> {
 
   // Find all users that have a count
-  @EntityGraph(attributePaths = {"diveLogs", "bookings"})
   @Query("SELECT u FROM UserEntity u")
   List<UserEntity> findAllUsers();
 
@@ -28,7 +27,6 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
   Optional<UserEntity> findById(String id);
 
   // Find methods by (username, email)
-  @EntityGraph(attributePaths = {"diveLogs", "bookings"})
   Optional<UserEntity> findByUsername(String username);
 
   Optional<UserEntity> findByEmail(String email);

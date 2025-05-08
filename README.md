@@ -100,7 +100,7 @@ including the ability to delete dive logs permanently.
 <div style="text-align: center;">
 Use Case Diagram illustrating OceanDive Web Application system interactions.
 
-![Use Case Diagram](assets/readme_assets/use-case-diagram.png)
+![Use Case Diagram](assets/readme_assets/use-case-diagram.png) 
 </div>
 
 ---
