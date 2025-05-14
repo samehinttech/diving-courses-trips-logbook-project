@@ -1,0 +1,48 @@
+   @Service
+   public class DatabaseCleanupService {
+
+       @PersistenceContext
+       private EntityManager entityManager;
+
+       @Transactional
+       public void clearDatabase() {
+           entityManager.createNativeQuery("DROP ALL OBJECTS").executeUpdate();
+       }
+   }
+
+
+   1. **Expose the Cleanup Service via REST API (for testing only)**:
+   ``` java
+      @RestController
+      @RequestMapping("/api/test")
+      public class TestController {
+
+          private final DatabaseCleanupService databaseCleanupService;
+
+          public TestController(DatabaseCleanupService databaseCleanupService) {
+              this.databaseCleanupService = databaseCleanupService;
+          }
+
+          @PostMapping("/clear")
+          public ResponseEntity<Void> clearDatabase() {
+              databaseCleanupService.clearDatabase();
+              return ResponseEntity.ok().build();
+          }
+      }
+   ```
+### **Option 5: Direct Truncate via Startup**
+Modify your application startup logic to clear data before executing tests:
+1. Create a Runner that executes at startup:
+``` java
+   @Component
+   public class DatabaseCleaner implements CommandLineRunner {
+
+       @PersistenceContext
+       private EntityManager entityManager;
+
+       @Override
+       public void run(String... args) throws Exception {
+           entityManager.createNativeQuery("DROP ALL OBJECTS").executeUpdate();
+       }
+   }
+```

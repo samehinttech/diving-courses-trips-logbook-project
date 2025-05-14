@@ -1,0 +1,963 @@
+{
+  "info": {
+    "name": "OceanDive API Collection",
+    "description": "A collection of API tests for the OceanDive application",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "description": "Endpoints for user authentication",
+      "item": [
+        {
+          "name": "Get Authentication Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/token",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "token"]
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Get an authentication token using Basic Auth"
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/refresh?refreshToken={{refreshToken}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "refresh"],
+              "query": [
+                {
+                  "key": "refreshToken",
+                  "value": "{{refreshToken}}"
+                }
+              ]
+            },
+            "description": "Refresh an authentication token"
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "logout"]
+            },
+            "description": "Logout and invalidate the current token"
+          },
+          "response": []
+        },
+        {
+          "name": "Premium User Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/premium/login?username={{username}}&password={{password}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "premium", "login"],
+              "query": [
+                {
+                  "key": "username",
+                  "value": "{{username}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}"
+                }
+              ]
+            },
+            "description": "Login as a premium user"
+          },
+          "response": []
+        },
+        {
+          "name": "Admin Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/admin/login?username={{username}}&password={{password}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "admin", "login"],
+              "query": [
+                {
+                  "key": "username",
+                  "value": "{{username}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}"
+                }
+              ]
+            },
+            "description": "Login as an admin"
+          },
+          "response": []
+        },
+        {
+          "name": "Premium User Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/premium/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "premium", "profile"]
+            },
+            "description": "Get the profile of the currently logged in premium user"
+          },
+          "response": []
+        },
+        {
+          "name": "Admin Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/admin/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "admin", "profile"]
+            },
+            "description": "Get the profile of the currently logged in admin"
+          },
+          "response": []
+        },
+        {
+          "name": "Register Premium User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"mobile\": \"+1234567890\",\n  \"diveCertification\": \"OPEN_WATER\",\n  \"username\": \"johndoe\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/premium/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "premium", "register"]
+            },
+            "description": "Register a new premium user"
+          },
+          "response": []
+        },
+        {
+          "name": "Register Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Admin\",\n  \"lastName\": \"User\",\n  \"email\": \"admin.user@example.com\",\n  \"mobile\": \"+1234567890\",\n  \"username\": \"adminuser\",\n  \"password\": \"password123\",\n  \"roleLimitation\": \"FULL_ACCESS\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/admin/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "admin", "register"]
+            },
+            "description": "Register a new admin (requires ADMIN role)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Content",
+      "description": "Endpoints for static content",
+      "item": [
+        {
+          "name": "Get About Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/about",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "about"]
+            },
+            "description": "Get information about the company"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Contact Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/contact",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "contact"]
+            },
+            "description": "Get contact information"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Privacy Policy",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/privacy-policy",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "privacy-policy"]
+            },
+            "description": "Get privacy policy information"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Terms and Conditions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/terms-conditions",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "terms-conditions"]
+            },
+            "description": "Get terms and conditions information"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Courses",
+      "description": "Endpoints for managing courses",
+      "item": [
+        {
+          "name": "Get All Courses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses"]
+            },
+            "description": "Get all courses"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Course by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "1"]
+            },
+            "description": "Get a specific course by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Upcoming Courses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/upcoming",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "upcoming"]
+            },
+            "description": "Get all upcoming courses (starting from today)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Available Courses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/available",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "available"]
+            },
+            "description": "Get all available courses (not fully booked)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Courses by Location",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/location/Bali",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "location", "Bali"]
+            },
+            "description": "Get courses by location"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Courses by Date Range",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/date-range?startDate=2023-01-01&endDate=2023-12-31",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "date-range"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2023-01-01"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2023-12-31"
+                }
+              ]
+            },
+            "description": "Get courses within a date range"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Trips",
+      "description": "Endpoints for managing trips",
+      "item": [
+        {
+          "name": "Get All Trips",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/trips",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "trips"]
+            },
+            "description": "Get all trips"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Trip by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/trips/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "trips", "1"]
+            },
+            "description": "Get a specific trip by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Upcoming Trips",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/trips/upcoming",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "trips", "upcoming"]
+            },
+            "description": "Get all upcoming trips (starting from today)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Available Trips",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/trips/available",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "trips", "available"]
+            },
+            "description": "Get all available trips (not fully booked)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Trips by Name",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/trips/name/Maldives",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "trips", "name", "Maldives"]
+            },
+            "description": "Get trips by name"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Trips by Date Range",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/trips/date-range?startDate=2023-01-01&endDate=2023-12-31",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "trips", "date-range"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2023-01-01"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2023-12-31"
+                }
+              ]
+            },
+            "description": "Get trips within a date range"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Bookings",
+      "description": "Endpoints for booking courses and trips",
+      "item": [
+        {
+          "name": "Book Course for Premium User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/courses/1/premium",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "courses", "1", "premium"]
+            },
+            "description": "Book a course for a premium user (requires authentication)"
+          },
+          "response": []
+        },
+        {
+          "name": "Book Trip for Premium User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/trips/1/premium",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "trips", "1", "premium"]
+            },
+            "description": "Book a trip for a premium user (requires authentication)"
+          },
+          "response": []
+        },
+        {
+          "name": "Book Course for Guest User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/courses/1/guest?guestUserId=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "courses", "1", "guest"],
+              "query": [
+                {
+                  "key": "guestUserId",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Book a course for a guest user"
+          },
+          "response": []
+        },
+        {
+          "name": "Book Trip for Guest User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/trips/1/guest?guestUserId=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "trips", "1", "guest"],
+              "query": [
+                {
+                  "key": "guestUserId",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Book a trip for a guest user"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Dive Logs",
+      "description": "Endpoints for managing dive logs (requires authentication)",
+      "item": [
+        {
+          "name": "Get All Dive Logs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/dive-logs",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "dive-logs"]
+            },
+            "description": "Get all dive logs for the current user"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Dive Log by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/dive-logs/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "dive-logs", "1"]
+            },
+            "description": "Get a specific dive log by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Dive Logs by Location",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/dive-logs/location/Bali",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "dive-logs", "location", "Bali"]
+            },
+            "description": "Get dive logs by location for the current user"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Dive Logs by Date Range",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/dive-logs/date-range?startTime=2023-01-01T00:00:00&endTime=2023-12-31T23:59:59",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "dive-logs", "date-range"],
+              "query": [
+                {
+                  "key": "startTime",
+                  "value": "2023-01-01T00:00:00"
+                },
+                {
+                  "key": "endTime",
+                  "value": "2023-12-31T23:59:59"
+                }
+              ]
+            },
+            "description": "Get dive logs within a date range for the current user"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Dive Log",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"diveNumber\": 1,\n  \"location\": \"Bali\",\n  \"startTime\": \"2023-01-01T10:00:00\",\n  \"endTime\": \"2023-01-01T11:00:00\",\n  \"waterTemperature\": 25.5,\n  \"airTemperature\": 30.0,\n  \"notes\": \"Great dive!\",\n  \"diveDate\": \"2023-01-01\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/dive-logs",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "dive-logs"]
+            },
+            "description": "Create a new dive log"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Dive Log",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"diveNumber\": 1,\n  \"location\": \"Bali\",\n  \"startTime\": \"2023-01-01T10:00:00\",\n  \"endTime\": \"2023-01-01T11:30:00\",\n  \"waterTemperature\": 26.0,\n  \"airTemperature\": 31.0,\n  \"notes\": \"Updated notes: Amazing dive!\",\n  \"diveDate\": \"2023-01-01\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/dive-logs/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "dive-logs", "1"]
+            },
+            "description": "Update an existing dive log"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Dive Log",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/dive-logs/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "dive-logs", "1"]
+            },
+            "description": "Delete a dive log"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "description": "Endpoints for admin operations (requires ADMIN role)",
+      "item": [
+        {
+          "name": "Add Course",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"location\": \"Bali\",\n  \"description\": \"Open Water Diver course in Bali\",\n  \"startDate\": \"2023-06-01\",\n  \"endDate\": \"2023-06-05\",\n  \"imageUrl\": \"https://example.com/images/bali.jpg\",\n  \"capacity\": 10,\n  \"currentBookings\": 0,\n  \"minCertificationRequired\": \"NON_DIVER\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/add-course",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "add-course"]
+            },
+            "description": "Create a new course (requires ADMIN role)"
+          },
+          "response": []
+        },
+        {
+          "name": "Add Trip",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Maldives Adventure\",\n  \"description\": \"Diving trip to the Maldives\",\n  \"startDate\": \"2023-07-01\",\n  \"endDate\": \"2023-07-10\",\n  \"imageUrl\": \"https://example.com/images/maldives.jpg\",\n  \"capacity\": 8,\n  \"currentBookings\": 0,\n  \"minCertificationRequired\": \"OPEN_WATER\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/add-trip",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "add-trip"]
+            },
+            "description": "Create a new trip (requires ADMIN role)"
+          },
+          "response": []
+        },
+        {
+          "name": "View Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/view-users",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "view-users"]
+            },
+            "description": "Get all users (premium and guest) (requires ADMIN role)"
+          },
+          "response": []
+        },
+        {
+          "name": "View Bookings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/view-bookings",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "view-bookings"]
+            },
+            "description": "Get all courses and trips with their booking status (requires ADMIN role)"
+          },
+          "response": []
+        },
+        {
+          "name": "Add Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"newadmin\",\n  \"password\": \"password123\",\n  \"email\": \"admin@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/add-admin",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "add-admin"]
+            },
+            "description": "Create a new admin (requires ADMIN role)"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.test(\"Status code is 200 OK or 201 Created\", function () {",
+          "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+          "});",
+          "",
+          "pm.test(\"Response time is less than 1000ms\", function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(1000);",
+          "});",
+          "",
+          "if (pm.response.code === 200 || pm.response.code === 201) {",
+          "    if (pm.response.headers.get(\"Content-Type\") && pm.response.headers.get(\"Content-Type\").includes(\"application/json\")) {",
+          "        pm.test(\"Response is valid JSON\", function () {",
+          "            pm.response.to.be.json;",
+          "        });",
+          "    }",
+          "}",
+          "",
+          "// Store auth token if it's returned",
+          "if (pm.request.url.toString().includes(\"/api/auth/token\") && pm.response.code === 201) {",
+          "    pm.environment.set(\"authToken\", pm.response.text());",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/oceandive",
+      "type": "string"
+    },
+    {
+      "key": "username",
+      "value": "admin",
+      "type": "string"
+    },
+    {
+      "key": "password",
+      "value": "password",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refreshToken",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

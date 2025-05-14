@@ -1,0 +1,168 @@
+## To install Maven Wrapper Jar
+   mvn -N io.takari:maven:wrapper
+
+
+
+### To run the project
+   mvn clean install
+   mvn spring-boot:run
+
+
+### To run the project with profile
+    mvn clean install -Pdev
+    mvn spring-boot:run -Pdev
+
+### To run the project with profile and skip tests
+    mvn clean install -Pdev -DskipTests
+    mvn spring-boot:run -Pdev -DskipTests
+
+
+### To run the project with profile and skip tests and skip checkstyle
+    mvn clean install -Pdev -DskipTests -Dcheckstyle.skip
+    mvn spring-boot:run -Pdev -DskipTests -Dcheckstyle.skip
+
+### To run the project with profile and skip tests and skip checkstyle and skip javadoc
+    mvn clean install -Pdev -DskipTests -Dcheckstyle.skip -Dmaven.javadoc.skip
+    mvn spring-boot:run -Pdev -DskipTests -Dcheckstyle.skip -Dmaven.javadoc.skip
+
+### To run the project with profile and skip tests and skip checkstyle and skip javadoc and skip findbugs
+    mvn clean install -Pdev -DskipTests -Dcheckstyle.skip -Dmaven.javadoc.skip -Dfindbugs.skip
+    mvn spring-boot:run -Pdev -DskipTests -Dcheckstyle.skip -Dmaven.javadoc.skip -Dfindbugs.skip
+
+
+ ###Cors
+ # Allow CORS for development
+ spring.web.cors.allowed-origins=*
+ spring.web.cors.allowed-methods=GET,POST,PUT,DELETE,OPTIONS
+ spring.web.cors.allowed-headers=*
+ spring.web.cors.allow-credentials=true
+
+### dockerfileFROM amazoncorretto:17-alpine
+
+WORKDIR /app
+
+COPY target/oceandive-0.0.1-SNAPSHOT.jar app.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
+
+
+
+###DOUMENTATION
+# OceanDive - Diving Center Management System
+
+OceanDive is a comprehensive management system for diving centers, allowing them to manage
+ activities, bookings, dive logs, and userEntity certifications.
+
+## Features
+
+- **User Management**: Registration, authentication, and authorization with JWT
+- **Activity Management**: CRUD operations for diving activities and courses
+- **Booking System**: Allow users to book diving activities
+- **Dive Logs**: Record and manage dive logs for divers
+- **Certification Tracking**: Track diver certification levels
+
+## Technologies
+
+- **Backend**: Spring Boot, Spring Security, Spring Data JPA
+- **Database**: PostgreSQL
+- **Authentication**: JWT with refresh tokens
+- **Deployment**: Docker, Docker Compose
+
+## Getting Started
+
+### Prerequisites
+
+- Java 17 or higher
+- Maven
+- Docker and Docker Compose (for containerized deployment)
+- PostgreSQL (if running locally)
+
+### Running Locally
+
+1. Clone the repository:
+git clone https://github.com/yourusername/oceandive.git
+cd oceandive
+
+2. Build the application:
+mvn clean package
+
+3. Run the application:
+java -jar target/oceandive-0.0.1-SNAPSHOT.jar
+
+### Running with Docker
+
+1. Build and run the containers:
+docker-compose up -d
+
+2. Stop the containers:
+docker-compose down
+
+## API Documentation
+
+### Authentication Endpoints
+
+- `POST /api/auth/register` - Register a new userEntity
+- `POST /api/auth/login` - Authenticate and get tokens
+- `POST /api/auth/refresh` - Refresh access token
+- `POST /api/auth/logout` - Logout and invalidate refresh token
+
+### Activity Endpoints
+
+- `GET /api/activities` - Get all activities
+- `GET /api/activities/{id}` - Get activity by ID
+- `GET /api/activities/type/{type}` - Get activities by type
+- `GET /api/activities/certification/{certification}` - Get activities by required certification
+- `POST /api/activities` - Create a new activity (ADMIN)
+- `PUT /api/activities/{id}` - Update an activity (ADMIN)
+- `DELETE /api/activities/{id}` - Delete an activity (ADMIN)
+
+### Booking Endpoints
+
+- `GET /api/bookings` - Get all bookings (ADMIN)
+- `GET /api/bookings/my-bookings` - Get userEntity's bookings
+- `GET /api/bookings/{id}` - Get booking by ID
+- `POST /api/bookings/activity/{activityId}` - Create a new booking
+- `PUT /api/bookings/{id}/status` - Update booking status
+- `DELETE /api/bookings/{id}` - Delete a booking (ADMIN)
+
+### Dive Log Endpoints
+
+- `GET /api/dive-logs` - Get all dive logs (ADMIN)
+- `GET /api/dive-logs/my-logs` - Get userEntity's dive logs
+- `GET /api/dive-logs/{id}` - Get dive log by ID
+- `POST /api/dive-logs` - Create a new dive log
+- `PUT /api/dive-logs/{id}` - Update a dive log
+- `DELETE /api/dive-logs/{id}` - Delete a dive log
+
+### User Endpoints
+
+- `GET /api/users/profile` - Get userEntity profile
+- `PUT /api/users/profile` - Update userEntity profile
+- `PUT /api/users/certification-request` - Request certification update
+- `PUT /api/users/change-password` - Change password
+
+### Admin Endpoints
+
+- `GET /api/admin/users` - Get all users (ADMIN)
+- `GET /api/admin/users/{username}` - Get userEntity by username (ADMIN)
+- `POST /api/admin/users` - Create a new userEntity (ADMIN)
+- `PUT /api/admin/users/{username}` - Update a userEntity (ADMIN)
+- `DELETE /api/admin/users/{username}` - Delete a userEntity (ADMIN)
+- `PUT /api/admin/users/{username}/roles` - Update userEntity roles (ADMIN)
+- `PUT /api/admin/users/{username}/certification` - Update userEntity certification (ADMIN)
+
+## Security
+
+The application uses JWT authentication with refresh tokens.
+ Access tokens have a 1-hour expiration, while refresh tokens are valid for 24 hours.
+ All sensitive endpoints are secured with appropriate role-based authorization.
+
+ Authentication & Authorization: JWT-based authentication with refresh tokens
+ User Management: User registration, profile management, and role-based authorization
+ Activity Management: CRUD operations for diving activities
+ Booking System: Booking functionality for users to book activities
+ Dive Logs: System for users to record their dive logs
+ Exception Handling: Global exception handling for better error responses
+ Docker Support: Ready for containerized deployment
