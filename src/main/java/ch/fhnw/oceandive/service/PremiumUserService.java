@@ -5,6 +5,7 @@ import ch.fhnw.oceandive.exceptionHandler.DuplicateResourceException;
 import ch.fhnw.oceandive.exceptionHandler.ResourceNotFoundException;
 import ch.fhnw.oceandive.model.PremiumUser;
 import ch.fhnw.oceandive.repository.PremiumUserRepo;
+import ch.fhnw.oceandive.util.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -90,6 +91,9 @@ public class PremiumUserService {
 
     @Transactional
     public PremiumUserDTO createPremiumUser(PremiumUserDTO premiumUserDTO) {
+        // Validate user data before processing
+        validatePremiumUserFields(premiumUserDTO);
+
         if (premiumUserRepo.findByUsername(premiumUserDTO.getUsername()) != null) {
             throw new DuplicateResourceException("Username already exists: " + premiumUserDTO.getUsername());
         }
@@ -107,6 +111,11 @@ public class PremiumUserService {
 
     @Transactional
     public PremiumUserDTO updatePremiumUser(Long id, PremiumUserDTO premiumUserDTO) {
+        // Validate email if it's being updated
+        if (premiumUserDTO.getEmail() != null) {
+            EmailValidator.validateEmail(premiumUserDTO.getEmail());
+        }
+
         PremiumUser existingUser = premiumUserRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 
@@ -193,5 +202,32 @@ public class PremiumUserService {
         }
 
         return premiumUser;
+    }
+
+    // Validate required premium user fields
+    private void validatePremiumUserFields(PremiumUserDTO premiumUserDTO) {
+        // Check required fields
+        if (premiumUserDTO.getEmail() == null || premiumUserDTO.getEmail().trim().isEmpty()) {
+            throw new IllegalArgumentException("Email cannot be empty");
+        }
+
+        // Use EmailValidator utility to validate email format
+        EmailValidator.validateEmail(premiumUserDTO.getEmail());
+
+        if (premiumUserDTO.getUsername() == null || premiumUserDTO.getUsername().trim().isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be empty");
+        }
+
+        if (premiumUserDTO.getPassword() == null || premiumUserDTO.getPassword().isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be empty");
+        }
+
+        if (premiumUserDTO.getFirstName() == null || premiumUserDTO.getFirstName().trim().isEmpty()) {
+            throw new IllegalArgumentException("First name cannot be empty");
+        }
+
+        if (premiumUserDTO.getLastName() == null || premiumUserDTO.getLastName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Last name cannot be empty");
+        }
     }
 }

@@ -5,11 +5,13 @@ import ch.fhnw.oceandive.exceptionHandler.DuplicateResourceException;
 import ch.fhnw.oceandive.exceptionHandler.ResourceNotFoundException;
 import ch.fhnw.oceandive.model.GuestUser;
 import ch.fhnw.oceandive.repository.GuestUserRepo;
+import ch.fhnw.oceandive.util.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -25,73 +27,58 @@ public class GuestUserService {
         this.guestUserRepo = guestUserRepo;
     }
 
-    /**
-     * Get all guest users.
-     *
-     * @return List of GuestUserDTO objects
-     */
+    // Get all guest users.
+    
     public List<GuestUserDTO> getAllGuestUsers() {
         return guestUserRepo.findAll().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Get a guest user by ID.
-     * @throws ResourceNotFoundException if the guest user is not found
-     */
+   // Get a guest user by ID.
     public GuestUserDTO getGuestUserById(Long id) {
-        GuestUser guestUser = guestUserRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Guest user not found with id: " + id));
-        return convertToDTO(guestUser);
+        // Using consistent pattern for null handling
+        return convertToDTO(guestUserRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Guest user not found with id: " + id)));
     }
 
-    /**
-     * Get a guest user entity by ID.
-     * @return The GuestUser entity
-     * @throws ResourceNotFoundException if the guest user is not found
-     */
+ // Get a guest user entity by ID.
     public GuestUser getGuestUserEntityById(Long id) {
         return guestUserRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Guest user not found with id: " + id));
     }
 
-    /**
-     * Get a guest user by email.
-     * @return The GuestUserDTO object
-     * @throws ResourceNotFoundException if the guest user is not found
-     */
+    // Get a guest user by email.
     public GuestUserDTO getGuestUserByEmail(String email) {
-        GuestUser guestUser = guestUserRepo.findByEmail(email);
-        if (guestUser == null) {
-            throw new ResourceNotFoundException("Guest user not found with email: " + email);
-        }
-        return convertToDTO(guestUser);
+        // Using Optional for consistent null handling
+        return Optional.ofNullable(guestUserRepo.findByEmail(email))
+                .map(this::convertToDTO)
+                .orElseThrow(() -> new ResourceNotFoundException("Guest user not found with email: " + email));
     }
 
-    /**
-     * Get a guest user by mobile number.
-     * @return The GuestUserDTO object
-     * @throws ResourceNotFoundException if the guest user is not found
-     */
+   // Get a guest user by mobile number.
     public GuestUserDTO getGuestUserByMobile(String mobile) {
-        GuestUser guestUser = guestUserRepo.findByMobile(mobile);
-        if (guestUser == null) {
-            throw new ResourceNotFoundException("Guest user not found with mobile: " + mobile);
-        }
-        return convertToDTO(guestUser);
+        // Using Optional for consistent null handling
+        return Optional.ofNullable(guestUserRepo.findByMobile(mobile))
+                .map(this::convertToDTO)
+                .orElseThrow(() -> new ResourceNotFoundException("Guest user not found with mobile: " + mobile));
     }
 
-    /**
-     * Create a new guest user.
-     * @return The created GuestUserDTO object
-     * @throws DuplicateResourceException if a user with the same email already exists
-     */
+    // Create a new guest user.
     @Transactional
     public GuestUserDTO createGuestUser(GuestUserDTO guestUserDTO) {
+        // Validate user data before processing
+        validateGuestUserFields(guestUserDTO);
+        
         // Check if email already exists
         if (guestUserRepo.findByEmail(guestUserDTO.getEmail()) != null) {
             throw new DuplicateResourceException("Email already exists: " + guestUserDTO.getEmail());
+        }
+        
+        // Check if mobile already exists
+        if (guestUserDTO.getMobile() != null && !guestUserDTO.getMobile().isEmpty() && 
+            guestUserRepo.findByMobile(guestUserDTO.getMobile()) != null) {
+            throw new DuplicateResourceException("Mobile number already exists: " + guestUserDTO.getMobile());
         }
 
         GuestUser guestUser = convertToEntity(guestUserDTO);
@@ -99,14 +86,12 @@ public class GuestUserService {
         return convertToDTO(savedGuestUser);
     }
 
-    /**
-     * Update an existing guest user.
-     * @return The updated GuestUserDTO object
-     * @throws ResourceNotFoundException if the guest user is not found
-     * @throws DuplicateResourceException if the updated email already exists for another user
-     */
+    // Update an existing guest user.
     @Transactional
     public GuestUserDTO updateGuestUser(Long id, GuestUserDTO guestUserDTO) {
+        // Validate user data before processing
+        validateGuestUserFields(guestUserDTO);
+        
         GuestUser existingUser = guestUserRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Guest user not found with id: " + id));
 
@@ -115,25 +100,22 @@ public class GuestUserService {
                 guestUserRepo.findByEmailAndIdNot(guestUserDTO.getEmail(), id).size() > 0) {
             throw new DuplicateResourceException("Email already exists: " + guestUserDTO.getEmail());
         }
+        
+        // Check if mobile already exists for another user
+        if (guestUserDTO.getMobile() != null && !guestUserDTO.getMobile().isEmpty() && 
+            !existingUser.getMobile().equals(guestUserDTO.getMobile()) &&
+            guestUserRepo.findByMobileAndIdNot(guestUserDTO.getMobile(), id).size() > 0) {
+            throw new DuplicateResourceException("Mobile number already exists: " + guestUserDTO.getMobile());
+        }
 
         // Update user fields
-        existingUser.setFirstName(guestUserDTO.getFirstName());
-        existingUser.setLastName(guestUserDTO.getLastName());
-        existingUser.setEmail(guestUserDTO.getEmail());
-        existingUser.setMobile(guestUserDTO.getMobile());
-        existingUser.setDiveCertification(guestUserDTO.getDiveCertification());
-        existingUser.setRole(guestUserDTO.getRole());
+        updateUserFields(existingUser, guestUserDTO);
 
         GuestUser updatedUser = guestUserRepo.save(existingUser);
         return convertToDTO(updatedUser);
     }
 
-    /**
-     * Delete a guest user by ID.
-     *
-     * @param id The ID of the guest user to delete
-     * @throws ResourceNotFoundException if the guest user is not found
-     */
+   // Delete a guest user by ID.
     @Transactional
     public void deleteGuestUser(Long id) {
         if (!guestUserRepo.existsById(id)) {
@@ -142,12 +124,7 @@ public class GuestUserService {
         guestUserRepo.deleteById(id);
     }
 
-    /**
-     * Convert a GuestUser entity to a GuestUserDTO.
-     *
-     * @param guestUser The GuestUser entity
-     * @return The GuestUserDTO object
-     */
+    // Convert a GuestUser entity to a GuestUserDTO.
     private GuestUserDTO convertToDTO(GuestUser guestUser) {
         return new GuestUserDTO(
                 guestUser.getId(),
@@ -160,10 +137,7 @@ public class GuestUserService {
         );
     }
 
-    /**
-     * Convert a GuestUserDTO to a GuestUser entity.
-     * @return The GuestUser entity
-     */
+    // Convert a GuestUserDTO to a GuestUser entity.
     private GuestUser convertToEntity(GuestUserDTO guestUserDTO) {
         GuestUser guestUser = new GuestUser(
                 guestUserDTO.getFirstName(),
@@ -180,5 +154,34 @@ public class GuestUserService {
         }
 
         return guestUser;
+    }
+    
+    // Helper method to update user fields
+    private void updateUserFields(GuestUser existingUser, GuestUserDTO guestUserDTO) {
+        existingUser.setFirstName(guestUserDTO.getFirstName());
+        existingUser.setLastName(guestUserDTO.getLastName());
+        existingUser.setEmail(guestUserDTO.getEmail());
+        existingUser.setMobile(guestUserDTO.getMobile());
+        existingUser.setDiveCertification(guestUserDTO.getDiveCertification());
+        existingUser.setRole(guestUserDTO.getRole());
+    }
+    
+    // Validate required user fields
+    private void validateGuestUserFields(GuestUserDTO guestUserDTO) {
+        // Check required fields
+        if (guestUserDTO.getEmail() == null || guestUserDTO.getEmail().trim().isEmpty()) {
+            throw new IllegalArgumentException("Email cannot be empty");
+        }
+        
+        // Use EmailValidator utility to validate email format
+        EmailValidator.validateEmail(guestUserDTO.getEmail());
+        
+        if (guestUserDTO.getFirstName() == null || guestUserDTO.getFirstName().trim().isEmpty()) {
+            throw new IllegalArgumentException("First name cannot be empty");
+        }
+        
+        if (guestUserDTO.getLastName() == null || guestUserDTO.getLastName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Last name cannot be empty");
+        }
     }
 }

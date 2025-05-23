@@ -8,22 +8,16 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GuestUserRepo extends JpaRepository<GuestUser, Long> {
 
-  /**
-   * Find a GuestUser by their mobile number.
-   */
+  // Find a GuestUser by their mobile number.
   GuestUser findByMobile(String mobile);
-  /**
-   * Find a GuestUser by their email address.
-   */
+  // Find a GuestUser by their mobile number and exclude ID.
+  List<GuestUser> findByMobileAndIdNot(String mobile, Long id);
+ // Find a GuestUser by their email address.
   GuestUser findByEmail(String email);
 
-  /**
-   * Find a GuestUser by their username.
-   */
+ // Find a GuestUser by their ID.
   List<GuestUser> findByIdNot(Long id);
-  /**
-   * Find a GuestUser by their email address and exclude the one with the given ID.
-   */
+ // Find a GuestUser by their email address and exclude ID.
   List<GuestUser> findByEmailAndIdNot(String email, Long id);
 
 
