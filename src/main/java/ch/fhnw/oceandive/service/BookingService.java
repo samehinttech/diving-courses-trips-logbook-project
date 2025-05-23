@@ -14,9 +14,14 @@ import java.security.SecureRandom;
 
 @Service
 public class BookingService {
-
+    /**
+     * Logger for logging information and errors while booking courses and trips
+     * This logger is used to log booking references and any exceptions that occur
+     * during the booking process
+     * It helps in debugging and tracking the flow of booking operations
+     */
     private static final Logger logger = LoggerFactory.getLogger(BookingService.class);
-    private final SecureRandom random = new SecureRandom();
+    private final SecureRandom random = new SecureRandom(); // I used SecureRandom for better randomness 
     private final CourseRepo courseRepo;
     private final TripRepo tripRepo;
 
@@ -26,18 +31,21 @@ public class BookingService {
         this.tripRepo = tripRepo;
     }
 
-   public String generateBookingReference(String name, String personName) {
-    // some logic for null checks
-    name = name == null ? "COURSE" : name;
-    personName = personName == null ? "USER" : personName;
-    int randomInt = 100 + random.nextInt(900);
-    return name.replaceAll("\\s+", "").toUpperCase() + "_" + 
-           personName.replaceAll("\\s+", "").toUpperCase() + "_" + randomInt;
-   }
+    public String generateBookingReference(String name, String personName) {
+        // some logic for null checks
+        name = name == null ? "COURSE" : name;
+        personName = personName == null ? "USER" : personName;
+        int randomInt = 100 + random.nextInt(900);
+        return name.replaceAll("\\s+", "").toUpperCase() + "_" +
+                personName.replaceAll("\\s+", "").toUpperCase() + "_" + randomInt;
+    }
 
     /**
      * Book a course for a user with dive certification.
-     * @throws BusinessRuleViolationException if the course is fully booked or the user doesn't have the required certification
+     * 
+     * @throws BusinessRuleViolationException if the course is fully booked or the
+     *                                        user doesn't have the required
+     *                                        certification
      */
     @Transactional
     public String bookCourse(Course course, DiveCertificationHolder user) {
@@ -47,7 +55,8 @@ public class BookingService {
 
         // Validate user certification level
         if (user.getDiveCertification().ordinal() < course.getMinCertificationRequired().ordinal()) {
-            throw new BusinessRuleViolationException("User does not have the required certification level for this course.");
+            throw new BusinessRuleViolationException(
+                    "User does not have the required certification level for this course.");
         }
 
         String bookingReference = generateBookingReference(course.getLocation(), user.getFirstName());
@@ -59,7 +68,10 @@ public class BookingService {
 
     /**
      * Book a trip for a user with dive certification.
-     * @throws BusinessRuleViolationException if the trip is fully booked or the user doesn't have the required certification
+     * 
+     * @throws BusinessRuleViolationException if the trip is fully booked or the
+     *                                        user doesn't have the required
+     *                                        certification
      */
     @Transactional
     public String bookTrip(Trip trip, DiveCertificationHolder user) {
@@ -69,7 +81,8 @@ public class BookingService {
 
         // Validate user certification level
         if (user.getDiveCertification().ordinal() < trip.getMinCertificationRequired().ordinal()) {
-            throw new BusinessRuleViolationException("User does not have the required certification level for this trip.");
+            throw new BusinessRuleViolationException(
+                    "User does not have the required certification level for this trip.");
         }
 
         String bookingReference = generateBookingReference(trip.getName(), user.getFirstName());
@@ -80,6 +93,8 @@ public class BookingService {
     }
 
     // Maintain backward compatibility with existing code
+    // These methods are just wrappers around the main booking methods to handle
+    // different user types
     @Transactional
     public String bookCourse(Course course, PremiumUser user) {
         return bookCourse(course, (DiveCertificationHolder) user);

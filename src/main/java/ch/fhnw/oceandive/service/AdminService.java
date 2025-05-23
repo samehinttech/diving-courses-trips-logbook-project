@@ -6,6 +6,7 @@ import ch.fhnw.oceandive.exceptionHandler.ResourceNotFoundException;
 import ch.fhnw.oceandive.model.Admin;
 import ch.fhnw.oceandive.repository.AdminRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,11 +19,13 @@ import java.util.stream.Collectors;
 @Service
 public class AdminService {
 
+    private final PasswordEncoder passwordEncoder;
     private final AdminRepo adminRepo;
 
     @Autowired
-    public AdminService(AdminRepo adminRepo) {
+    public AdminService(AdminRepo adminRepo, PasswordEncoder passwordEncoder) {
         this.adminRepo = adminRepo;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -38,6 +41,7 @@ public class AdminService {
 
     /**
      * Get an admin by ID.
+     * 
      * @throws ResourceNotFoundException if the admin is not found
      */
     public AdminDTO getAdminById(Long id) {
@@ -48,6 +52,7 @@ public class AdminService {
 
     /**
      * Get an admin by username.
+     * 
      * @throws ResourceNotFoundException if the admin is not found
      */
     public AdminDTO getAdminByUsername(String username) {
@@ -60,6 +65,7 @@ public class AdminService {
 
     /**
      * Get an admin by email.
+     * 
      * @throws ResourceNotFoundException if the admin is not found
      */
     public AdminDTO getAdminByEmail(String email) {
@@ -69,8 +75,10 @@ public class AdminService {
         }
         return convertToDTO(admin);
     }
+
     /**
      * Create a new admin.
+     * 
      * @throws DuplicateResourceException if the username or email already exists
      */
 
@@ -87,48 +95,78 @@ public class AdminService {
         }
 
         Admin admin = convertToEntity(adminDTO);
+        // Hash the password before saving
+        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
         Admin savedAdmin = adminRepo.save(admin);
         return convertToDTO(savedAdmin);
     }
 
     /**
      * Update an existing admin.
-     * @throws ResourceNotFoundException if the admin is not found
-     * @throws DuplicateResourceException if the updated username or email already exists for another admin
+     * 
+     * @throws ResourceNotFoundException  if the admin is not found
+     * @throws DuplicateResourceException if the updated username or email already
+     *                                    exists for another admin
      */
     @Transactional
     public AdminDTO updateAdmin(Long id, AdminDTO adminDTO) {
+        // Find the existing admin or throw exception
         Admin existingAdmin = adminRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Admin not found with id: " + id));
 
         // Check if username already exists for another admin
-        Admin adminWithSameUsername = adminRepo.findByUsername(adminDTO.getUsername());
-        if (adminWithSameUsername != null && !adminWithSameUsername.getId().equals(id)) {
-            throw new DuplicateResourceException("Username already exists: " + adminDTO.getUsername());
+        if (adminDTO.getUsername() != null) {
+            Admin adminWithSameUsername = adminRepo.findByUsername(adminDTO.getUsername());
+            if (adminWithSameUsername != null && !adminWithSameUsername.getId().equals(id)) {
+                throw new DuplicateResourceException("Username already exists: " + adminDTO.getUsername());
+            }
         }
 
         // Check if email already exists for another admin
-        Admin adminWithSameEmail = adminRepo.findByEmail(adminDTO.getEmail());
-        if (adminWithSameEmail != null && !adminWithSameEmail.getId().equals(id)) {
-            throw new DuplicateResourceException("Email already exists: " + adminDTO.getEmail());
+        if (adminDTO.getEmail() != null) {
+            Admin adminWithSameEmail = adminRepo.findByEmail(adminDTO.getEmail());
+            if (adminWithSameEmail != null && !adminWithSameEmail.getId().equals(id)) {
+                throw new DuplicateResourceException("Email already exists: " + adminDTO.getEmail());
+            }
         }
 
-        // Update admin fields
-        existingAdmin.setFirstName(adminDTO.getFirstName());
-        existingAdmin.setLastName(adminDTO.getLastName());
-        existingAdmin.setEmail(adminDTO.getEmail());
-        existingAdmin.setMobile(adminDTO.getMobile());
-        existingAdmin.setUsername(adminDTO.getUsername());
-        existingAdmin.setPassword(adminDTO.getPassword()); // Note: In a real app, you'd hash the password
-        existingAdmin.setRole(adminDTO.getRole());
-        existingAdmin.setRoleLimitation(adminDTO.getRoleLimitation());
+        // Update admin fields - only update non-null fields
+        if (adminDTO.getFirstName() != null) {
+            existingAdmin.setFirstName(adminDTO.getFirstName());
+        }
+        if (adminDTO.getLastName() != null) {
+            existingAdmin.setLastName(adminDTO.getLastName());
+        }
+        if (adminDTO.getEmail() != null) {
+            existingAdmin.setEmail(adminDTO.getEmail());
+        }
+        if (adminDTO.getMobile() != null) {
+            existingAdmin.setMobile(adminDTO.getMobile());
+        }
+        if (adminDTO.getUsername() != null) {
+            existingAdmin.setUsername(adminDTO.getUsername());
+        }
 
+        // Only update password if it's provided and not empty
+        if (adminDTO.getPassword() != null && !adminDTO.getPassword().isEmpty()) {
+            existingAdmin.setPassword(passwordEncoder.encode(adminDTO.getPassword()));
+        }
+
+        if (adminDTO.getRole() != null) {
+            existingAdmin.setRole(adminDTO.getRole());
+        }
+        if (adminDTO.getRoleLimitation() != null) {
+            existingAdmin.setRoleLimitation(adminDTO.getRoleLimitation());
+        }
+
+        // Save and return the updated admin
         Admin updatedAdmin = adminRepo.save(existingAdmin);
         return convertToDTO(updatedAdmin);
     }
 
     /**
      * Delete an admin by ID.
+     * 
      * @throws ResourceNotFoundException if the admin is not found
      */
     @Transactional
@@ -141,6 +179,7 @@ public class AdminService {
 
     /**
      * Convert an Admin entity to an AdminDTO.
+     * 
      * @return The AdminDTO object
      */
     private AdminDTO convertToDTO(Admin admin) {
@@ -151,16 +190,16 @@ public class AdminService {
                 admin.getEmail(),
                 admin.getMobile(),
                 admin.getUsername(),
-                admin.getPassword(),
+                null, // Password is not returned that it is not exposed in the DTO
                 admin.getRole(),
                 admin.getRoleLimitation(),
                 admin.getCreatedAt(),
-                admin.getUpdatedAt()
-        );
+                admin.getUpdatedAt());
     }
 
     /**
      * Convert an AdminDTO to an Admin entity.
+     * 
      * @return The Admin entity
      */
     private Admin convertToEntity(AdminDTO adminDTO) {
@@ -171,15 +210,14 @@ public class AdminService {
                 adminDTO.getMobile(),
                 adminDTO.getPassword(),
                 adminDTO.getRole(),
-                adminDTO.getRoleLimitation()
-        );
+                adminDTO.getRoleLimitation());
         // Set username separately as it's not in the constructor
         admin.setUsername(adminDTO.getUsername());
         // ID should only be set for existing entities
         if (adminDTO.getId() != null) {
             admin.setId(adminDTO.getId());
         }
-        
+
         return admin;
     }
 }

@@ -3,29 +3,29 @@ package ch.fhnw.oceandive.service;
 import ch.fhnw.oceandive.dto.PremiumUserDTO;
 import ch.fhnw.oceandive.exceptionHandler.DuplicateResourceException;
 import ch.fhnw.oceandive.exceptionHandler.ResourceNotFoundException;
-import ch.fhnw.oceandive.model.DiveCertification;
 import ch.fhnw.oceandive.model.PremiumUser;
 import ch.fhnw.oceandive.repository.PremiumUserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Service class for managing PremiumUser entities.
- */
 @Service
 public class PremiumUserService {
 
     private final PremiumUserRepo premiumUserRepo;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public PremiumUserService(PremiumUserRepo premiumUserRepo) {
+    public PremiumUserService(PremiumUserRepo premiumUserRepo, PasswordEncoder passwordEncoder) {
         this.premiumUserRepo = premiumUserRepo;
+        this.passwordEncoder = passwordEncoder;
     }
 
+    // CRUD operations for PremiumUser
     /**
      * Get all premium users.
      *
@@ -39,117 +39,121 @@ public class PremiumUserService {
 
     /**
      * Get a premium user by ID.
-     * @return The PremiumUserDTO object
+     *
      * @throws ResourceNotFoundException if the premium user is not found
      */
     public PremiumUserDTO getPremiumUserById(Long id) {
         PremiumUser premiumUser = premiumUserRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Premium user not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
         return convertToDTO(premiumUser);
     }
 
     /**
      * Get a premium user by username.
-     * @return The PremiumUserDTO object
+     *
      * @throws ResourceNotFoundException if the premium user is not found
      */
     public PremiumUserDTO getPremiumUserByUsername(String username) {
         PremiumUser premiumUser = premiumUserRepo.findByUsername(username);
         if (premiumUser == null) {
-            throw new ResourceNotFoundException("Premium user not found with username: " + username);
+            throw new ResourceNotFoundException("User not found with username: " + username);
         }
         return convertToDTO(premiumUser);
     }
 
     /**
      * Get a premium user entity by username.
-     * @return The PremiumUser entity
+     * This method returns the actual entity object rather than a DTO, which is
+     * necessary for operations requiring direct entity access such as:
+     * - Entity relationships and associations
+     * - Authentication and authorization checks
+     * - Service layer operations that need the full entity model *
+     * 
      * @throws ResourceNotFoundException if the premium user is not found
      */
+
     public PremiumUser getPremiumUserEntityByUsername(String username) {
         PremiumUser premiumUser = premiumUserRepo.findByUsername(username);
         if (premiumUser == null) {
-            throw new ResourceNotFoundException("Premium user not found with username: " + username);
+            throw new ResourceNotFoundException("User not found with username: " + username);
         }
         return premiumUser;
     }
 
-    /**
-     * Get a premium user by email.
-     * @return The PremiumUserDTO object
-     * @throws ResourceNotFoundException if the premium user is not found
-     */
     public PremiumUserDTO getPremiumUserByEmail(String email) {
         PremiumUser premiumUser = premiumUserRepo.findByEmail(email);
         if (premiumUser == null) {
-            throw new ResourceNotFoundException("Premium user not found with email: " + email);
+            throw new ResourceNotFoundException("User not found with email: " + email);
         }
         return convertToDTO(premiumUser);
     }
 
-    /**
-     * Create a new premium user.
-     * @return The created PremiumUserDTO object
-     * @throws DuplicateResourceException if a user with the same username or email already exists
-     */
     @Transactional
     public PremiumUserDTO createPremiumUser(PremiumUserDTO premiumUserDTO) {
-        // Check if username already exists
         if (premiumUserRepo.findByUsername(premiumUserDTO.getUsername()) != null) {
             throw new DuplicateResourceException("Username already exists: " + premiumUserDTO.getUsername());
         }
 
-        // Check if email already exists
         if (premiumUserRepo.findByEmail(premiumUserDTO.getEmail()) != null) {
             throw new DuplicateResourceException("Email already exists: " + premiumUserDTO.getEmail());
         }
 
         PremiumUser premiumUser = convertToEntity(premiumUserDTO);
+        // Hash the password before saving
+        premiumUser.setPassword(passwordEncoder.encode(premiumUser.getPassword()));
         PremiumUser savedPremiumUser = premiumUserRepo.save(premiumUser);
         return convertToDTO(savedPremiumUser);
     }
 
-    /**
-     * Update an existing premium user.
-     * @return The updated PremiumUserDTO object
-     * @throws ResourceNotFoundException if the premium user is not found
-     * @throws DuplicateResourceException if the updated username or email already exists for another user
-     */
     @Transactional
     public PremiumUserDTO updatePremiumUser(Long id, PremiumUserDTO premiumUserDTO) {
         PremiumUser existingUser = premiumUserRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Premium user not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 
-        // Check if username already exists for another user
-        if (!existingUser.getUsername().equals(premiumUserDTO.getUsername()) &&
+        if (premiumUserDTO.getUsername() != null &&
+                !existingUser.getUsername().equals(premiumUserDTO.getUsername()) &&
                 premiumUserRepo.findByUsernameAndIdNot(premiumUserDTO.getUsername(), id).size() > 0) {
             throw new DuplicateResourceException("Username already exists: " + premiumUserDTO.getUsername());
         }
 
-        // Check if email already exists for another user
-        if (!existingUser.getEmail().equals(premiumUserDTO.getEmail()) &&
+        if (premiumUserDTO.getEmail() != null &&
+                !existingUser.getEmail().equals(premiumUserDTO.getEmail()) &&
                 premiumUserRepo.findByEmailAndIdNot(premiumUserDTO.getEmail(), id).size() > 0) {
             throw new DuplicateResourceException("Email already exists: " + premiumUserDTO.getEmail());
         }
 
-        // Update user fields
-        existingUser.setFirstName(premiumUserDTO.getFirstName());
-        existingUser.setLastName(premiumUserDTO.getLastName());
-        existingUser.setEmail(premiumUserDTO.getEmail());
-        existingUser.setMobile(premiumUserDTO.getMobile());
-        existingUser.setDiveCertification(premiumUserDTO.getDiveCertification());
-        existingUser.setUsername(premiumUserDTO.getUsername());
-        existingUser.setPassword(premiumUserDTO.getPassword()); // Note: In a real app, you'd hash the password
-        existingUser.setRole(premiumUserDTO.getRole());
+        // Update non-null fields
+        if (premiumUserDTO.getFirstName() != null) {
+            existingUser.setFirstName(premiumUserDTO.getFirstName());
+        }
+        if (premiumUserDTO.getLastName() != null) {
+            existingUser.setLastName(premiumUserDTO.getLastName());
+        }
+        if (premiumUserDTO.getEmail() != null) {
+            existingUser.setEmail(premiumUserDTO.getEmail());
+        }
+        if (premiumUserDTO.getMobile() != null) {
+            existingUser.setMobile(premiumUserDTO.getMobile());
+        }
+        if (premiumUserDTO.getDiveCertification() != null) {
+            existingUser.setDiveCertification(premiumUserDTO.getDiveCertification());
+        }
+        if (premiumUserDTO.getUsername() != null) {
+            existingUser.setUsername(premiumUserDTO.getUsername());
+        }
+        if (premiumUserDTO.getRole() != null) {
+            existingUser.setRole(premiumUserDTO.getRole());
+        }
+
+        // Only update password if provided and not empty
+        if (premiumUserDTO.getPassword() != null && !premiumUserDTO.getPassword().isEmpty()) {
+            existingUser.setPassword(passwordEncoder.encode(premiumUserDTO.getPassword()));
+        }
 
         PremiumUser updatedUser = premiumUserRepo.save(existingUser);
         return convertToDTO(updatedUser);
     }
 
-    /**
-     * Delete a premium user by ID.
-     * @throws ResourceNotFoundException if the premium user is not found
-     */
     @Transactional
     public void deletePremiumUser(Long id) {
         if (!premiumUserRepo.existsById(id)) {
@@ -158,10 +162,6 @@ public class PremiumUserService {
         premiumUserRepo.deleteById(id);
     }
 
-    /**
-     * Convert a PremiumUser entity to a PremiumUserDTO.
-     * @return The PremiumUserDTO object
-     */
     private PremiumUserDTO convertToDTO(PremiumUser premiumUser) {
         return new PremiumUserDTO(
                 premiumUser.getId(),
@@ -171,17 +171,12 @@ public class PremiumUserService {
                 premiumUser.getMobile(),
                 premiumUser.getDiveCertification(),
                 premiumUser.getUsername(),
-                premiumUser.getPassword(),
+                null, // null to not expose password in DTOs
                 premiumUser.getRole(),
                 premiumUser.getCreatedAt(),
-                premiumUser.getUpdatedAt()
-        );
+                premiumUser.getUpdatedAt());
     }
 
-    /**
-     * Convert a PremiumUserDTO to a PremiumUser entity.
-     * @return The PremiumUser entity
-     */
     private PremiumUser convertToEntity(PremiumUserDTO premiumUserDTO) {
         PremiumUser premiumUser = new PremiumUser(
                 premiumUserDTO.getFirstName(),
@@ -190,11 +185,9 @@ public class PremiumUserService {
                 premiumUserDTO.getMobile(),
                 premiumUserDTO.getDiveCertification(),
                 premiumUserDTO.getUsername(),
-                premiumUserDTO.getPassword(),
-                premiumUserDTO.getRole()
-        );
+                premiumUserDTO.getPassword(), // Password will be encoded before saving
+                premiumUserDTO.getRole());
 
-        // ID should only be set for existing entities
         if (premiumUserDTO.getId() != null) {
             premiumUser.setId(premiumUserDTO.getId());
         }
