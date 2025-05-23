@@ -2,6 +2,7 @@ package ch.fhnw.oceandive.service;
 
 import ch.fhnw.oceandive.exceptionHandler.ResourceNotFoundException;
 import ch.fhnw.oceandive.model.Course;
+import ch.fhnw.oceandive.model.DiveCertification;
 import ch.fhnw.oceandive.repository.CourseRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,15 +18,16 @@ import java.util.List;
 public class CourseService {
 
     private final CourseRepo courseRepo;
+    private final CertificationValidatorService certificationValidator;
 
     @Autowired
-    public CourseService(CourseRepo courseRepo) {
+    public CourseService(CourseRepo courseRepo, CertificationValidatorService certificationValidator) {
         this.courseRepo = courseRepo;
+        this.certificationValidator = certificationValidator;
     }
 
     /**
      * Get all courses.
-     *
      * @return List of all courses
      */
     public List<Course> getAllCourses() {
@@ -34,8 +36,6 @@ public class CourseService {
 
     /**
      * Get a course by ID.
-     * 
-     * @param id The ID of the course to retrieve
      * @return The found course entity
      * @throws ResourceNotFoundException if the course is not found
      */
@@ -46,8 +46,6 @@ public class CourseService {
 
     /**
      * Get courses with start date after the given date.
-     * 
-     * @param date The date to compare against
      * @return List of courses starting after the given date
      */
     public List<Course> getCoursesByStartDateAfter(LocalDate date) {
@@ -59,8 +57,6 @@ public class CourseService {
 
     /**
      * Get courses with start date before the given date.
-     * 
-     * @param date The date to compare against
      * @return List of courses starting before the given date
      */
     public List<Course> getCoursesByStartDateBefore(LocalDate date) {
@@ -72,9 +68,6 @@ public class CourseService {
 
     /**
      * Get courses with start date between the given dates.
-     * 
-     * @param startDate The start date of the range
-     * @param endDate   The end date of the range
      * @return List of courses starting between the given dates
      * @throws IllegalArgumentException if startDate or endDate is null, or if
      *                                  startDate is after endDate
@@ -91,7 +84,6 @@ public class CourseService {
 
     /**
      * Get courses by location.
-     * 
      * @param location The location to search for (case insensitive, partial match)
      * @return List of courses at the given location
      */
@@ -102,19 +94,64 @@ public class CourseService {
         return courseRepo.findByLocationContainingIgnoreCase(location);
     }
 
-    /**
-     * Get courses that are not fully booked.
-     *
-     * @return List of courses that are not fully booked
-     */
+    
+    // Get courses that are not fully booked.
+    
     public List<Course> getAvailableCourses() {
         return courseRepo.findByCurrentBookingsLessThanCapacity();
     }
 
     /**
+     * Check if a user with the given certification can enroll in this course
+     * @return true if the user can enroll in the course, false otherwise
+     */
+    public boolean canEnrollInCourse(Long courseId, DiveCertification userCertification) {
+        Course course = getCourseById(courseId);
+
+        // For users with no certification
+        if (userCertification == null) {
+            userCertification = DiveCertification.NON_DIVER;
+        }
+
+        // Use the certification validator service
+        return certificationValidator.validateCertification(
+                userCertification,
+                course.getMinCertificationRequired());
+    }
+
+    /**
+     * Book a course if user has adequate certification
+     * @return The updated course
+     * @throws IllegalStateException if the course is fully booked or user lacks
+     *                               required certification
+     */
+    @Transactional
+    public Course enrollInCourseWithCertification(Long courseId, DiveCertification userCertification) {
+        if (!canEnrollInCourse(courseId, userCertification)) {
+            throw new IllegalStateException("User does not have required certification for this course");
+        }
+
+        return enrollInCourse(courseId);
+    }
+
+    /**
+     * Enroll in a course
+     * @throws IllegalStateException if the course is fully booked
+     */
+    @Transactional
+    public Course enrollInCourse(Long courseId) {
+        Course course = getCourseById(courseId);
+
+        if (course.getCurrentBookings() >= course.getCapacity()) {
+            throw new IllegalStateException("Course is fully booked");
+        }
+
+        course.setCurrentBookings(course.getCurrentBookings() + 1);
+        return courseRepo.save(course);
+    }
+
+    /**
      * Create a new course.
-     * 
-     * @param course The course entity to create
      * @return The created course with generated ID
      */
     @Transactional
@@ -127,11 +164,7 @@ public class CourseService {
 
     /**
      * Update an existing course.
-     * 
-     * @param id            The ID of the course to update
-     * @param courseDetails The updated course details
-     * @return The updated course entity
-     * @throws ResourceNotFoundException if the course is not found
+      * @throws ResourceNotFoundException if the course is not found
      */
     @Transactional
     public Course updateCourse(Long id, Course courseDetails) {
@@ -148,19 +181,31 @@ public class CourseService {
         course.setImageUrl(courseDetails.getImageUrl());
         course.setCapacity(courseDetails.getCapacity());
         course.setMinCertificationRequired(courseDetails.getMinCertificationRequired());
+        course.setMinCertificationRequired(courseDetails.getMinCertificationRequired());
 
         return courseRepo.save(course);
     }
 
     /**
      * Delete a course by ID.
-     * 
-     * @param id The ID of the course to delete
-     * @throws ResourceNotFoundException if the course is not found
      */
     @Transactional
     public void deleteCourse(Long id) {
         Course course = getCourseById(id);
         courseRepo.delete(course);
+    }
+
+    /**
+     * Cancel enrollment in a course
+     */
+    @Transactional
+    public Course cancelEnrollment(Long courseId) {
+        Course course = getCourseById(courseId);
+
+        if (course.getCurrentBookings() > 0) {
+            course.setCurrentBookings(course.getCurrentBookings() - 1);
+        }
+
+        return courseRepo.save(course);
     }
 }

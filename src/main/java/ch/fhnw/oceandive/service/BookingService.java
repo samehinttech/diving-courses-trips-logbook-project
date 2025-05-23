@@ -14,21 +14,18 @@ import java.security.SecureRandom;
 
 @Service
 public class BookingService {
-    /**
-     * Logger for logging information and errors while booking courses and trips
-     * This logger is used to log booking references and any exceptions that occur
-     * during the booking process
-     * It helps in debugging and tracking the flow of booking operations
-     */
     private static final Logger logger = LoggerFactory.getLogger(BookingService.class);
-    private final SecureRandom random = new SecureRandom(); // I used SecureRandom for better randomness 
+    private final SecureRandom random = new SecureRandom();
     private final CourseRepo courseRepo;
     private final TripRepo tripRepo;
+    private final CertificationValidatorService certificationValidator;
 
     @Autowired
-    public BookingService(CourseRepo courseRepo, TripRepo tripRepo) {
+    public BookingService(CourseRepo courseRepo, TripRepo tripRepo, 
+                         CertificationValidatorService certificationValidator) {
         this.courseRepo = courseRepo;
         this.tripRepo = tripRepo;
+        this.certificationValidator = certificationValidator;
     }
 
     public String generateBookingReference(String name, String personName) {
@@ -53,15 +50,19 @@ public class BookingService {
             throw new BusinessRuleViolationException("Course is fully booked.");
         }
 
-        // Validate user certification level
-        if (user.getDiveCertification().ordinal() < course.getMinCertificationRequired().ordinal()) {
+        // Use the validation service
+        ValidationResult validationResult = certificationValidator.validateCourseEnrollment(course, user);
+        if (!validationResult.isValid()) {
             throw new BusinessRuleViolationException(
-                    "User does not have the required certification level for this course.");
+                validationResult.getFirstMessage().isEmpty() ? 
+                "User does not have the required certification level for this course." :
+                validationResult.getFirstMessage()
+            );
         }
 
         String bookingReference = generateBookingReference(course.getLocation(), user.getFirstName());
         course.incrementBookings();
-        courseRepo.save(course); // Save the updated course
+        courseRepo.save(course);
         logger.info("Course booked with reference: {}", bookingReference);
         return bookingReference;
     }
@@ -79,22 +80,24 @@ public class BookingService {
             throw new BusinessRuleViolationException("Trip is fully booked.");
         }
 
-        // Validate user certification level
-        if (user.getDiveCertification().ordinal() < trip.getMinCertificationRequired().ordinal()) {
+        // Use the validation service
+        ValidationResult validationResult = certificationValidator.validateTripBooking(trip, user);
+        if (!validationResult.isValid()) {
             throw new BusinessRuleViolationException(
-                    "User does not have the required certification level for this trip.");
+                validationResult.getFirstMessage().isEmpty() ? 
+                "User does not have the required certification level for this trip." :
+                validationResult.getFirstMessage()
+            );
         }
 
         String bookingReference = generateBookingReference(trip.getName(), user.getFirstName());
         trip.incrementBookings();
-        tripRepo.save(trip); // Save the updated trip
+        tripRepo.save(trip);
         logger.info("Trip booked with reference: {}", bookingReference);
         return bookingReference;
     }
 
     // Maintain backward compatibility with existing code
-    // These methods are just wrappers around the main booking methods to handle
-    // different user types
     @Transactional
     public String bookCourse(Course course, PremiumUser user) {
         return bookCourse(course, (DiveCertificationHolder) user);
