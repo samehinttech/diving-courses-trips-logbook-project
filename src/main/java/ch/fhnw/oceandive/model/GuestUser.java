@@ -1,7 +1,7 @@
 package ch.fhnw.oceandive.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
+
 
 /**
  * Entity representing a customer who does not have an account in the system.

@@ -28,7 +28,6 @@ public class TripService {
 
     /**
      * Get all trips.
-     *
      * @return List of all trips
      */
     public List<Trip> getAllTrips() {
@@ -37,7 +36,6 @@ public class TripService {
 
     /**
      * Get a trip by ID.
-     * 
      * @return The trip
      * @throws ResourceNotFoundException if the trip is not found
      */
@@ -48,7 +46,6 @@ public class TripService {
 
     /**
      * Get trips with start date after the given date.
-     * 
      * @return List of trips starting after the given date
      */
     public List<Trip> getTripsByStartDateAfter(LocalDate date) {
@@ -57,7 +54,6 @@ public class TripService {
 
     /**
      * Get trips with start date before the given date.
-     * 
      * @return List of trips starting before the given date
      */
     public List<Trip> getTripsByStartDateBefore(LocalDate date) {
@@ -66,7 +62,6 @@ public class TripService {
 
     /**
      * Get trips with start date between the given dates.
-     * 
      * @return List of trips starting between the given dates
      */
     public List<Trip> getTripsByStartDateBetween(LocalDate startDate, LocalDate endDate) {
@@ -75,7 +70,6 @@ public class TripService {
 
     /**
      * Get trips by name.
-     * 
      * @return List of trips with the given name
      */
     public List<Trip> getTripsByName(String name) {
@@ -84,7 +78,6 @@ public class TripService {
 
     /**
      * Get trips that are not fully booked.
-     * 
      * @return List of trips that are not fully booked
      */
     public List<Trip> getAvailableTrips() {
@@ -93,33 +86,31 @@ public class TripService {
 
     /**
      * Create a new trip.
-     * 
      * @return The created trip
      */
     @Transactional
     public Trip createTrip(Trip trip) {
         // Validate trip data
         validateTripData(trip);
-
+        
         // Ensure currentBookings starts at 0
         trip.setCurrentBookings(0);
-
+        
         return tripRepo.save(trip);
     }
 
     /**
      * Update an existing trip.
-     * 
      * @return The updated trip
      * @throws ResourceNotFoundException if the trip is not found
      */
     @Transactional
     public Trip updateTrip(Long id, Trip tripDetails) {
         Trip trip = getTripById(id);
-
+        
         // Validate trip data
         validateTripData(tripDetails);
-
+        
         // Update fields
         if (tripDetails.getName() != null) {
             trip.setName(tripDetails.getName());
@@ -136,7 +127,7 @@ public class TripService {
         if (tripDetails.getImageUrl() != null) {
             trip.setImageUrl(tripDetails.getImageUrl());
         }
-
+        
         // Handle capacity change - ensure it's not less than current bookings
         if (tripDetails.getCapacity() != null) {
             if (tripDetails.getCapacity() < trip.getCurrentBookings()) {
@@ -144,17 +135,16 @@ public class TripService {
             }
             trip.setCapacity(tripDetails.getCapacity());
         }
-
+        
         if (tripDetails.getMinCertificationRequired() != null) {
             trip.setMinCertificationRequired(tripDetails.getMinCertificationRequired());
         }
-
+        
         return tripRepo.save(trip);
     }
 
     /**
      * Delete a trip by ID
-     * 
      * @throws ResourceNotFoundException if the trip is not found
      */
     @Transactional
@@ -162,76 +152,71 @@ public class TripService {
         Trip trip = getTripById(id);
         tripRepo.delete(trip);
     }
-
+    
     /**
      * Check if a user with the given certification can book this trip
-     * 
      * @return true if the user can book the trip, false otherwise
      */
     public boolean canBookTripWithCertification(Long tripId, DiveCertification userCertification) {
         Trip trip = getTripById(tripId);
-
-        // Use the certification validator service
+        
+        // Use the simple certification validation method
         return certificationValidator.validateCertification(
-                userCertification,
-                trip.getMinCertificationRequired());
+            userCertification, 
+            trip.getMinCertificationRequired()
+        );
     }
-
+    
     /**
      * Book a trip if user has adequate certification
-     * 
      * @return The updated trip
-     * @throws IllegalStateException if the trip is fully booked or user lacks
-     *                               required certification
+     * @throws IllegalStateException if the trip is fully booked or user lacks required certification
      */
     @Transactional
     public Trip bookTripWithCertification(Long tripId, DiveCertification userCertification) {
         if (!canBookTripWithCertification(tripId, userCertification)) {
             throw new IllegalStateException("User does not have required certification for this trip");
         }
-
+        
         return bookTrip(tripId);
     }
-
+    
     /**
      * Book a spot on a trip
-     * 
      * @return The updated trip
      * @throws ResourceNotFoundException if the trip is not found
-     * @throws IllegalStateException     if the trip is fully booked
+     * @throws IllegalStateException if the trip is fully booked
      */
     @Transactional
     public Trip bookTrip(Long tripId) {
         Trip trip = getTripById(tripId);
-
+        
         if (trip.isFullyBooked()) {
             throw new IllegalStateException("Trip is fully booked");
         }
-
+        
         trip.incrementBookings();
         return tripRepo.save(trip);
     }
-
+    
     /**
      * Cancel a booking for a trip
-     * 
      * @return The updated trip
      * @throws ResourceNotFoundException if the trip is not found
      */
     @Transactional
     public Trip cancelBooking(Long tripId) {
         Trip trip = getTripById(tripId);
-
+        
         if (trip.getCurrentBookings() > 0) {
             trip.setCurrentBookings(trip.getCurrentBookings() - 1);
         }
-
+        
         return tripRepo.save(trip);
     }
-
+    
     /**
      * Get trips by minimum certification level.
-     * 
      * @return List of trips requiring the specified minimum certification
      */
     public List<Trip> getTripsByMinCertification(DiveCertification certification) {
@@ -240,39 +225,38 @@ public class TripService {
 
     /**
      * Get upcoming trips (starting after today).
-     * 
      * @return List of upcoming trips
      */
     public List<Trip> getUpcomingTrips() {
         return tripRepo.findByStartDateAfter(LocalDate.now());
     }
-
+    
     // Validation logic
     private void validateTripData(Trip trip) {
         if (trip.getName() == null || trip.getName().trim().isEmpty()) {
             throw new IllegalArgumentException("Trip name cannot be empty");
         }
-
+        
         if (trip.getDescription() == null || trip.getDescription().trim().isEmpty()) {
             throw new IllegalArgumentException("Trip description cannot be empty");
         }
-
+        
         if (trip.getStartDate() == null) {
             throw new IllegalArgumentException("Trip start date cannot be empty");
         }
-
+        
         if (trip.getEndDate() == null) {
             throw new IllegalArgumentException("Trip end date cannot be empty");
         }
-
+        
         if (trip.getEndDate().isBefore(trip.getStartDate())) {
             throw new IllegalArgumentException("Trip end date cannot be before start date");
         }
-
+        
         if (trip.getCapacity() == null || trip.getCapacity() <= 0) {
             throw new IllegalArgumentException("Trip capacity must be greater than zero");
         }
-
+        
         if (trip.getMinCertificationRequired() == null) {
             throw new IllegalArgumentException("Minimum certification is required");
         }

@@ -3,7 +3,6 @@ package ch.fhnw.oceandive.model;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Objects;
 import org.hibernate.annotations.CreationTimestamp;
 
 /**

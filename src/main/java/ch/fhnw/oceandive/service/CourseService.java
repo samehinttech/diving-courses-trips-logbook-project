@@ -94,9 +94,10 @@ public class CourseService {
         return courseRepo.findByLocationContainingIgnoreCase(location);
     }
 
-    
-    // Get courses that are not fully booked.
-    
+    /**
+     * Get courses that are not fully booked.
+     * @return List of courses that are not fully booked
+     */
     public List<Course> getAvailableCourses() {
         return courseRepo.findByCurrentBookingsLessThanCapacity();
     }
@@ -113,7 +114,7 @@ public class CourseService {
             userCertification = DiveCertification.NON_DIVER;
         }
 
-        // Use the certification validator service
+        // Use the simple certification validation method
         return certificationValidator.validateCertification(
                 userCertification,
                 course.getMinCertificationRequired());
@@ -122,8 +123,7 @@ public class CourseService {
     /**
      * Book a course if user has adequate certification
      * @return The updated course
-     * @throws IllegalStateException if the course is fully booked or user lacks
-     *                               required certification
+     * @throws IllegalStateException if the course is fully booked or user lacks required certification
      */
     @Transactional
     public Course enrollInCourseWithCertification(Long courseId, DiveCertification userCertification) {
@@ -136,6 +136,7 @@ public class CourseService {
 
     /**
      * Enroll in a course
+     * @return The updated course
      * @throws IllegalStateException if the course is fully booked
      */
     @Transactional
@@ -164,7 +165,8 @@ public class CourseService {
 
     /**
      * Update an existing course.
-      * @throws ResourceNotFoundException if the course is not found
+     * @return The updated course entity
+     * @throws ResourceNotFoundException if the course is not found
      */
     @Transactional
     public Course updateCourse(Long id, Course courseDetails) {
@@ -174,38 +176,62 @@ public class CourseService {
 
         Course course = getCourseById(id);
 
-        course.setLocation(courseDetails.getLocation());
-        course.setDescription(courseDetails.getDescription());
-        course.setStartDate(courseDetails.getStartDate());
-        course.setEndDate(courseDetails.getEndDate());
-        course.setImageUrl(courseDetails.getImageUrl());
-        course.setCapacity(courseDetails.getCapacity());
-        course.setMinCertificationRequired(courseDetails.getMinCertificationRequired());
-        course.setMinCertificationRequired(courseDetails.getMinCertificationRequired());
+        if (courseDetails.getLocation() != null) {
+            course.setLocation(courseDetails.getLocation());
+        }
+        
+        if (courseDetails.getDescription() != null) {
+            course.setDescription(courseDetails.getDescription());
+        }
+        
+        if (courseDetails.getStartDate() != null) {
+            course.setStartDate(courseDetails.getStartDate());
+        }
+        
+        if (courseDetails.getEndDate() != null) {
+            course.setEndDate(courseDetails.getEndDate());
+        }
+        
+        if (courseDetails.getImageUrl() != null) {
+            course.setImageUrl(courseDetails.getImageUrl());
+        }
+        
+        if (courseDetails.getCapacity() != null) {
+            if (courseDetails.getCapacity() < course.getCurrentBookings()) {
+                throw new IllegalArgumentException("Cannot reduce capacity below current number of bookings");
+            }
+            course.setCapacity(courseDetails.getCapacity());
+        }
+        
+        if (courseDetails.getMinCertificationRequired() != null) {
+            course.setMinCertificationRequired(courseDetails.getMinCertificationRequired());
+        }
 
         return courseRepo.save(course);
     }
 
     /**
      * Delete a course by ID.
+     * @throws ResourceNotFoundException if the course is not found
      */
     @Transactional
     public void deleteCourse(Long id) {
         Course course = getCourseById(id);
         courseRepo.delete(course);
     }
-
+    
     /**
-     * Cancel enrollment in a course
+     * Cancel enrollment in a course.
+     * @return The updated course
      */
     @Transactional
     public Course cancelEnrollment(Long courseId) {
         Course course = getCourseById(courseId);
-
+        
         if (course.getCurrentBookings() > 0) {
             course.setCurrentBookings(course.getCurrentBookings() - 1);
         }
-
+        
         return courseRepo.save(course);
     }
 }
