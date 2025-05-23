@@ -41,7 +41,7 @@ public class DiveLogDTO implements Serializable {
       LocalDateTime endTime, Integer duration, Double waterTemperature, Double airTemperature,
       String notes) {
     this(id, diveNumber, location, startTime, endTime, duration, waterTemperature, airTemperature, 
-        notes, startTime != null ? startTime.toLocalDate() : null);
+        notes, startTime != null ? (startTime.toLocalDate()) : null);
   }
 
   public Long getId() {

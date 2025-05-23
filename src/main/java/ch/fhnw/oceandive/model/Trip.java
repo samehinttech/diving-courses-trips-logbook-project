@@ -6,7 +6,8 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 
 /**
- * Entity representing a diving trip offered by the system. Trips can be booked by users and
+ * Entity representing a diving trip offered by the system. Trips can be booked
+ * by users and
  * customers.
  */
 @Entity
@@ -28,8 +29,6 @@ public class Trip {
 
   @Column(nullable = false)
   private LocalDate endDate;
-
-  // Duration is now calculated from startDate and endDate
 
   @Column(nullable = false)
   @CreationTimestamp
@@ -109,7 +108,7 @@ public class Trip {
 
   public Integer getDuration() {
     return (endDate != null && startDate != null) ? (int) (endDate.toEpochDay()
-        - startDate.toEpochDay()) : null;
+        - startDate.toEpochDay() + 1 ) : null;
   }
 
   public LocalDateTime getCreatedAt() {

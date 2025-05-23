@@ -29,8 +29,6 @@ public class Course {
     @Column(nullable = false)
     private LocalDate endDate;
 
-    // Duration is now calculated from startDate and endDate
-
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
