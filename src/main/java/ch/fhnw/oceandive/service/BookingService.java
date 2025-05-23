@@ -2,23 +2,38 @@ package ch.fhnw.oceandive.service;
 
 import ch.fhnw.oceandive.exceptionHandler.BusinessRuleViolationException;
 import ch.fhnw.oceandive.model.*;
+import ch.fhnw.oceandive.repository.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Random;
+import java.security.SecureRandom;
 
 @Service
 public class BookingService {
 
     private static final Logger logger = LoggerFactory.getLogger(BookingService.class);
-    private final Random random = new Random();
+    private final SecureRandom random = new SecureRandom();
+    private final CourseRepo courseRepo;
+    private final TripRepo tripRepo;
 
-    public String generateBookingReference(String name, String personName) {
-        int randomInt = 100 + random.nextInt(900); // Generate 3 random integers
-        return name.replaceAll("\\s+", "").toUpperCase() + "_" + personName.replaceAll("\\s+", "").toUpperCase() + "_" + randomInt;
+    @Autowired
+    public BookingService(CourseRepo courseRepo, TripRepo tripRepo) {
+        this.courseRepo = courseRepo;
+        this.tripRepo = tripRepo;
     }
+
+   public String generateBookingReference(String name, String personName) {
+    // some logic for null checks
+    name = name == null ? "COURSE" : name;
+    personName = personName == null ? "USER" : personName;
+    int randomInt = 100 + random.nextInt(900);
+    return name.replaceAll("\\s+", "").toUpperCase() + "_" + 
+           personName.replaceAll("\\s+", "").toUpperCase() + "_" + randomInt;
+   }
 
     /**
      * Book a course for a user with dive certification.
@@ -37,6 +52,7 @@ public class BookingService {
 
         String bookingReference = generateBookingReference(course.getLocation(), user.getFirstName());
         course.incrementBookings();
+        courseRepo.save(course); // Save the updated course
         logger.info("Course booked with reference: {}", bookingReference);
         return bookingReference;
     }
@@ -58,6 +74,7 @@ public class BookingService {
 
         String bookingReference = generateBookingReference(trip.getName(), user.getFirstName());
         trip.incrementBookings();
+        tripRepo.save(trip); // Save the updated trip
         logger.info("Trip booked with reference: {}", bookingReference);
         return bookingReference;
     }
