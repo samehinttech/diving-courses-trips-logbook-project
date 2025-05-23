@@ -35,3 +35,10 @@ build/
 
 ### dev documentation ###
 mydocs/
+
+
+### Environment Files ###
+.env
+.env.local
+.env.*
+!.env.example

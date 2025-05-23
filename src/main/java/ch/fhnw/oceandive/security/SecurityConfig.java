@@ -32,7 +32,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-  @Value("${jwt.key}")
+  @Value("${JWT_SECRET}")
   private String jwtKey;
 
   @Bean
