@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class ValidationResult {
   private boolean valid = false;
-  private List<String> messages = new ArrayList<>();
+  private final List<String> messages = new ArrayList<>();
 
   public boolean isValid() {
     return valid;
@@ -30,7 +30,7 @@ public class ValidationResult {
   // Returns the first error message, or empty string if no messages
 
   public String getFirstMessage() {
-    return messages.isEmpty() ? "" : messages.get(0);
+    return messages.isEmpty() ? "" : messages.getFirst();
   }
 
   // Returns all messages as a combined string

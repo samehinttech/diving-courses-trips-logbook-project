@@ -10,10 +10,10 @@ meet the requirements of the **Internet Technology module** at
 * [OceanDive](#oceandive)
   * [Analysis](#analysis)
     * [Scenario](#scenario)
-    * [User Stories](#userEntity-stories)
-      * [Admin User Stories](#admin-userEntity-stories)
+    * [User Stories](#user-stories)
+      * [Admin User Stories](#admin-user-stories)
       * [Guest stories (non-registered users)](#guest-stories-non-registered-users)
-      * [Registered User Stories](#registered-userEntity-stories)
+      * [Registered User Stories](#registered-user-stories)
     * [Use Case Diagram](#use-case-diagram)
   * [Design](#design)
     * [Wireframe Design](#wireframe-design)
@@ -31,11 +31,10 @@ meet the requirements of the **Internet Technology module** at
   * [Maintainers](#maintainers)
   * [Contributors](#contributors)
   * [Note](#note)
-<!-- TOC -->
+<!-- TOC --> * [Contributors](#contributors)
+    * [Note](#note)
 
-## Analysis
-
-### Scenario
+<!-- TOC --> Scenario
 
 As a team, we designed the website OceanDive that offers dive courses,
 dive trips, and additional service “digital dive log.”
@@ -100,7 +99,7 @@ including the ability to delete dive logs permanently.
 <div style="text-align: center;">
 Use Case Diagram illustrating OceanDive Web Application system interactions.
 
-![Use Case Diagram](assets/use-case-diagram.png) 
+![Use Case Diagram](assets/use-case-diagram.png)
 </div>
 
 ---

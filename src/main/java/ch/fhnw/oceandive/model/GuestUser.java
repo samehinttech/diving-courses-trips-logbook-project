@@ -36,11 +36,4 @@ public class GuestUser extends BaseUser implements DiveCertificationHolder {
         this.diveCertification = diveCertification;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
 }

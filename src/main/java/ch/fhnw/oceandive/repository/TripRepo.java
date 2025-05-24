@@ -36,6 +36,8 @@ public interface TripRepo extends JpaRepository<Trip, Long> {
     // Find trips by minimum certification required
     List<Trip> findByMinCertificationRequired(DiveCertification minCertificationRequired);
 
+    // Get all trips with pagination
+    @Query("SELECT t FROM Trip t")
     Page<Trip> getAllTrips(Pageable pageable);
 
 }

@@ -38,6 +38,17 @@ public class PremiumUserService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
+        
+    /**
+     * Get all premium users with pagination.
+     *
+     * @param pageable pagination information
+     * @return Page of PremiumUserDTO objects
+     */
+    public Page<PremiumUserDTO> getAllPremiumUsers(Pageable pageable) {
+        return premiumUserRepo.findAll(pageable)
+                .map(this::convertToDTO);
+    }
 
     /**
      * Get a premium user by ID.
@@ -230,15 +241,5 @@ public class PremiumUserService {
         if (premiumUserDTO.getLastName() == null || premiumUserDTO.getLastName().trim().isEmpty()) {
             throw new IllegalArgumentException("Last name cannot be empty");
         }
-    }
-
-    /**
-     * Get all premium users with pagination.
-     *
-     * @param pageable pagination information
-     * @return Page of PremiumUserDTO objects
-     */
-    public Page<PremiumUserDTO> getAllPremiumUsers(Pageable pageable) {
-        return premiumUserRepo.getAllPremiumUsers(pageable);
     }
 }

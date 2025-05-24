@@ -1,4 +1,4 @@
-package ch.fhnw.oceandive.rules;
+package rules;
 
 import ch.fhnw.oceandive.model.DiveCertification;
 import ch.fhnw.oceandive.model.CertificationValidator;
@@ -9,8 +9,8 @@ import ch.fhnw.oceandive.model.ValidationResult;
 
 // ================ Simple Certification Validators ================
 
-// Allow NON_DIVER to be in a dive trips as Snorklers 
-rule "NON_DIVER can dive NON_DIVER trips"
+// Allow NON_DIVER to participate in NON_DIVER activities
+rule "NON_DIVER can do NON_DIVER activities"
     when
         $result: CertificationValidator(
             userCertification == DiveCertification.NON_DIVER,
@@ -20,8 +20,8 @@ rule "NON_DIVER can dive NON_DIVER trips"
         $result.setValid(true);
 end
 
-// Allow any certification level to participate in NON_DIVER trips
-rule "Any certification can dive NON_DIVER trips"
+// Allow any certification level to participate in NON_DIVER activities
+rule "Any certification can do NON_DIVER activities"
     when
         $result: CertificationValidator(
             requiredCertification == DiveCertification.NON_DIVER
@@ -30,8 +30,8 @@ rule "Any certification can dive NON_DIVER trips"
         $result.setValid(true);
 end
 
-// all Strict Business Rules start from here 
-rule "OPEN_WATER can dive OPEN_WATER trips"
+// OPEN_WATER certifications
+rule "OPEN_WATER can do OPEN_WATER activities"
     when
         $result: CertificationValidator(
             userCertification == DiveCertification.OPEN_WATER,
@@ -41,35 +41,38 @@ rule "OPEN_WATER can dive OPEN_WATER trips"
         $result.setValid(true);
 end
 
-rule "ADVANCED_OPEN_WATER can dive OPEN_WATER trips"
+// Higher certifications can do lower level activities
+rule "ADVANCED_OPEN_WATER can do OPEN_WATER activities"
     when
         $result: CertificationValidator(
             userCertification == DiveCertification.ADVANCED_OPEN_WATER,
-            requiredCertification == DiveCertification.OPEN_WATER
+            requiredCertification in (DiveCertification.OPEN_WATER, DiveCertification.ADVANCED_OPEN_WATER)
         )
     then
         $result.setValid(true);
 end
 
-rule "RESCUE_DIVER can dive any level trips"
+rule "RESCUE_DIVER can do any activity except INSTRUCTOR"
     when
         $result: CertificationValidator(
-            userCertification == DiveCertification.RESCUE_DIVER
+            userCertification == DiveCertification.RESCUE_DIVER,
+            requiredCertification != DiveCertification.INSTRUCTOR
         )
     then
         $result.setValid(true);
 end
 
-rule "DIVEMASTER can dive any level trips"
+rule "DIVEMASTER can do any activity except INSTRUCTOR"
     when
         $result: CertificationValidator(
-            userCertification == DiveCertification.DIVEMASTER
+            userCertification == DiveCertification.DIVEMASTER,
+            requiredCertification != DiveCertification.INSTRUCTOR
         )
     then
         $result.setValid(true);
 end
 
-rule "INSTRUCTOR can dive any level trips"
+rule "INSTRUCTOR can do any activity"
     when
         $result: CertificationValidator(
             userCertification == DiveCertification.INSTRUCTOR
@@ -78,86 +81,27 @@ rule "INSTRUCTOR can dive any level trips"
         $result.setValid(true);
 end
 
-// Course rules
-rule "NON_DIVER can take OPEN_WATER course"
-    when
-        $result: CertificationValidator(
-            userCertification == DiveCertification.NON_DIVER,
-            requiredCertification == DiveCertification.OPEN_WATER
-        )
-    then
-        $result.setValid(true);
-end
+// ================ Trip Validation Rules ================
 
-rule "OPEN_WATER can take ADVANCED_OPEN_WATER course"
+rule "Trip - Any cert can do NON_DIVER trips"
     when
-        $result: CertificationValidator(
-            userCertification == DiveCertification.OPEN_WATER,
-            requiredCertification == DiveCertification.ADVANCED_OPEN_WATER
-        )
-    then
-        $result.setValid(true);
-end
-
-rule "ADVANCED_OPEN_WATER can take RESCUE_DIVER course"
-    when
-        $result: CertificationValidator(
-            userCertification == DiveCertification.ADVANCED_OPEN_WATER,
-            requiredCertification == DiveCertification.RESCUE_DIVER
-        )
-    then
-        $result.setValid(true);
-end
-
-rule "ADVANCED_OPEN_WATER can take DIVEMASTER course"
-    when
-        $result: CertificationValidator(
-            userCertification == DiveCertification.ADVANCED_OPEN_WATER,
-            requiredCertification == DiveCertification.DIVEMASTER
-        )
-    then
-        $result.setValid(true);
-end
-
-rule "RESCUE_DIVER can take DIVEMASTER course"
-    when
-        $result: CertificationValidator(
-            userCertification == DiveCertification.RESCUE_DIVER,
-            requiredCertification == DiveCertification.DIVEMASTER
-        )
-    then
-        $result.setValid(true);
-end
-
-rule "DIVEMASTER can take INSTRUCTOR course"
-    when
-        $result: CertificationValidator(
-            userCertification == DiveCertification.DIVEMASTER,
-            requiredCertification == DiveCertification.INSTRUCTOR
-        )
-    then
-        $result.setValid(true);
-end
-
-// ================ Complex Object Validation Rules ================
-
-rule "Trip Validation - NON_DIVER can only do NON_DIVER trips"
-    when
-        $user: DiveCertificationHolder(diveCertification == DiveCertification.NON_DIVER)
+        $user: DiveCertificationHolder()
         $trip: Trip(minCertificationRequired == DiveCertification.NON_DIVER)
         $result: ValidationResult()
     then
         $result.setValid(true);
 end
 
-rule "Trip Validation - OPEN_WATER and above can do OPEN_WATER trips"
+rule "Trip - OPEN_WATER and above for OPEN_WATER trips"
     when
         $user: DiveCertificationHolder(
-            diveCertification == DiveCertification.OPEN_WATER ||
-            diveCertification == DiveCertification.ADVANCED_OPEN_WATER ||
-            diveCertification == DiveCertification.RESCUE_DIVER ||
-            diveCertification == DiveCertification.DIVEMASTER ||
-            diveCertification == DiveCertification.INSTRUCTOR
+            diveCertification in (
+                DiveCertification.OPEN_WATER,
+                DiveCertification.ADVANCED_OPEN_WATER,
+                DiveCertification.RESCUE_DIVER,
+                DiveCertification.DIVEMASTER,
+                DiveCertification.INSTRUCTOR
+            )
         )
         $trip: Trip(minCertificationRequired == DiveCertification.OPEN_WATER)
         $result: ValidationResult()
@@ -165,13 +109,15 @@ rule "Trip Validation - OPEN_WATER and above can do OPEN_WATER trips"
         $result.setValid(true);
 end
 
-rule "Trip Validation - ADVANCED_OPEN_WATER and above can do ADVANCED_OPEN_WATER trips"
+rule "Trip - ADVANCED and above for ADVANCED trips"
     when
         $user: DiveCertificationHolder(
-            diveCertification == DiveCertification.ADVANCED_OPEN_WATER ||
-            diveCertification == DiveCertification.RESCUE_DIVER ||
-            diveCertification == DiveCertification.DIVEMASTER ||
-            diveCertification == DiveCertification.INSTRUCTOR
+            diveCertification in (
+                DiveCertification.ADVANCED_OPEN_WATER,
+                DiveCertification.RESCUE_DIVER,
+                DiveCertification.DIVEMASTER,
+                DiveCertification.INSTRUCTOR
+            )
         )
         $trip: Trip(minCertificationRequired == DiveCertification.ADVANCED_OPEN_WATER)
         $result: ValidationResult()
@@ -179,38 +125,47 @@ rule "Trip Validation - ADVANCED_OPEN_WATER and above can do ADVANCED_OPEN_WATER
         $result.setValid(true);
 end
 
-// Additional rules for Course validation with complex objects
-rule "Course Validation - NON_DIVER can take OPEN_WATER course"
+// ================ Course Validation Rules ================
+
+rule "Course - NON_DIVER can take beginner courses"
     when
         $user: DiveCertificationHolder(diveCertification == DiveCertification.NON_DIVER)
-        $course: Course(minCertificationRequired == DiveCertification.NON_DIVER)
+        $course: Course(minCertificationRequired in (DiveCertification.NON_DIVER, DiveCertification.OPEN_WATER))
         $result: ValidationResult()
     then
         $result.setValid(true);
 end
 
-// Default rule - certification level insufficient for trips
-rule "Default - certification level insufficient for trips"
+rule "Course - OPEN_WATER can take advancement courses"
+    when
+        $user: DiveCertificationHolder(diveCertification == DiveCertification.OPEN_WATER)
+        $course: Course(minCertificationRequired in (DiveCertification.NON_DIVER, DiveCertification.OPEN_WATER, DiveCertification.ADVANCED_OPEN_WATER))
+        $result: ValidationResult()
+    then
+        $result.setValid(true);
+end
+
+// Default failure rules with lower salience
+rule "Default trip validation failure"
     salience -100
     when
         $user: DiveCertificationHolder()
         $trip: Trip()
         $result: ValidationResult(valid == false)
     then
-        $result.addMessage("User with " + $user.getDiveCertification() + 
-                          " certification cannot book trip requiring " + 
-                          $trip.getMinCertificationRequired());
+        $result.addMessage("User with " + $user.getDiveCertification() +
+                          " certification cannot book " + $trip.getLocation() +
+                          " trip requiring " + $trip.getMinCertificationRequired());
 end
 
-// Default rule - certification level insufficient for course
-rule "Default - certification level insufficient for course"
+rule "Default course validation failure"
     salience -100
     when
         $user: DiveCertificationHolder()
         $course: Course()
         $result: ValidationResult(valid == false)
-    then 
+    then
         $result.addMessage("User with " + $user.getDiveCertification() +
-                         " certification cannot enroll in course requiring " + 
-                         $course.getMinCertificationRequired());
+                         " certification cannot enroll in " + $course.getName() +
+                         " course requiring " + $course.getMinCertificationRequired());
 end

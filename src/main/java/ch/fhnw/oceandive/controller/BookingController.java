@@ -45,7 +45,7 @@ public class BookingController {
     }
 
     /**
-     * POST /api/bookings/courses/{courseId}/premium: Book a course for a premium user.
+     * POST /api/bookings/courses/{courseId}/user: Book a course for a user.
      * Requires authentication.
      *
      * @param courseId the ID of the course to book
@@ -53,15 +53,51 @@ public class BookingController {
      * @throws ResourceNotFoundException if the course is not found
      * @throws BusinessRuleViolationException if the course is fully booked, or the user doesn't have the required certification
      */
-    @PostMapping("/courses/{courseId}/premium")
-    public ResponseEntity<Map<String, String>> bookCourseForPremiumUser(@PathVariable Long courseId) {
+    @PostMapping("/courses/{courseId}/user")
+    public ResponseEntity<Map<String, String>> bookCourseForUser(@PathVariable Long courseId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-
         PremiumUser premiumUser = premiumUserService.getPremiumUserEntityByUsername(username);
-        Course course = courseService.getCourseById(courseId);
 
-        String bookingReference = bookingService.bookCourse(course, premiumUser);
+        Course course = courseService.getCourseById(courseId);
+        return bookCourseForEntity(course, premiumUser);
+    }
+
+    /**
+     * POST /api/bookings/trips/{tripId}/user: Book a trip for a user.
+     * Requires authentication.
+     *
+     * @param tripId the ID of the trip to book
+     * @return the ResponseEntity with status 200 (OK) and the booking reference in the body
+     * @throws ResourceNotFoundException if the trip is not found
+     * @throws BusinessRuleViolationException if the trip is fully booked, or the user doesn't have the required certification
+     */
+    @PostMapping("/trips/{tripId}/user")
+    public ResponseEntity<Map<String, String>> bookTripForUser(@PathVariable Long tripId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        PremiumUser premiumUser = premiumUserService.getPremiumUserEntityByUsername(username);
+
+        Trip trip = tripService.getTripById(tripId);
+        return bookTripForEntity(trip, premiumUser);
+    }
+
+    /**
+     * Helper method to book a course for any entity type
+     * 
+     * @param course the course to book
+     * @param entity the entity (user or guest) booking the course
+     * @return the ResponseEntity with booking reference
+     */
+    private ResponseEntity<Map<String, String>> bookCourseForEntity(Course course, Object entity) {
+        String bookingReference;
+        if (entity instanceof PremiumUser) {
+            bookingReference = bookingService.bookCourse(course, (PremiumUser) entity);
+        } else if (entity instanceof GuestUser) {
+            bookingReference = bookingService.bookCourse(course, (GuestUser) entity);
+        } else {
+            throw new IllegalArgumentException("Unsupported entity type");
+        }
 
         Map<String, String> response = new HashMap<>();
         response.put("bookingReference", bookingReference);
@@ -71,23 +107,21 @@ public class BookingController {
     }
 
     /**
-     * POST /api/bookings/trips/{tripId}/premium: Book a trip for a premium user.
-     * Requires authentication.
-     *
-     * @param tripId the ID of the trip to book
-     * @return the ResponseEntity with status 200 (OK) and the booking reference in the body
-     * @throws ResourceNotFoundException if the trip is not found
-     * @throws BusinessRuleViolationException if the trip is fully booked, or the user doesn't have the required certification
+     * Helper method to book a trip for any entity type
+     * 
+     * @param trip the trip to book
+     * @param entity the entity (user or guest) booking the trip
+     * @return the ResponseEntity with booking reference
      */
-    @PostMapping("/trips/{tripId}/premium")
-    public ResponseEntity<Map<String, String>> bookTripForPremiumUser(@PathVariable Long tripId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-
-        PremiumUser premiumUser = premiumUserService.getPremiumUserEntityByUsername(username);
-        Trip trip = tripService.getTripById(tripId);
-
-        String bookingReference = bookingService.bookTrip(trip, premiumUser);
+    private ResponseEntity<Map<String, String>> bookTripForEntity(Trip trip, Object entity) {
+        String bookingReference;
+        if (entity instanceof PremiumUser) {
+            bookingReference = bookingService.bookTrip(trip, (PremiumUser) entity);
+        } else if (entity instanceof GuestUser) {
+            bookingReference = bookingService.bookTrip(trip, (GuestUser) entity);
+        } else {
+            throw new IllegalArgumentException("Unsupported entity type");
+        }
 
         Map<String, String> response = new HashMap<>();
         response.put("bookingReference", bookingReference);
@@ -114,13 +148,7 @@ public class BookingController {
         GuestUser guestUser = guestUserService.getGuestUserEntityById(guestUserId);
         Course course = courseService.getCourseById(courseId);
 
-        String bookingReference = bookingService.bookCourse(course, guestUser);
-
-        Map<String, String> response = new HashMap<>();
-        response.put("bookingReference", bookingReference);
-        response.put("message", "Course booked successfully");
-
-        return ResponseEntity.status(201).body(response);
+        return bookCourseForEntity(course, guestUser);
     }
 
     /**
@@ -141,12 +169,6 @@ public class BookingController {
         GuestUser guestUser = guestUserService.getGuestUserEntityById(guestUserId);
         Trip trip = tripService.getTripById(tripId);
 
-        String bookingReference = bookingService.bookTrip(trip, guestUser);
-
-        Map<String, String> response = new HashMap<>();
-        response.put("bookingReference", bookingReference);
-        response.put("message", "Trip booked successfully");
-
-        return ResponseEntity.status(201).body(response);
+        return bookTripForEntity(trip, guestUser);
     }
 }

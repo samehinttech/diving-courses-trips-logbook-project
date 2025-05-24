@@ -18,6 +18,7 @@
   <properties>
     <java.version>21</java.version>
     <spring-modulith.version>1.1.12</spring-modulith.version>
+    <drools.version>8.44.0.Final</drools.version>
   </properties>
   <dependencies>
     <!-- Core Web, Data, and Validation Dependencies -->
@@ -61,28 +62,33 @@
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-core</artifactId>
-      <version>8.44.0.Final</version>
+      <version>${drools.version}</version>
     </dependency>
 
     <!-- Drools Compiler -->
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-compiler</artifactId>
-      <version>8.44.0.Final</version>
+      <version>${drools.version}</version>
     </dependency>
 
     <!-- KIE API -->
     <dependency>
       <groupId>org.kie</groupId>
       <artifactId>kie-api</artifactId>
-      <version>8.44.0.Final</version>
+      <version>${drools.version}</version>
     </dependency>
 
     <!-- KIE Internal -->
     <dependency>
       <groupId>org.kie</groupId>
       <artifactId>kie-internal</artifactId>
-      <version>8.44.0.Final</version>
+      <version>${drools.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-mvel</artifactId>
+      <version>${drools.version}</version>
     </dependency>
     <!-- Template Engine -->
     <dependency>
@@ -197,6 +203,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.5.3</version>
         <!-- Configuration to disable the mockito agent
          This will remove the warning "Mockito is currently self-attaching to
          enable the inline-mock-maker."-->
@@ -205,6 +212,7 @@
             -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
             -Xshare:off
           </argLine>
+            <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
           <systemPropertyVariables>
             <propertyName>propertyValue</propertyName>
           </systemPropertyVariables>

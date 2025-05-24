@@ -8,10 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * Service for validating dive certification requirements using Drools rules engine.
- * Provides methods for both simple certification-level checks and complex object-based validation.
- */
 @Service
 public class CertificationValidatorService {
 
@@ -23,68 +19,87 @@ public class CertificationValidatorService {
         this.kieContainer = kieContainer;
     }
 
-    /**
-     * Validates if a user with the given certification can perform an activity 
-     * requiring the specified minimum certification level
-     * @return true if the user can perform the activity, false otherwise
-     */
-    public boolean validateCertification(DiveCertification userCertification, 
-                                         DiveCertification requiredCertification) {
+    public boolean validateCertification(DiveCertification userCertification,
+        DiveCertification requiredCertification) {
+        if (userCertification == null) {
+            userCertification = DiveCertification.NON_DIVER;
+        }
+
         CertificationValidator validator = new CertificationValidator();
         validator.setUserCertification(userCertification);
         validator.setRequiredCertification(requiredCertification);
-        
-        KieSession kieSession = kieContainer.newKieSession();
+
+        KieSession kieSession = null;
         try {
+            kieSession = kieContainer.newKieSession();
             kieSession.insert(validator);
-            kieSession.fireAllRules();
+            int rulesActivated = kieSession.fireAllRules();
+
+            logger.debug("Certification validation: {} -> {} = {}, rules activated: {}",
+                userCertification, requiredCertification, validator.isValid(), rulesActivated);
+
             return validator.isValid();
+        } catch (Exception e) {
+            logger.error("Error during certification validation", e);
+            return false;
         } finally {
-            kieSession.dispose();
+            if (kieSession != null) {
+                kieSession.dispose();
+            }
         }
     }
-    
-    /**
-     * Validates if a user can book a specific trip based on certification and any other rules
-     * @return ValidationResult containing validation status and any error messages
-     */
+
     public ValidationResult validateTripBooking(Trip trip, DiveCertificationHolder user) {
         ValidationResult result = new ValidationResult();
-        
-        KieSession kieSession = kieContainer.newKieSession();
+
+        KieSession kieSession = null;
         try {
+            kieSession = kieContainer.newKieSession();
             kieSession.insert(trip);
             kieSession.insert(user);
             kieSession.insert(result);
-            kieSession.fireAllRules();
-            
-            logger.debug("Trip booking validation for User {} with cert {}: {}", 
-                       user.getFirstName(), user.getDiveCertification(), result.isValid());
+
+            int rulesActivated = kieSession.fireAllRules();
+
+            logger.debug("Trip booking validation for {} with cert {}: {}, rules activated: {}",
+                user.getFirstName(), user.getDiveCertification(), result.isValid(), rulesActivated);
+
+            return result;
+        } catch (Exception e) {
+            logger.error("Error during trip booking validation", e);
+            result.addMessage("Validation error: " + e.getMessage());
             return result;
         } finally {
-            kieSession.dispose();
+            if (kieSession != null) {
+                kieSession.dispose();
+            }
         }
     }
-    
-    /**
-     * Validates if a user can enroll in a specific course based on certification and any other rules
-     * @return ValidationResult containing validation status and any error messages
-     */
+
     public ValidationResult validateCourseEnrollment(Course course, DiveCertificationHolder user) {
         ValidationResult result = new ValidationResult();
-        
-        KieSession kieSession = kieContainer.newKieSession();
+
+        KieSession kieSession = null;
         try {
+            kieSession = kieContainer.newKieSession();
             kieSession.insert(course);
             kieSession.insert(user);
             kieSession.insert(result);
-            kieSession.fireAllRules();
-            
-            logger.debug("Course enrollment validation for User {} with cert {}: {}", 
-                       user.getFirstName(), user.getDiveCertification(), result.isValid());
+
+            int rulesActivated = kieSession.fireAllRules();
+
+            logger.debug("Course enrollment validation for {} with cert {}: {}, rules activated: {}",
+                user.getFirstName(), user.getDiveCertification(), result.isValid(), rulesActivated);
+
+            return result;
+        } catch (Exception e) {
+            logger.error("Error during course enrollment validation", e);
+            result.addMessage("Validation error: " + e.getMessage());
             return result;
         } finally {
-            kieSession.dispose();
+            if (kieSession != null) {
+                kieSession.dispose();
+            }
         }
     }
 }

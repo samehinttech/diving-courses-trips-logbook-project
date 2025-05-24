@@ -19,7 +19,7 @@ import java.util.List;
 
 /**
  * REST controller for managing dive logs.
- * Only authenticated premium users can access these endpoints.
+ * Only authenticated users can access these endpoints.
  */
 @RestController
 @RequestMapping("/api/dive-logs")
@@ -35,6 +35,28 @@ public class DiveLogController {
     }
 
     /**
+     * Helper method to get the current premium user
+     * @return the current premium user
+     */
+    private PremiumUser getCurrentPremiumUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return premiumUserService.getPremiumUserEntityByUsername(username);
+    }
+
+    /**
+     * Helper method to filter dive logs for the current user
+     * @param diveLogs the list of dive logs to filter
+     * @param premiumUser the current premium user
+     * @return filtered list of dive logs belonging to the current user
+     */
+    private List<DiveLog> filterDiveLogsForUser(List<DiveLog> diveLogs, PremiumUser premiumUser) {
+        return diveLogs.stream()
+                .filter(diveLog -> diveLog.getPremiumUser().getId().equals(premiumUser.getId()))
+                .toList();
+    }
+
+    /**
      * GET /api/dive-logs: Get all dive logs for the current user.
      * Requires authentication.
      *
@@ -42,12 +64,8 @@ public class DiveLogController {
      */
     @GetMapping
     public ResponseEntity<List<DiveLog>> getAllDiveLogsForCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        
-        PremiumUser premiumUser = premiumUserService.getPremiumUserEntityByUsername(username);
+        PremiumUser premiumUser = getCurrentPremiumUser();
         List<DiveLog> diveLogs = diveLogService.getDiveLogsByPremiumUser(premiumUser);
-        
         return ResponseEntity.ok(diveLogs);
     }
 
@@ -60,17 +78,14 @@ public class DiveLogController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<DiveLog> getDiveLogById(@PathVariable Long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        
-        PremiumUser premiumUser = premiumUserService.getPremiumUserEntityByUsername(username);
+        PremiumUser premiumUser = getCurrentPremiumUser();
         DiveLog diveLog = diveLogService.getDiveLogById(id);
-        
+
         // Check if the dive log belongs to the current user
         if (!diveLog.getPremiumUser().getId().equals(premiumUser.getId())) {
             throw new BusinessRuleViolationException("You are not authorized to access this dive log");
         }
-        
+
         return ResponseEntity.ok(diveLog);
     }
 
@@ -83,17 +98,12 @@ public class DiveLogController {
      */
     @GetMapping("/location/{location}")
     public ResponseEntity<List<DiveLog>> getDiveLogsByLocation(@PathVariable String location) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        
-        PremiumUser premiumUser = premiumUserService.getPremiumUserEntityByUsername(username);
+        PremiumUser premiumUser = getCurrentPremiumUser();
         List<DiveLog> diveLogs = diveLogService.getDiveLogsByLocation(location);
-        
+
         // Filter dive logs to only include those belonging to the current user
-        diveLogs = diveLogs.stream()
-                .filter(diveLog -> diveLog.getPremiumUser().getId().equals(premiumUser.getId()))
-                .toList();
-        
+        diveLogs = filterDiveLogsForUser(diveLogs, premiumUser);
+
         return ResponseEntity.ok(diveLogs);
     }
 
@@ -109,18 +119,13 @@ public class DiveLogController {
     public ResponseEntity<List<DiveLog>> getDiveLogsByDateRange(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime) {
-        
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        
-        PremiumUser premiumUser = premiumUserService.getPremiumUserEntityByUsername(username);
+
+        PremiumUser premiumUser = getCurrentPremiumUser();
         List<DiveLog> diveLogs = diveLogService.getDiveLogsByStartTimeBetween(startTime, endTime);
-        
+
         // Filter dive logs to only include those belonging to the current user
-        diveLogs = diveLogs.stream()
-                .filter(diveLog -> diveLog.getPremiumUser().getId().equals(premiumUser.getId()))
-                .toList();
-        
+        diveLogs = filterDiveLogsForUser(diveLogs, premiumUser);
+
         return ResponseEntity.ok(diveLogs);
     }
 
@@ -133,12 +138,8 @@ public class DiveLogController {
      */
     @PostMapping
     public ResponseEntity<DiveLog> createDiveLog(@RequestBody DiveLog diveLog) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        
-        PremiumUser premiumUser = premiumUserService.getPremiumUserEntityByUsername(username);
+        PremiumUser premiumUser = getCurrentPremiumUser();
         DiveLog createdDiveLog = diveLogService.createDiveLog(diveLog, premiumUser.getId());
-        
         return ResponseEntity.status(HttpStatus.CREATED).body(createdDiveLog);
     }
 
@@ -151,12 +152,8 @@ public class DiveLogController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<DiveLog> updateDiveLog(@PathVariable Long id, @RequestBody DiveLog diveLog) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        
-        PremiumUser premiumUser = premiumUserService.getPremiumUserEntityByUsername(username);
+        PremiumUser premiumUser = getCurrentPremiumUser();
         DiveLog updatedDiveLog = diveLogService.updateDiveLog(id, diveLog, premiumUser.getId());
-        
         return ResponseEntity.ok(updatedDiveLog);
     }
 
@@ -168,12 +165,8 @@ public class DiveLogController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDiveLog(@PathVariable Long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        
-        PremiumUser premiumUser = premiumUserService.getPremiumUserEntityByUsername(username);
+        PremiumUser premiumUser = getCurrentPremiumUser();
         diveLogService.deleteDiveLog(id, premiumUser.getId());
-        
         return ResponseEntity.noContent().build();
     }
 }

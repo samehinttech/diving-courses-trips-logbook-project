@@ -1,12 +1,9 @@
 package ch.fhnw.oceandive.repository;
 
-import ch.fhnw.oceandive.dto.PremiumUserDTO;
 import ch.fhnw.oceandive.model.PremiumUser;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -28,5 +25,4 @@ public interface PremiumUserRepo extends JpaRepository<PremiumUser, Long> {
 
   List<PremiumUser> findByUsernameAndIdNot(String username, Long id);
 
-  Page<PremiumUserDTO> getAllPremiumUsers(Pageable pageable);
 }

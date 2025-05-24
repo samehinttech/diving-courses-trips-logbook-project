@@ -19,19 +19,21 @@ import java.util.stream.Collectors;
 
 @Service
 public class TokenService {
+
   private static final Logger logger = LoggerFactory.getLogger(TokenService.class);
-  
+
   private final JwtEncoder encoder;
   private final JwtDecoder decoder;
-  
-  // Token configuration with defaults that can be overridden in .env
+
   @Value("${oceandive.security.jwt.access-token.expiration:3600}")
   private long accessTokenExpirationSeconds;
-  
+
   @Value("${oceandive.security.jwt.refresh-token.expiration:86400}")
   private long refreshTokenExpirationSeconds;
 
-  // In-memory store for blacklisted tokens with expiration time
+  @Value("${oceandive.security.jwt.issuer:oceandive-api}")
+  private String jwtIssuer;
+
   private final Map<String, Instant> blacklistedTokens = new ConcurrentHashMap<>();
 
   public TokenService(JwtEncoder encoder, JwtDecoder decoder) {
@@ -40,166 +42,64 @@ public class TokenService {
   }
 
   /**
-   * Generate an access token for the authenticated user
-   * @return The generated JWT token string
+   * Generate a JWT access token with user roles included.
    */
   public String generateToken(Authentication authentication) {
     Instant now = Instant.now();
-    
-    // Create a unique token ID
     String tokenId = UUID.randomUUID().toString();
-    
-    String scope = authentication.getAuthorities().stream()
+
+    // Collect user roles from an authentication object
+    List<String> roles = authentication.getAuthorities().stream()
         .map(GrantedAuthority::getAuthority)
-        .filter(authority -> !authority.startsWith("ROLE"))
-        .collect(Collectors.joining(" "));
-        
+        .collect(Collectors.toList());
+
     JwtClaimsSet claims = JwtClaimsSet.builder()
-        .issuer("oceandive-api")
+        .issuer(jwtIssuer)
         .issuedAt(now)
         .expiresAt(now.plus(accessTokenExpirationSeconds, ChronoUnit.SECONDS))
         .subject(authentication.getName())
-        .id(tokenId)  // Add jti claim for unique token ID
-        .claim("scope", scope)
+        .id(tokenId)
+        .claim("roles", roles) // Add user roles to token claims
         .build();
-        
-    var encoderParameters = JwtEncoderParameters.from(
-        JwsHeader.with(MacAlgorithm.HS512).build(), 
+
+    JwtEncoderParameters encoderParameters = JwtEncoderParameters.from(
+        JwsHeader.with(MacAlgorithm.HS512).build(),
         claims
     );
-    
+
     String token = this.encoder.encode(encoderParameters).getTokenValue();
-    logger.debug("Generated access token for user: {}", authentication.getName());
+    logger.debug("Generated access token for user '{}': {}", authentication.getName(), token);
     return token;
   }
 
   /**
-   * Generate a refresh token for the given username
-   * @return The generated refresh token string
+   * Generate a JWT refresh token.
    */
   public String generateRefreshToken(String username) {
     Instant now = Instant.now();
     String tokenId = UUID.randomUUID().toString();
-    
+
     JwtClaimsSet claims = JwtClaimsSet.builder()
-        .issuer("oceandive-api")
+        .issuer(jwtIssuer)
         .issuedAt(now)
         .expiresAt(now.plus(refreshTokenExpirationSeconds, ChronoUnit.SECONDS))
         .subject(username)
         .id(tokenId)
         .claim("token_type", "refresh")
         .build();
-        
-    var encoderParameters = JwtEncoderParameters.from(
-        JwsHeader.with(MacAlgorithm.HS512).build(), 
+
+    JwtEncoderParameters encoderParameters = JwtEncoderParameters.from(
+        JwsHeader.with(MacAlgorithm.HS512).build(),
         claims
     );
-    
+
     String token = this.encoder.encode(encoderParameters).getTokenValue();
-    logger.debug("Generated refresh token for user: {}", username);
+    logger.debug("Generated refresh token for user '{}': {}", username, token);
     return token;
   }
 
   /**
-   * Add a token to the blacklist with its expiration time
-   * 
-   * @param token The token to blacklist
-   */
-  public void blacklistToken(String token) {
-    try {
-      Jwt jwt = decoder.decode(token);
-      blacklistedTokens.put(token, jwt.getExpiresAt());
-      logger.debug("Token blacklisted. Total blacklisted tokens: {}", blacklistedTokens.size());
-    } catch (Exception e) {
-      logger.warn("Failed to blacklist invalid token: {}", e.getMessage());
-    }
-  }
-
-  /**
-   * Blacklist all tokens for a specific user
-   * 
-   * @param username The username whose tokens should be blacklisted
-   */
-  public void blacklistUserTokens(String username) {
-    logger.info("Blacklisting all tokens for user: {}", username);
-  }
-
-  /**
-   * Check if a token is blacklisted
-   * @return true if the token is blacklisted, false otherwise
-   */
-  public boolean isTokenBlacklisted(String token) {
-    return blacklistedTokens.containsKey(token);
-  }
-
-  /**
-   * Clean up expired tokens from the blacklist
-   * Runs every hour by default
-   */
-  @Scheduled(fixedRateString = "${oceandive.security.jwt.blacklist-cleanup-interval:3600000}")
-  public void cleanupBlacklist() {
-    Instant now = Instant.now();
-    int sizeBefore = blacklistedTokens.size();
-    
-    // Remove expired tokens
-    blacklistedTokens.entrySet().removeIf(entry -> entry.getValue().isBefore(now));
-    
-    int removed = sizeBefore - blacklistedTokens.size();
-    if (removed > 0) {
-      logger.info("Cleaned up {} expired tokens from blacklist. Remaining: {}", 
-          removed, blacklistedTokens.size());
-    }
-  }
-
-  /**
-   * Validate a token
-   * @return true if the token is valid, false otherwise
-   */
-  public boolean validateToken(String token) {
-    if (isTokenBlacklisted(token)) {
-      logger.debug("Token validation failed: token is blacklisted");
-      return false;
-    }
-
-    try {
-      Jwt jwt = decoder.decode(token);
-      
-      // Validate expiration time
-      Instant expiresAt = jwt.getExpiresAt();
-      if (expiresAt == null || expiresAt.isBefore(Instant.now())) {
-        logger.debug("Token validation failed: token is expired");
-        return false;
-      }
-      
-      // Validate issuer
-      String issuer = jwt.getClaimAsString("iss");
-      if (!"oceandive-api".equals(issuer)) {
-        logger.debug("Token validation failed: invalid issuer");
-        return false;
-      }
-      
-      return true;
-    } catch (JwtValidationException e) {
-      logger.debug("Token validation failed: {}", e.getMessage());
-      return false;
-    } catch (Exception e) {
-      logger.warn("Unexpected error during token validation: {}", e.getMessage());
-      return false;
-    }
-  }
-
-  /**
-   * Parse a token and extract its claims
-   * @return The JWT object containing all claims
-   * @throws JwtException if the token is invalid
-   */
-  public Jwt parseToken(String token) throws JwtException {
-    return decoder.decode(token);
-  }
-  
-  /**
-   * Get remaining validity time of a token in seconds
-   * @return Remaining seconds until expiration, or 0 if expired/invalid
+   * Get the remaining validity time of a token in seconds.
    */
   public long getTokenRemainingValiditySeconds(String token) {
     try {
@@ -207,24 +107,137 @@ public class TokenService {
       Instant expiration = jwt.getExpiresAt();
       if (expiration != null) {
         Duration duration = Duration.between(Instant.now(), expiration);
-        return Math.max(0, duration.getSeconds());
+        long remainingTime = Math.max(0, duration.getSeconds());
+        logger.debug("Remaining validity for token '{}': {} seconds", jwt.getId(), remainingTime);
+        return remainingTime;
       }
     } catch (Exception e) {
-      logger.debug("Could not determine token validity: {}", e.getMessage());
+      logger.warn("Failed to get token validity: {}", e.getMessage());
     }
     return 0;
   }
-  
+
   /**
-   * Extract username from token
-   * @return The username, or null if token is invalid
+   * Extract the username (subject) from a token.
    */
   public String getUsernameFromToken(String token) {
     try {
       Jwt jwt = decoder.decode(token);
-      return jwt.getSubject();
+      String username = jwt.getSubject();
+      logger.debug("Extracted username '{}' from token '{}'", username, jwt.getId());
+      return username;
     } catch (Exception e) {
-      return null;
+      logger.warn("Failed to extract username from token: {}", e.getMessage());
+    }
+    return null;
+  }
+
+  /**
+   * Validate an access or refresh token.
+   */
+  public boolean validateToken(String token) {
+    if (isTokenBlacklisted(token)) {
+      logger.warn("Token validation failed: token is blacklisted.");
+      return false;
+    }
+
+    try {
+      Jwt jwt = decoder.decode(token);
+
+      Instant expiresAt = jwt.getExpiresAt();
+      if (expiresAt == null || expiresAt.isBefore(Instant.now())) {
+        logger.warn("Token validation failed: token is expired.");
+        return false;
+      }
+
+      String issuer = String.valueOf(jwt.getIssuer());
+      if (!jwtIssuer.equals(issuer)) {
+        logger.warn("Token validation failed: invalid issuer.");
+        return false;
+      }
+
+      return true;
+
+    } catch (Exception e) {
+      logger.error("Token validation failed. Error: {}", e.getMessage());
+      return false;
+    }
+  }
+  
+  /**
+   * Validate a token and check if it has the required role.
+   */
+  public boolean validateTokenWithRole(String token, String requiredRole) {
+    if (!validateToken(token)) {
+      return false;
+    }
+  
+    try {
+      Jwt jwt = decoder.decode(token);
+      List<String> roles = null;
+      
+      // Try to get roles as string list first
+      try {
+          roles = jwt.getClaimAsStringList("roles");
+      } catch (Exception e) {
+          // If that fails, try to get as a generic claim and convert
+          Object rolesObj = jwt.getClaim("roles");
+          logger.debug("Roles from JWT raw: {} (type: {})", 
+                      rolesObj, 
+                      rolesObj != null ? rolesObj.getClass().getName() : "null");
+                      
+          if (rolesObj instanceof List) {
+              roles = ((List<?>) rolesObj).stream()
+                      .map(Object::toString)
+                      .collect(Collectors.toList());
+          }
+      }
+      
+      logger.debug("Validating token with roles: {} against required role: {}", roles, requiredRole);
+      
+      if (roles == null || !roles.contains(requiredRole)) {
+        logger.warn("Token validation failed: missing required role '{}'", requiredRole);
+        return false;
+      }
+      
+      return true;
+    } catch (Exception e) {
+      logger.error("Role validation failed. Error: {}", e.getMessage(), e);
+      return false;
+    }
+  }
+
+  /**
+   * Blacklist a token.
+   */
+  public void blacklistToken(String token) {
+    try {
+      Jwt jwt = decoder.decode(token);
+      blacklistedTokens.put(token, jwt.getExpiresAt());
+      logger.info("Token blacklisted: {}. Total blacklisted tokens: {}", jwt.getId(), blacklistedTokens.size());
+    } catch (Exception e) {
+      logger.error("Failed to blacklist token. Error: {}", e.getMessage());
+    }
+  }
+
+  /**
+   * Check if a token is blocklisted.
+   */
+  public boolean isTokenBlacklisted(String token) {
+    return blacklistedTokens.containsKey(token);
+  }
+
+  /**
+   * Clean up expired tokens in the blocklist.
+   */
+  @Scheduled(fixedRateString = "${oceandive.security.jwt.blacklist-cleanup-interval:3600000}")
+  public void cleanupBlacklist() {
+    Instant now = Instant.now();
+    int originalSize = blacklistedTokens.size();
+    blacklistedTokens.entrySet().removeIf(entry -> entry.getValue().isBefore(now));
+    int cleaned = originalSize - blacklistedTokens.size();
+    if (cleaned > 0) {
+      logger.debug("Blacklist cleanup: removed {} expired tokens. Remaining: {}", cleaned, blacklistedTokens.size());
     }
   }
 }

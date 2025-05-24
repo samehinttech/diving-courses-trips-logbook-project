@@ -1,6 +1,5 @@
 package ch.fhnw.oceandive.repository;
 
-import ch.fhnw.oceandive.dto.GuestUserDTO;
 import ch.fhnw.oceandive.model.GuestUser;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,6 +22,4 @@ public interface GuestUserRepo extends JpaRepository<GuestUser, Long> {
  // Find a GuestUser by their email address and exclude ID.
   List<GuestUser> findByEmailAndIdNot(String email, Long id);
 
-  // Find a GuestUser by their username with pagination.
-  Page<GuestUserDTO> getAllGuestUsers(Pageable pageable);
 }

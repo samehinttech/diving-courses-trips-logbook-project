@@ -40,27 +40,54 @@ public class SecurityConfig {
     return new UserDetailsServiceImpl();
   }
 
- @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-      return http
-          .csrf(AbstractHttpConfigurer::disable)
-          .authorizeHttpRequests(auth -> auth
-              .requestMatchers("/api/admin/**").hasRole("ADMIN") // Admin-only endpoints
-              .requestMatchers("/api/user/**").hasRole("USER")   // User-only endpoints
-              .requestMatchers("/api/guest/**").hasRole("GUEST") // Guest-only endpoints
-              .requestMatchers("/api/auth/token").hasAnyRole("USER", "ADMIN") // Token generation endpoint
-              .requestMatchers("/api/trips/**", "/api/courses/**").permitAll() // Public endpoints
-              .requestMatchers("/api/auth/premium/register").permitAll() // Allow premium user registration
-              .requestMatchers("/api/auth/premium/login").permitAll() // Allow premium user login
-              .requestMatchers("/api/auth/admin/login").permitAll() // Allow admin login
-              .requestMatchers("/api/dive-log/**").hasAnyRole("USER", "ADMIN")
-              .anyRequest().authenticated() // All other requests require authentication
-          )
-          .sessionManagement(session ->
-              session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-          .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()))
-          .httpBasic(withDefaults())
-          .build();
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter) throws Exception {
+    return http
+        .csrf(AbstractHttpConfigurer::disable)
+        .addFilterAfter(jwtAuthFilter, org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter.class)
+        .authorizeHttpRequests(auth -> auth
+            // Auth endpoints
+            .requestMatchers("/api/auth/user/login", "/api/auth/user/register", 
+                             "/api/auth/refresh", "/api/auth/admin/login").permitAll()
+
+            // Admin-specific auth endpoints
+            .requestMatchers("/api/auth/admin/profile").hasRole("ADMIN")
+
+            // Premium user auth endpoints
+            .requestMatchers("/api/auth/user/profile").hasRole("PREMIUM")
+
+            // Authenticated auth endpoints
+            .requestMatchers("/api/auth/token", "/api/auth/logout").authenticated()
+
+            // Public content endpoints
+            .requestMatchers("/", "/api", "/api/about", "/api/contact", "/api/privacy-policy", "/api/terms-conditions", 
+                             "/api/debug/jwt-info").permitAll()
+
+            // Public course endpoints
+            .requestMatchers("/api/courses", "/api/courses/**", "/oceandive/api/courses", "/oceandive/api/courses/**", "/oceandive/api").permitAll()
+
+            // Public trip endpoints
+            .requestMatchers("/api/trips", "/api/trips/**").permitAll()
+
+            // Public booking endpoints for guest users
+            .requestMatchers("/api/bookings/courses/*/guest", "/api/bookings/trips/*/guest").permitAll()
+
+            // Admin endpoints
+            .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
+            // Premium user endpoints
+            .requestMatchers("/api/user/**", "/api/dive-logs/**", "/api/bookings/courses/*/user", "/api/bookings/trips/*/user").hasRole("PREMIUM")
+
+            // Any other request requires authentication
+            .anyRequest().authenticated()
+        )
+        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> {
+            JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
+            jwt.jwtAuthenticationConverter(converter);
+        }))
+        .httpBasic(withDefaults())
+        .build();
   }
 
   @Bean
@@ -70,9 +97,9 @@ public class SecurityConfig {
 
   @Bean
   public JwtDecoder jwtDecoder() {
-    byte[] bytes = jwtKey.getBytes();
-    SecretKeySpec originalKey = new SecretKeySpec(bytes, "HmacSHA512");
-    return NimbusJwtDecoder.withSecretKey(originalKey).macAlgorithm(MacAlgorithm.HS512).build();
+    byte[] secret = jwtKey.getBytes();
+    SecretKeySpec keySpec = new SecretKeySpec(secret, "HmacSHA512");
+    return NimbusJwtDecoder.withSecretKey(keySpec).macAlgorithm(MacAlgorithm.HS512).build();
   }
 
   @Bean
@@ -82,15 +109,14 @@ public class SecurityConfig {
 
   @Bean
   public AuthenticationProvider authenticationProvider() {
-    DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-    authenticationProvider.setUserDetailsService(userDetailsService());
-    authenticationProvider.setPasswordEncoder(passwordEncoder());
-    return authenticationProvider;
+    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+    authProvider.setUserDetailsService(userDetailsService());
+    authProvider.setPasswordEncoder(passwordEncoder());
+    return authProvider;
   }
 
   @Bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
-      throws Exception {
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
     return config.getAuthenticationManager();
   }
 }

@@ -188,6 +188,7 @@ public class GuestUserService {
 
     // Get all guest users with pagination.
     public Page<GuestUserDTO> getAllGuestUsers(Pageable pageable) {
-        return guestUserRepo.getAllGuestUsers(pageable);
+        return guestUserRepo.findAll(pageable)
+                .map(this::convertToDTO);
     }
 }
