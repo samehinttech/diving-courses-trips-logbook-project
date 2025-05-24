@@ -18,7 +18,7 @@ public class Course {
     private Long id;
 
     @Column(nullable = false)
-    private String location;
+    private String name;
 
     @Column(nullable = false, length = 1000)
     private String description;
@@ -51,10 +51,10 @@ public class Course {
     }
 
     //Parameterized constructor
-    public Course(String location, String description, LocalDate startDate, LocalDate endDate, 
+    public Course(String name, String description, LocalDate startDate, LocalDate endDate, 
                  String imageUrl, Integer capacity, 
                  DiveCertification minCertificationRequired) {
-        this.location = location;
+        this.name = name;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -74,12 +74,12 @@ public class Course {
         this.id = id;
     }
 
-    public String getLocation() {
-        return location;
+    public String getName() {
+        return name;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {

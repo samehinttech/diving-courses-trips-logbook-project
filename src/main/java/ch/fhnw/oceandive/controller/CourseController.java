@@ -2,7 +2,6 @@ package ch.fhnw.oceandive.controller;
 
 import ch.fhnw.oceandive.model.Course;
 import ch.fhnw.oceandive.service.CourseService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +18,6 @@ public class CourseController {
 
     private final CourseService courseService;
 
-    @Autowired
     public CourseController(CourseService courseService) {
         this.courseService = courseService;
     }
@@ -74,20 +72,20 @@ public class CourseController {
      */
     @GetMapping("/courses/available")
     public ResponseEntity<List<Course>> getAvailableCourses() {
-        List<Course> courses = courseService.getAvailableCourses();
+        List<Course> courses = courseService.getAllCourses();
         return ResponseEntity.ok(courses);
     }
 
     /**
-     * GET /api/courses/location/{location} : Get courses by location.
+     * GET /api/courses/name/{name} : Get courses by name.
      * Public endpoint accessible to all users.
      *
-     * @param location the location to search for
+     * @param name the name to search for
      * @return the ResponseEntity with status 200 (OK) and the list of courses in body
      */
-    @GetMapping("/courses/location/{location}")
-    public ResponseEntity<List<Course>> getCoursesByLocation(@PathVariable String location) {
-        List<Course> courses = courseService.getCoursesByLocation(location);
+    @GetMapping("/courses/name/{name}")
+    public ResponseEntity<List<Course>> getCoursesByName(@PathVariable String name) {
+        List<Course> courses = courseService.getCoursesByName(name);
         return ResponseEntity.ok(courses);
     }
 

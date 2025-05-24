@@ -1,4 +1,4 @@
-package ch.fhnw.oceandive.util;
+package ch.fhnw.oceandive.validation;
 
 import java.util.regex.Pattern;
 

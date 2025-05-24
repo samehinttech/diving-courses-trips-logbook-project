@@ -5,6 +5,8 @@ import ch.fhnw.oceandive.model.Trip;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,8 +26,8 @@ public interface TripRepo extends JpaRepository<Trip, Long> {
     // Find trips with start date between the given dates
     List<Trip> findByStartDateBetween(LocalDate startDate, LocalDate endDate);
 
-    // Find trips with a name containing the given string (case insensitive)
-    List<Trip> findByNameContainingIgnoreCase(String name);
+    // Find trips with a location containing the given string (case insensitive)
+    List<Trip> findByLocationContainingIgnoreCase(String location);
 
     // Find trips with available capacity (current bookings less than capacity)
     @Query("SELECT t FROM Trip t WHERE t.currentBookings < t.capacity")
@@ -33,4 +35,7 @@ public interface TripRepo extends JpaRepository<Trip, Long> {
 
     // Find trips by minimum certification required
     List<Trip> findByMinCertificationRequired(DiveCertification minCertificationRequired);
+
+    Page<Trip> getAllTrips(Pageable pageable);
+
 }

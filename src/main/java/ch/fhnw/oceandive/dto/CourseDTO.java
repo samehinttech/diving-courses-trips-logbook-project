@@ -10,7 +10,7 @@ import java.util.Objects;
 public class CourseDTO implements Serializable {
 
   private final Long id;
-  private final String location;
+  private final String name;
   private final String description;
   private final LocalDate startDate;
   private final LocalDate endDate;
@@ -21,12 +21,12 @@ public class CourseDTO implements Serializable {
   private final Integer currentBookings;
   private final DiveCertification minCertificationRequired;
 
-  public CourseDTO(Long id, String location, String description, LocalDate startDate,
+  public CourseDTO(Long id, String name, String description, LocalDate startDate,
       LocalDate endDate, Integer duration, LocalDateTime createdAt, String imageUrl,
       Integer capacity,
       Integer currentBookings, DiveCertification minCertificationRequired) {
     this.id = id;
-    this.location = location;
+    this.name = name;
     this.description = description;
     this.startDate = startDate;
     this.endDate = endDate;
@@ -42,8 +42,8 @@ public class CourseDTO implements Serializable {
     return id;
   }
 
-  public String getLocation() {
-    return location;
+  public String getName() {
+    return name;
   }
 
   public String getDescription() {
@@ -92,7 +92,7 @@ public class CourseDTO implements Serializable {
     }
     CourseDTO entity = (CourseDTO) obj;
     return Objects.equals(this.id, entity.id) &&
-        Objects.equals(this.location, entity.location) &&
+        Objects.equals(this.name, entity.name) &&
         Objects.equals(this.description, entity.description) &&
         Objects.equals(this.startDate, entity.startDate) &&
         Objects.equals(this.endDate, entity.endDate) &&
@@ -106,15 +106,15 @@ public class CourseDTO implements Serializable {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, location, description, startDate, endDate, duration, createdAt,
-        imageUrl, capacity, currentBookings, minCertificationRequired);
+    return Objects.hash(id, name, description, startDate, endDate, duration, createdAt, imageUrl,
+        capacity, currentBookings, minCertificationRequired);
   }
 
   @Override
   public String toString() {
     return getClass().getSimpleName() + "(" +
         "id = " + id + ", " +
-        "location = " + location + ", " +
+        "name = " + name + ", " +
         "description = " + description + ", " +
         "startDate = " + startDate + ", " +
         "endDate = " + endDate + ", " +

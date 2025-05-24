@@ -4,7 +4,8 @@ import ch.fhnw.oceandive.exceptionHandler.ResourceNotFoundException;
 import ch.fhnw.oceandive.model.DiveCertification;
 import ch.fhnw.oceandive.model.Trip;
 import ch.fhnw.oceandive.repository.TripRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +21,6 @@ public class TripService {
     private final TripRepo tripRepo;
     private final CertificationValidatorService certificationValidator;
 
-    @Autowired
     public TripService(TripRepo tripRepo, CertificationValidatorService certificationValidator) {
         this.tripRepo = tripRepo;
         this.certificationValidator = certificationValidator;
@@ -69,11 +69,11 @@ public class TripService {
     }
 
     /**
-     * Get trips by name.
-     * @return List of trips with the given name
+     * Get trips by location.
+     * @return List of trips with the given location
      */
-    public List<Trip> getTripsByName(String name) {
-        return tripRepo.findByNameContainingIgnoreCase(name);
+    public List<Trip> getTripsByLocation(String location) {
+        return tripRepo.findByLocationContainingIgnoreCase(location);
     }
 
     /**
@@ -112,8 +112,8 @@ public class TripService {
         validateTripData(tripDetails);
         
         // Update fields
-        if (tripDetails.getName() != null) {
-            trip.setName(tripDetails.getName());
+        if (tripDetails.getLocation() != null) {
+            trip.setLocation(tripDetails.getLocation());
         }
         if (tripDetails.getDescription() != null) {
             trip.setDescription(tripDetails.getDescription());
@@ -231,10 +231,18 @@ public class TripService {
         return tripRepo.findByStartDateAfter(LocalDate.now());
     }
     
+    /**
+     * Get all trips with pagination.
+     * @return Page of trips
+     */
+    public Page<Trip> getAllTrips(Pageable pageable) {
+        return tripRepo.getAllTrips(pageable);
+    }
+    
     // Validation logic
     private void validateTripData(Trip trip) {
-        if (trip.getName() == null || trip.getName().trim().isEmpty()) {
-            throw new IllegalArgumentException("Trip name cannot be empty");
+        if (trip.getLocation() == null || trip.getLocation().trim().isEmpty()) {
+            throw new IllegalArgumentException("Trip location cannot be empty");
         }
         
         if (trip.getDescription() == null || trip.getDescription().trim().isEmpty()) {

@@ -5,8 +5,10 @@ import ch.fhnw.oceandive.exceptionHandler.DuplicateResourceException;
 import ch.fhnw.oceandive.exceptionHandler.ResourceNotFoundException;
 import ch.fhnw.oceandive.model.GuestUser;
 import ch.fhnw.oceandive.repository.GuestUserRepo;
-import ch.fhnw.oceandive.util.EmailValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import ch.fhnw.oceandive.validation.EmailValidator;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +24,6 @@ public class GuestUserService {
 
     private final GuestUserRepo guestUserRepo;
 
-    @Autowired
     public GuestUserService(GuestUserRepo guestUserRepo) {
         this.guestUserRepo = guestUserRepo;
     }
@@ -183,5 +184,10 @@ public class GuestUserService {
         if (guestUserDTO.getLastName() == null || guestUserDTO.getLastName().trim().isEmpty()) {
             throw new IllegalArgumentException("Last name cannot be empty");
         }
+    }
+
+    // Get all guest users with pagination.
+    public Page<GuestUserDTO> getAllGuestUsers(Pageable pageable) {
+        return guestUserRepo.getAllGuestUsers(pageable);
     }
 }

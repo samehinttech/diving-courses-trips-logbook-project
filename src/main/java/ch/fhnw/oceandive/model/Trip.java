@@ -19,7 +19,7 @@ public class Trip {
   private Long id;
 
   @Column(nullable = false)
-  private String name;
+  private String location;
 
   @Column(nullable = false, length = 1000)
   private String description;
@@ -52,10 +52,10 @@ public class Trip {
   }
 
   // Constructor
-  public Trip(String name, String description, LocalDate startDate, LocalDate endDate,
+  public Trip(String location, String description, LocalDate startDate, LocalDate endDate,
       String imageUrl, Integer capacity,
       DiveCertification minCertificationRequired) {
-    this.name = name;
+    this.location = location;
     this.description = description;
     this.startDate = startDate;
     this.endDate = endDate;
@@ -74,12 +74,12 @@ public class Trip {
     this.id = id;
   }
 
-  public String getName() {
-    return name;
+  public String getLocation() {
+    return location;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setLocation(String location) {
+    this.location = location;
   }
 
   public String getDescription() {

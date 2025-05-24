@@ -79,15 +79,15 @@ public class TripController {
     }
 
     /**
-     * GET /api/trips/name/{name}: Get trips by name.
+     * GET /api/trips/location/{location}: Get trips by location(which is used as the trip name).
      * Public endpoint is accessible to all users.
      *
-     * @param name the name to search for
+     * @param location the location to search for
      * @return the ResponseEntity with status 200 (OK) and the list of trips in body
      */
-    @GetMapping("/trips/name/{name}")
-    public ResponseEntity<List<Trip>> getTripsByName(@PathVariable String name) {
-        List<Trip> trips = tripService.getTripsByName(name);
+    @GetMapping("/trips/location/{location}")
+    public ResponseEntity<List<Trip>> getTripsByLocation(@PathVariable String location) {
+        List<Trip> trips = tripService.getTripsByLocation(location);
         return ResponseEntity.ok(trips);
     }
 

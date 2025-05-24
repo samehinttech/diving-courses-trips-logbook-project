@@ -4,7 +4,8 @@ import ch.fhnw.oceandive.exceptionHandler.ResourceNotFoundException;
 import ch.fhnw.oceandive.model.Course;
 import ch.fhnw.oceandive.model.DiveCertification;
 import ch.fhnw.oceandive.repository.CourseRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +21,6 @@ public class CourseService {
     private final CourseRepo courseRepo;
     private final CertificationValidatorService certificationValidator;
 
-    @Autowired
     public CourseService(CourseRepo courseRepo, CertificationValidatorService certificationValidator) {
         this.courseRepo = courseRepo;
         this.certificationValidator = certificationValidator;
@@ -32,6 +32,14 @@ public class CourseService {
      */
     public List<Course> getAllCourses() {
         return courseRepo.findAll();
+    }
+
+    /**
+     * Get all courses with pagination.
+     * @return A page of courses
+     */
+    public Page<Course> findAll(Pageable pageable) {
+        return courseRepo.findAll(pageable);
     }
 
     /**
@@ -83,23 +91,12 @@ public class CourseService {
     }
 
     /**
-     * Get courses by location.
-     * @param location The location to search for (case insensitive, partial match)
-     * @return List of courses at the given location
+     * Get courses by name (case insensitive, partial match).
+     * @param name the name to search for
+     * @return List of courses matching the name
      */
-    public List<Course> getCoursesByLocation(String location) {
-        if (location == null || location.trim().isEmpty()) {
-            throw new IllegalArgumentException("Location cannot be null or empty");
-        }
-        return courseRepo.findByLocationContainingIgnoreCase(location);
-    }
-
-    /**
-     * Get courses that are not fully booked.
-     * @return List of courses that are not fully booked
-     */
-    public List<Course> getAvailableCourses() {
-        return courseRepo.findByCurrentBookingsLessThanCapacity();
+    public List<Course> getCoursesByName(String name) {
+        return courseRepo.findByNameContainingIgnoreCase(name);
     }
 
     /**
@@ -173,40 +170,31 @@ public class CourseService {
         if (courseDetails == null) {
             throw new IllegalArgumentException("Course details cannot be null");
         }
-
         Course course = getCourseById(id);
-
-        if (courseDetails.getLocation() != null) {
-            course.setLocation(courseDetails.getLocation());
+        if (courseDetails.getName() != null) {
+            course.setName(courseDetails.getName());
         }
-        
         if (courseDetails.getDescription() != null) {
             course.setDescription(courseDetails.getDescription());
         }
-        
         if (courseDetails.getStartDate() != null) {
             course.setStartDate(courseDetails.getStartDate());
         }
-        
         if (courseDetails.getEndDate() != null) {
             course.setEndDate(courseDetails.getEndDate());
         }
-        
         if (courseDetails.getImageUrl() != null) {
             course.setImageUrl(courseDetails.getImageUrl());
         }
-        
         if (courseDetails.getCapacity() != null) {
             if (courseDetails.getCapacity() < course.getCurrentBookings()) {
                 throw new IllegalArgumentException("Cannot reduce capacity below current number of bookings");
             }
             course.setCapacity(courseDetails.getCapacity());
         }
-        
         if (courseDetails.getMinCertificationRequired() != null) {
             course.setMinCertificationRequired(courseDetails.getMinCertificationRequired());
         }
-
         return courseRepo.save(course);
     }
 

@@ -60,7 +60,7 @@ public class BookingService {
             );
         }
 
-        String bookingReference = generateBookingReference(course.getLocation(), user.getFirstName());
+        String bookingReference = generateBookingReference(course.getName(), user.getFirstName());
         course.incrementBookings();
         courseRepo.save(course);
         logger.info("Course booked with reference: {}", bookingReference);
@@ -90,7 +90,7 @@ public class BookingService {
             );
         }
 
-        String bookingReference = generateBookingReference(trip.getName(), user.getFirstName());
+        String bookingReference = generateBookingReference(trip.getLocation(), user.getFirstName());
         trip.incrementBookings();
         tripRepo.save(trip);
         logger.info("Trip booked with reference: {}", bookingReference);

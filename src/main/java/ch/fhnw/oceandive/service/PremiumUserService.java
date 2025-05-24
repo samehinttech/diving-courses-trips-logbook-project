@@ -5,8 +5,10 @@ import ch.fhnw.oceandive.exceptionHandler.DuplicateResourceException;
 import ch.fhnw.oceandive.exceptionHandler.ResourceNotFoundException;
 import ch.fhnw.oceandive.model.PremiumUser;
 import ch.fhnw.oceandive.repository.PremiumUserRepo;
-import ch.fhnw.oceandive.util.EmailValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import ch.fhnw.oceandive.validation.EmailValidator;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +22,6 @@ public class PremiumUserService {
     private final PremiumUserRepo premiumUserRepo;
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
     public PremiumUserService(PremiumUserRepo premiumUserRepo, PasswordEncoder passwordEncoder) {
         this.premiumUserRepo = premiumUserRepo;
         this.passwordEncoder = passwordEncoder;
@@ -229,5 +230,15 @@ public class PremiumUserService {
         if (premiumUserDTO.getLastName() == null || premiumUserDTO.getLastName().trim().isEmpty()) {
             throw new IllegalArgumentException("Last name cannot be empty");
         }
+    }
+
+    /**
+     * Get all premium users with pagination.
+     *
+     * @param pageable pagination information
+     * @return Page of PremiumUserDTO objects
+     */
+    public Page<PremiumUserDTO> getAllPremiumUsers(Pageable pageable) {
+        return premiumUserRepo.getAllPremiumUsers(pageable);
     }
 }

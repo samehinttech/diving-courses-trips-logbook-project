@@ -5,7 +5,8 @@ import ch.fhnw.oceandive.exceptionHandler.DuplicateResourceException;
 import ch.fhnw.oceandive.exceptionHandler.ResourceNotFoundException;
 import ch.fhnw.oceandive.model.Admin;
 import ch.fhnw.oceandive.repository.AdminRepo;
-import ch.fhnw.oceandive.util.EmailValidator;
+import ch.fhnw.oceandive.validation.EmailValidator;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

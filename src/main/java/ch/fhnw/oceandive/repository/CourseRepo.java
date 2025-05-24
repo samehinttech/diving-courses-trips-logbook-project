@@ -34,18 +34,18 @@ public interface CourseRepo extends JpaRepository<Course, Long> {
      * Find courses with start date between the given dates.
      * 
      * @param startDate The start date
-     * @param endDate The end date
+     * @param endDate   The end date
      * @return List of courses starting between the given dates
      */
     List<Course> findByStartDateBetween(LocalDate startDate, LocalDate endDate);
 
     /**
-     * Find courses by location.
+     * Find courses by name.
      * 
-     * @param location The location to search for
-     * @return List of courses at the given location
+     * @param name The name to search for
+     * @return List of courses with the given name
      */
-    List<Course> findByLocationContainingIgnoreCase(String location);
+    List<Course> findByNameContainingIgnoreCase(String name);
 
     /**
      * Find courses that are not fully booked.
