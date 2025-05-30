@@ -1,0 +1,18 @@
+/*
+=================================
+MAIN STYLESHEET - MASTER IMPORT
+=================================
+Import order is critical!
+*/
+
+/* 1. Global variables, reset, and base styles FIRST */
+@import "/css/styles.css";
+
+/* 2. Utility classes SECOND */
+@import "/css/utils.css";
+
+/* 3. Header & Footer components THIRD (includes component-specific responsive) */
+@import "/css/header-footer.css";
+
+/* 4. Global responsive overrides LAST */
+@import "/css/responsive.css";
