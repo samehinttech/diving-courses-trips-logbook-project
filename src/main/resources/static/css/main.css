@@ -6,13 +6,13 @@ Import order is critical!
 */
 
 /* 1. Global variables, reset, and base styles FIRST */
-@import "static/css/styles.css";
+@import url("/static/css/styles.css");
 
 /* 2. Utility classes SECOND */
-@import "static/css/utils.css";
+@import url("/static/css/utils.css");
 
 /* 3. Header & Footer components THIRD (includes component-specific responsive) */
-@import "static/css/header-footer.css";
+@import url("/static/css/header-footer.css");
 
 /* 4. Global responsive overrides LAST */
-@import "static/css/responsive.css";
+@import url("static/css/responsive.css");

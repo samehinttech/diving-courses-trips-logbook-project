@@ -1,8 +1,12 @@
+/**
+ * Class to load HTML fragments into the index page
+ */
 class FragmentLoader {
   constructor() {
-    this.cache = new Map();
+    this.cache = new Map(); // Cache to store loaded fragments
   }
 
+  // Load a fragment from a URL and insert it into the target element
   async loadFragment(url, targetSelector) {
     try {
       let html;
@@ -29,6 +33,7 @@ class FragmentLoader {
     }
   }
 
+  // Execute scripts in the loaded fragment
   executeScripts(container) {
     const scripts = container.querySelectorAll('script');
     scripts.forEach(oldScript => {
@@ -41,12 +46,21 @@ class FragmentLoader {
     });
   }
 
+  // Load fragments in parallel 
   async initCommonFragments() {
-    await this.loadFragment('navi-bar.html', '#header-fragment');
-    await this.loadFragment('footer.html', '#footer-fragment');
-    this.initMobileMenu(); // Manually initialize menu
+    // Start both loads simultaneously
+    const headerPromise = this.loadFragment('navi-bar.html', '#header-fragment');
+    const footerPromise = this.loadFragment('footer.html', '#footer-fragment');
+
+    // Wait for both to complete
+    await Promise.all([headerPromise, footerPromise]);
+
+    // Initialize menu after header is loaded
+    this.initMobileMenu();
   }
 
+
+// Load with visual feedback
   initMobileMenu() {
     const hamburger = document.querySelector('.hamburger-menu');
     const mobileNav = document.querySelector('.mobile-nav');
@@ -58,7 +72,7 @@ class FragmentLoader {
       });
     }
   }
-
+  // Update the active navigation link based on the current URL
   updateActiveNavLink() {
     const currentPath = window.location.pathname;
     const navLinks = document.querySelectorAll('.nav-links a, .mobile-nav-links a');
@@ -76,13 +90,29 @@ class FragmentLoader {
       }
     });
   }
+
+  // Preload fragments for instant loading for future navigations
+  async preloadFragments() {
+    const fragmentUrls = ['navi-bar.html', 'footer.html'];
+    const preloadPromises = fragmentUrls.map(url =>
+        fetch(url).then(response => response.text()).then(html => {
+          this.cache.set(url, html);
+        }).catch(error => console.warn(`Failed to preload ${url}:`, error))
+    );
+
+    await Promise.all(preloadPromises);
+    console.log('Fragments preloaded');
+  }
 }
 
 const fragmentLoader = new FragmentLoader();
 
 document.addEventListener('DOMContentLoaded', async () => {
+  // Use parallel loading for better performance
   await fragmentLoader.initCommonFragments();
   fragmentLoader.updateActiveNavLink();
 });
 
-window.fragmentLoader = fragmentLoader;
+//Preload fragments as soon as script loads
+fragmentLoader.preloadFragments().then(r => window.fragmentLoader.initCommonFragments());
+

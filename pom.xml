@@ -13,6 +13,7 @@
   <artifactId>oceandive</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>oceandive</name>
+  <packaging>jar</packaging>
   <description>Student Project for Internet Technology at FHNW</description>
 
   <properties>
@@ -194,8 +195,11 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>${java.version}</source>
-          <target>${java.version}</target>
+          <source>21</source>
+          <target>21</target>
+          <compilerArgs>
+            <arg>-parameters</arg>
+          </compilerArgs>
         </configuration>
       </plugin>
 
@@ -204,18 +208,10 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.5.3</version>
-        <!-- Configuration to disable the mockito agent
-         This will remove the warning "Mockito is currently self-attaching to
-         enable the inline-mock-maker."-->
         <configuration>
-          <argLine>
-            -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
-            -Xshare:off
-          </argLine>
-            <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
-          <systemPropertyVariables>
-            <propertyName>propertyValue</propertyName>
-          </systemPropertyVariables>
+          <forkCount>1</forkCount>
+          <reuseForks>true</reuseForks>
+          <argLine> -Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
         </configuration>
       </plugin>
     </plugins>

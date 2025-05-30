@@ -1,7 +1,9 @@
 <footer class="footer">
 
   <div class="footer-container">
-    <link rel="stylesheet" href="/static/css/main.css">
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/static/css/styles.css?v=1">
+    <link rel="stylesheet" href="/static/css/header-footer.css?v=1">
     <!-- Footer Top Section -->
     <div class="footer-top">
       <!-- Footer Logo -->
@@ -34,7 +36,7 @@
 
     <!-- Footer Bottom -->
     <div class="footer-bottom">
-      <p>&copy; 2024 Oceandive. All rights reserved. |
+      <p>&copy; <span th:text="${T(java.time.Year).now()}"></span> Oceandive. All rights reserved. |
         <a href="#" class="footer-link">Privacy Policy</a> |
         <a href="#" class="footer-link">Terms and Conditions</a>
       </p>
