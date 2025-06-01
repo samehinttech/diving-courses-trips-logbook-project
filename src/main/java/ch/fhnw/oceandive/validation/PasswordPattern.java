@@ -1,105 +1,16 @@
 package ch.fhnw.oceandive.validation;
 
 import jakarta.validation.Constraint;
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
-import java.util.regex.Pattern;
 
-/**
- * Password validation annotation and validator.
- * Ensures passwords meet security requirements:
- * - At least 8 characters
- * - At least one uppercase letter
- * - At least one lowercase letter
- * - At least one digit
- * - At least one special character
- */
 @Documented
-@Constraint(validatedBy = PasswordPattern.Validator.class)
+@Constraint(validatedBy = PasswordPatternValidator.class)
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PasswordPattern {
   String message() default "Password must be at least 8 characters and contain uppercase, lowercase, digit and special character";
   Class<?>[] groups() default {};
   Class<? extends Payload>[] payload() default {};
-
-  /**
-   * Password pattern validator implementation
-   */
-  class Validator implements ConstraintValidator<PasswordPattern, String> {
-
-    private static final String PASSWORD_REGEX =
-        "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).{8,}$";
-
-    private static final Pattern PASSWORD_PATTERN = Pattern.compile(PASSWORD_REGEX);
-
-    // Pattern matchers for specific requirements
-    private static final Pattern UPPERCASE_PATTERN = Pattern.compile(".*[A-Z].*");
-    private static final Pattern LOWERCASE_PATTERN = Pattern.compile(".*[a-z].*");
-    private static final Pattern DIGIT_PATTERN = Pattern.compile(".*[0-9].*");
-    private static final Pattern SPECIAL_CHAR_PATTERN = Pattern.compile(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?].*");
-
-    @Override
-    public void initialize(PasswordPattern constraintAnnotation) {
-      // Nothing to initialize
-    }
-
-    @Override
-    public boolean isValid(String password, ConstraintValidatorContext context) {
-      if (password == null) {
-        return false;
-      }
-
-      if (!PASSWORD_PATTERN.matcher(password).matches()) {
-        context.disableDefaultConstraintViolation();
-        context.buildConstraintViolationWithTemplate(
-            buildDetailedErrorMessage(password)
-        ).addConstraintViolation();
-        return false;
-      }
-
-      return true;
-    }
-
-    /**
-     * Build a detailed error message indicating which requirements are not met
-     */
-    private String buildDetailedErrorMessage(String password) {
-      StringBuilder message = new StringBuilder("Password must ");
-      boolean needsAnd = false;
-
-      if (password.length() < 8) {
-        message.append("be at least 8 characters long");
-        needsAnd = true;
-      }
-
-      if (!UPPERCASE_PATTERN.matcher(password).matches()) {
-        if (needsAnd) message.append(" and ");
-        message.append("contain at least one uppercase letter");
-        needsAnd = true;
-      }
-
-      if (!LOWERCASE_PATTERN.matcher(password).matches()) {
-        if (needsAnd) message.append(" and ");
-        message.append("contain at least one lowercase letter");
-        needsAnd = true;
-      }
-
-      if (!DIGIT_PATTERN.matcher(password).matches()) {
-        if (needsAnd) message.append(" and ");
-        message.append("contain at least one digit");
-        needsAnd = true;
-      }
-
-      if (!SPECIAL_CHAR_PATTERN.matcher(password).matches()) {
-        if (needsAnd) message.append(" and ");
-        message.append("contain at least one special character");
-      }
-
-      return message.toString();
-    }
-  }
 }

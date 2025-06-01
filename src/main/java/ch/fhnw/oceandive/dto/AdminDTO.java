@@ -1,5 +1,6 @@
 package ch.fhnw.oceandive.dto;
 
+import ch.fhnw.oceandive.validation.PasswordPattern;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import java.io.Serializable;
@@ -21,6 +22,7 @@ public class AdminDTO implements Serializable {
   @NotEmpty(message = "Please enter a username")
   private final String username;
   @NotEmpty(message = "Please enter a password")
+  @PasswordPattern
   private final String password;
   private final String role;
   private final String roleLimitation;

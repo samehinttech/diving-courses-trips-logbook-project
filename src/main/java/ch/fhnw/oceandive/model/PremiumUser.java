@@ -1,5 +1,6 @@
 package ch.fhnw.oceandive.model;
 
+import ch.fhnw.oceandive.validation.PasswordPattern;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
@@ -24,6 +25,7 @@ public class PremiumUser extends BaseUser implements DiveCertificationHolder {
 
   @NotEmpty(message = "Please enter a password")
   @Column(nullable = false)
+  @PasswordPattern
   private String password;
   @CreationTimestamp
   @Column(nullable = false, updatable = false)

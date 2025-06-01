@@ -5,7 +5,7 @@ import ch.fhnw.oceandive.model.CertificationValidator;
 import ch.fhnw.oceandive.model.DiveCertificationHolder;
 import ch.fhnw.oceandive.model.Trip;
 import ch.fhnw.oceandive.model.Course;
-import ch.fhnw.oceandive.model.ValidationResult;
+import ch.fhnw.oceandive.validation.ValidationResult;
 
 // ================ Simple Certification Validators ================
 

@@ -1,6 +1,7 @@
 package ch.fhnw.oceandive.dto;
 
 import ch.fhnw.oceandive.model.DiveCertification;
+import ch.fhnw.oceandive.validation.PasswordPattern;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import java.io.Serializable;
@@ -22,6 +23,7 @@ public class PremiumUserDTO implements Serializable {
   private final DiveCertification diveCertification;
   private final String username;
   @NotEmpty(message = "Please enter a password")
+  @PasswordPattern
   private final String password;
   private final String role;
   private final LocalDateTime createdAt;

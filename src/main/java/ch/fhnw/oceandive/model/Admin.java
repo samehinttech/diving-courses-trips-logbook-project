@@ -1,5 +1,6 @@
 package ch.fhnw.oceandive.model;
 
+import ch.fhnw.oceandive.validation.PasswordPattern;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
@@ -24,6 +25,7 @@ public class Admin extends BaseUser {
 
     @NotEmpty(message = "Please enter a password")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @PasswordPattern
     private String password;
 
     private String roleLimitation;

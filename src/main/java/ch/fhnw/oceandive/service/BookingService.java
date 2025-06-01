@@ -4,6 +4,7 @@ import ch.fhnw.oceandive.exceptionHandler.BusinessRuleViolationException;
 import ch.fhnw.oceandive.model.*;
 import ch.fhnw.oceandive.repository.*;
 
+import ch.fhnw.oceandive.validation.ValidationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

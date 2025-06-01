@@ -5,7 +5,6 @@ import ch.fhnw.oceandive.exceptionHandler.DuplicateResourceException;
 import ch.fhnw.oceandive.exceptionHandler.ResourceNotFoundException;
 import ch.fhnw.oceandive.model.GuestUser;
 import ch.fhnw.oceandive.repository.GuestUserRepo;
-import ch.fhnw.oceandive.validation.EmailValidator;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +28,7 @@ public class GuestUserService {
     }
 
     // Get all guest users.
-    
+
     public List<GuestUserDTO> getAllGuestUsers() {
         return guestUserRepo.findAll().stream()
                 .map(this::convertToDTO)
@@ -70,12 +69,11 @@ public class GuestUserService {
     public GuestUserDTO createGuestUser(GuestUserDTO guestUserDTO) {
         // Validate user data before processing
         validateGuestUserFields(guestUserDTO);
-        
+
         // Check if email already exists
         if (guestUserRepo.findByEmail(guestUserDTO.getEmail()) != null) {
             throw new DuplicateResourceException("Email already exists: " + guestUserDTO.getEmail());
         }
-        
         // Check if mobile already exists
         if (guestUserDTO.getMobile() != null && !guestUserDTO.getMobile().isEmpty() && 
             guestUserRepo.findByMobile(guestUserDTO.getMobile()) != null) {
@@ -92,20 +90,20 @@ public class GuestUserService {
     public GuestUserDTO updateGuestUser(Long id, GuestUserDTO guestUserDTO) {
         // Validate user data before processing
         validateGuestUserFields(guestUserDTO);
-        
+
         GuestUser existingUser = guestUserRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Guest user not found with id: " + id));
 
         // Check if email already exists for another user
         if (!existingUser.getEmail().equals(guestUserDTO.getEmail()) &&
-                guestUserRepo.findByEmailAndIdNot(guestUserDTO.getEmail(), id).size() > 0) {
+            !guestUserRepo.findByEmailAndIdNot(guestUserDTO.getEmail(), id).isEmpty()) {
             throw new DuplicateResourceException("Email already exists: " + guestUserDTO.getEmail());
         }
-        
+
         // Check if mobile already exists for another user
         if (guestUserDTO.getMobile() != null && !guestUserDTO.getMobile().isEmpty() && 
             !existingUser.getMobile().equals(guestUserDTO.getMobile()) &&
-            guestUserRepo.findByMobileAndIdNot(guestUserDTO.getMobile(), id).size() > 0) {
+            !guestUserRepo.findByMobileAndIdNot(guestUserDTO.getMobile(), id).isEmpty()) {
             throw new DuplicateResourceException("Mobile number already exists: " + guestUserDTO.getMobile());
         }
 
@@ -156,7 +154,7 @@ public class GuestUserService {
 
         return guestUser;
     }
-    
+
     // Helper method to update user fields
     private void updateUserFields(GuestUser existingUser, GuestUserDTO guestUserDTO) {
         existingUser.setFirstName(guestUserDTO.getFirstName());
@@ -166,21 +164,19 @@ public class GuestUserService {
         existingUser.setDiveCertification(guestUserDTO.getDiveCertification());
         existingUser.setRole(guestUserDTO.getRole());
     }
-    
+
     // Validate required user fields
     private void validateGuestUserFields(GuestUserDTO guestUserDTO) {
         // Check required fields
         if (guestUserDTO.getEmail() == null || guestUserDTO.getEmail().trim().isEmpty()) {
             throw new IllegalArgumentException("Email cannot be empty");
         }
-        
-        // Use EmailValidator utility to validate email format
-        EmailValidator.validateEmail(guestUserDTO.getEmail());
-        
+
+
         if (guestUserDTO.getFirstName() == null || guestUserDTO.getFirstName().trim().isEmpty()) {
             throw new IllegalArgumentException("First name cannot be empty");
         }
-        
+
         if (guestUserDTO.getLastName() == null || guestUserDTO.getLastName().trim().isEmpty()) {
             throw new IllegalArgumentException("Last name cannot be empty");
         }

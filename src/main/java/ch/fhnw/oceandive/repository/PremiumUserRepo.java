@@ -7,13 +7,12 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-
 @Repository
 public interface PremiumUserRepo extends JpaRepository<PremiumUser, Long> {
 
-  PremiumUser findByUsername(String username);
+    PremiumUser findByUsername(String username);
 
-  PremiumUser findByEmail(String email);
+    PremiumUser findByEmail(String email);
 
   List<PremiumUser> findAllByCreatedAt(LocalDateTime createdAt);
 

@@ -1,6 +1,7 @@
 package ch.fhnw.oceandive.service;
 
 import ch.fhnw.oceandive.model.*;
+import ch.fhnw.oceandive.validation.ValidationResult;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.slf4j.Logger;

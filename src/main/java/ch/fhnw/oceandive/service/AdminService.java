@@ -5,7 +5,6 @@ import ch.fhnw.oceandive.exceptionHandler.DuplicateResourceException;
 import ch.fhnw.oceandive.exceptionHandler.ResourceNotFoundException;
 import ch.fhnw.oceandive.model.Admin;
 import ch.fhnw.oceandive.repository.AdminRepo;
-import ch.fhnw.oceandive.validation.EmailValidator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -85,10 +84,7 @@ public class AdminService {
      */
     @Transactional
     public AdminDTO createAdmin(AdminDTO adminDTO) {
-        // Validate admin data before processing
-        validateAdminFields(adminDTO);
-
-        // Check if username already exists
+              // Check if a username already exists
         if (adminRepo.findByUsername(adminDTO.getUsername()) != null) {
             throw new DuplicateResourceException("Username already exists: " + adminDTO.getUsername());
         }
@@ -114,12 +110,8 @@ public class AdminService {
      */
     @Transactional
     public AdminDTO updateAdmin(Long id, AdminDTO adminDTO) {
-        // Validate email if it's being updated
-        if (adminDTO.getEmail() != null) {
-            EmailValidator.validateEmail(adminDTO.getEmail());
-        }
 
-        // Find the existing admin or throw exception
+        // Find the existing admin or throw an exception
         Admin existingAdmin = adminRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Admin not found with id: " + id));
 
@@ -230,30 +222,4 @@ public class AdminService {
         return admin;
     }
 
-    // Validate required admin fields
-    private void validateAdminFields(AdminDTO adminDTO) {
-        // Check required fields
-        if (adminDTO.getEmail() == null || adminDTO.getEmail().trim().isEmpty()) {
-            throw new IllegalArgumentException("Email cannot be empty");
-        }
-
-        // Use EmailValidator utility to validate email format
-        EmailValidator.validateEmail(adminDTO.getEmail());
-
-        if (adminDTO.getUsername() == null || adminDTO.getUsername().trim().isEmpty()) {
-            throw new IllegalArgumentException("Username cannot be empty");
-        }
-
-        if (adminDTO.getPassword() == null || adminDTO.getPassword().isEmpty()) {
-            throw new IllegalArgumentException("Password cannot be empty");
-        }
-
-        if (adminDTO.getFirstName() == null || adminDTO.getFirstName().trim().isEmpty()) {
-            throw new IllegalArgumentException("First name cannot be empty");
-        }
-
-        if (adminDTO.getLastName() == null || adminDTO.getLastName().trim().isEmpty()) {
-            throw new IllegalArgumentException("Last name cannot be empty");
-        }
-    }
 }

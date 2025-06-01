@@ -1,11 +1,11 @@
-package ch.fhnw.oceandive.model;
+package ch.fhnw.oceandive.validation;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Class to store validation results with detailed error messages.
- * Used by the rules engine to provide more context about validation failures.
+ * Used by the rule engine to provide more context about validation failures.
  */
 public class ValidationResult {
   private boolean valid = false;

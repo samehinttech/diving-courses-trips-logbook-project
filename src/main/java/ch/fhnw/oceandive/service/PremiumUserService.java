@@ -5,7 +5,6 @@ import ch.fhnw.oceandive.exceptionHandler.DuplicateResourceException;
 import ch.fhnw.oceandive.exceptionHandler.ResourceNotFoundException;
 import ch.fhnw.oceandive.model.PremiumUser;
 import ch.fhnw.oceandive.repository.PremiumUserRepo;
-import ch.fhnw.oceandive.validation.EmailValidator;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,7 +37,7 @@ public class PremiumUserService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
-        
+
     /**
      * Get all premium users with pagination.
      *
@@ -123,23 +122,19 @@ public class PremiumUserService {
 
     @Transactional
     public PremiumUserDTO updatePremiumUser(Long id, PremiumUserDTO premiumUserDTO) {
-        // Validate email if it's being updated
-        if (premiumUserDTO.getEmail() != null) {
-            EmailValidator.validateEmail(premiumUserDTO.getEmail());
-        }
 
         PremiumUser existingUser = premiumUserRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 
         if (premiumUserDTO.getUsername() != null &&
                 !existingUser.getUsername().equals(premiumUserDTO.getUsername()) &&
-                premiumUserRepo.findByUsernameAndIdNot(premiumUserDTO.getUsername(), id).size() > 0) {
+            !premiumUserRepo.findByUsernameAndIdNot(premiumUserDTO.getUsername(), id).isEmpty()) {
             throw new DuplicateResourceException("Username already exists: " + premiumUserDTO.getUsername());
         }
 
         if (premiumUserDTO.getEmail() != null &&
                 !existingUser.getEmail().equals(premiumUserDTO.getEmail()) &&
-                premiumUserRepo.findByEmailAndIdNot(premiumUserDTO.getEmail(), id).size() > 0) {
+            !premiumUserRepo.findByEmailAndIdNot(premiumUserDTO.getEmail(), id).isEmpty()) {
             throw new DuplicateResourceException("Email already exists: " + premiumUserDTO.getEmail());
         }
 
@@ -223,8 +218,6 @@ public class PremiumUserService {
             throw new IllegalArgumentException("Email cannot be empty");
         }
 
-        // Use EmailValidator utility to validate email format
-        EmailValidator.validateEmail(premiumUserDTO.getEmail());
 
         if (premiumUserDTO.getUsername() == null || premiumUserDTO.getUsername().trim().isEmpty()) {
             throw new IllegalArgumentException("Username cannot be empty");
