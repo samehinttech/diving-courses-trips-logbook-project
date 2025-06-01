@@ -42,3 +42,7 @@ mydocs/
 .env.local
 .env.*
 !.env.example
+
+
+## Database files ##
+data/
