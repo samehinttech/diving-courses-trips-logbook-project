@@ -1,4 +1,8 @@
 <header th:fragment="header" class="header" role="banner">
+  <!-- CSRF Meta Tags for AJAX requests -->
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
   <nav class="nav-container">
     <!-- Logo Section -->
     <div class="nav-logo">
@@ -40,6 +44,7 @@
       <div th:if="${#authorization.expression('isAuthenticated()') && #authentication.name != 'anonymousUser'}">
         <span class="user-name" th:text="'Welcome, ' + ${#authentication.name}"></span>
         <form th:action="@{/logout}" method="post" style="display: inline-block;">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
           <button type="submit" class="btn-logout-simple button">Logout</button>
         </form>
       </div>
@@ -73,6 +78,7 @@
             <span th:text="'Welcome, ' + ${#authentication.name}"></span>
           </div>
           <form th:action="@{/logout}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <button type="submit" class="btn-logout-mobile">LOGOUT</button>
           </form>
         </div>

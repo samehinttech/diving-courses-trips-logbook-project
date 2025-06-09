@@ -28,6 +28,8 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -48,12 +50,13 @@ public class SecurityConfig {
   public SecurityFilterChain apiSecurity(HttpSecurity http) throws Exception {
     http
         .securityMatcher("/api/**")
+        // CSRF disabled for API endpoints (Since they use JWT tokens anyway)
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(auth -> auth
             .requestMatchers(
                 "/api/auth/user/login", "/api/auth/user/register", "/api/auth/refresh", "/api/auth/admin/login",
                 "/api/about", "/api/contact", "/api/privacy", "/api/terms", "/api/debug/**",
-                "/api/courses/**", "/api/trips/**"
+                "/api/courses/**", "/api/trips/**","/api/index"
             ).permitAll()
             .anyRequest().authenticated()
         )
@@ -64,8 +67,19 @@ public class SecurityConfig {
   @Bean
   @Order(2)
   public SecurityFilterChain webSecurity(HttpSecurity http) throws Exception {
+    // Custom CSRF token request handler
+    CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
+    // Set the name of the attribute the CsrfToken will be on
+    requestHandler.setCsrfRequestAttributeName("_csrf");
+
     http
-        .csrf(AbstractHttpConfigurer::disable)
+        // Enable CSRF protection for web pages
+        .csrf(csrf -> csrf
+            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+            .csrfTokenRequestHandler(requestHandler)
+            // Exclude H2 console from CSRF (for development) TODO remove in production
+            .ignoringRequestMatchers("/h2-console/**")
+        )
         .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
@@ -100,7 +114,7 @@ public class SecurityConfig {
             .logoutUrl("/logout")
             .logoutSuccessUrl("/login?logout=true")
             .invalidateHttpSession(true)
-            .deleteCookies("JSESSIONID")
+            .deleteCookies("JSESSIONID", "XSRF-TOKEN")
             .permitAll()
         );
     return http.build();
@@ -108,13 +122,13 @@ public class SecurityConfig {
 
   @Bean
   public JwtEncoder jwtEncoder() {
-    byte[] secret = Base64.getDecoder().decode(jwtKey); // Decode base64
+    byte[] secret = Base64.getDecoder().decode(jwtKey);
     return new NimbusJwtEncoder(new ImmutableSecret<>(secret));
   }
 
   @Bean
   public JwtDecoder jwtDecoder() {
-    byte[] secret = Base64.getDecoder().decode(jwtKey); // Decode base64
+    byte[] secret = Base64.getDecoder().decode(jwtKey);
     SecretKeySpec keySpec = new SecretKeySpec(secret, "HmacSHA512");
     return NimbusJwtDecoder.withSecretKey(keySpec).macAlgorithm(MacAlgorithm.HS512).build();
   }
@@ -128,7 +142,7 @@ public class SecurityConfig {
   public AuthenticationProvider authenticationProvider(PasswordEncoder passwordEncoder, UserDetailsService userDetailsService) {
     DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService);
     authProvider.setPasswordEncoder(passwordEncoder);
-    authProvider.setHideUserNotFoundExceptions(false); // Show detailed error messages
+    authProvider.setHideUserNotFoundExceptions(false);
     return authProvider;
   }
 
