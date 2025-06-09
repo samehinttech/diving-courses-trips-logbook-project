@@ -1,0 +1,115 @@
+/* Profile-specific styles */
+.profile-info-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.profile-field {
+  width: 100%;
+  padding: var(--space-md) var(--space-lg);
+  border: 2px solid var(--bg-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-base);
+  font-family: var(--font-primary), sans-serif;
+  background-color: #fafafa;
+  color: var(--color-text-dark);
+  line-height: 1.5;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+}
+
+.password-hidden {
+  font-family: monospace;
+  font-size: var(--text-lg);
+  letter-spacing: 2px;
+}
+
+.profile-actions {
+  display: flex;
+  gap: var(--space-md);
+  margin-top: var(--space-xl);
+  flex-wrap: wrap;
+}
+
+.profile-navigation {
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-secondary {
+  background: #6c757d linear-gradient(to bottom, #6c757d 5%, #5a6268 100%);
+  border: 1px solid #495057;
+}
+
+.btn-secondary:hover {
+  background: #5a6268 linear-gradient(to bottom, #5a6268 5%, #6c757d 100%);
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .profile-actions {
+    flex-direction: column;
+  }
+
+  .profile-actions .btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .profile-navigation {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profile-navigation .btn-guest {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+/* Profile Edit specific styles */
+.form-actions {
+  display: flex;
+  gap: var(--space-md);
+  margin-top: var(--space-xl);
+  flex-wrap: wrap;
+}
+
+.form-text {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+  margin-top: var(--space-xs);
+  font-style: italic;
+}
+
+.security-options {
+  text-align: center;
+}
+
+.security-options p {
+  margin-bottom: var(--space-md);
+  color: var(--color-muted);
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions .btn,
+  .form-actions .submit-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .profile-field {
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--text-sm);
+  }
+}

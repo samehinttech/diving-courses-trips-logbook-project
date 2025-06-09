@@ -1,0 +1,82 @@
+<header th:fragment="header" class="header" role="banner">
+  <nav class="nav-container">
+    <!-- Logo Section -->
+    <div class="nav-logo">
+      <a th:href="@{/}">
+        <div class="logo-design"><span>Ocean</span>Dive</div>
+      </a>
+    </div>
+
+    <!-- Hamburger Menu Checkbox -->
+    <input type="checkbox" class="mobile-menu-checkbox" id="menu-toggle" />
+    <label for="menu-toggle" class="hamburger-menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </label>
+
+    <!-- Desktop Navigation Links -->
+    <div class="nav-links">
+      <a th:href="@{/}">HOME</a>
+      <a th:href="@{/courses}">COURSES</a>
+      <a th:href="@{/trips}">TRIPS</a>
+      <a th:href="@{/about}">ABOUT</a>
+      <a th:href="@{/contact}">CONTACT</a>
+
+      <!-- Authenticated User Links -->
+      <a th:href="@{/dive-log}" th:if="${#authorization.expression('isAuthenticated()') && #authentication.name != 'anonymousUser'}">DIVE-LOG</a>
+      <a th:href="@{/profile}" th:if="${#authorization.expression('isAuthenticated()') && #authentication.name != 'anonymousUser'}">PROFILE</a>
+    </div>
+
+    <!-- Authentication Section -->
+    <div class="nav-auth">
+      <!-- Guest Users -->
+      <div th:if="${#authorization.expression('isAnonymous()')}">
+        <a th:href="@{/login}">LOGIN</a>
+        <a th:href="@{/register}" class="btn-register">REGISTER</a>
+      </div>
+
+      <!-- Authenticated Users -->
+      <div th:if="${#authorization.expression('isAuthenticated()') && #authentication.name != 'anonymousUser'}">
+        <span class="user-name" th:text="'Welcome, ' + ${#authentication.name}"></span>
+        <form th:action="@{/logout}" method="post" style="display: inline-block;">
+          <button type="submit" class="btn-logout-simple button">Logout</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Links -->
+    <div class="mobile-nav">
+      <div class="mobile-nav-links">
+        <a th:href="@{/}">HOME</a>
+        <a th:href="@{/courses}">COURSES</a>
+        <a th:href="@{/trips}">TRIPS</a>
+        <a th:href="@{/about}">ABOUT</a>
+        <a th:href="@{/contact}">CONTACT</a>
+
+        <!-- Authenticated User Links -->
+        <a th:href="@{/dive-log}" th:if="${#authorization.expression('isAuthenticated()') && #authentication.name != 'anonymousUser'}">DIVE-LOG</a>
+        <a th:href="@{/profile}" th:if="${#authorization.expression('isAuthenticated()') && #authentication.name != 'anonymousUser'}">PROFILE</a>
+      </div>
+
+      <!-- Mobile Authentication Section -->
+      <div class="mobile-nav-auth">
+        <!-- Guest Users -->
+        <div th:if="${#authorization.expression('isAnonymous()')}">
+          <a th:href="@{/login}" class="mobile-login-link">LOGIN</a>
+          <a th:href="@{/register}" class="mobile-register-link">REGISTER</a>
+        </div>
+
+        <!-- Authenticated Users -->
+        <div th:if="${#authorization.expression('isAuthenticated()') && #authentication.name != 'anonymousUser'}">
+          <div class="mobile-user-info">
+            <span th:text="'Welcome, ' + ${#authentication.name}"></span>
+          </div>
+          <form th:action="@{/logout}" method="post">
+            <button type="submit" class="btn-logout-mobile">LOGOUT</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>

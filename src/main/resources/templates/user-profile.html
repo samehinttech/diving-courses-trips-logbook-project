@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="View and manage your OceanDive profile information.">
+  <meta name="keywords" content="profile, account, OceanDive, user information">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/login.css}">
+  <link rel="stylesheet" th:href="@{/css/profile.css}">
+  <title th:text="${pageTitle}">My Profile - OceanDive</title>
+</head>
+<body>
+<div id="header-fragment" th:replace="~{fragments/header :: header}"></div>
+
+<!-- Profile Header Section -->
+<section class="login-header-section">
+  <div class="login-header-content">
+    <h1 class="section-heading">
+      <span th:if="${userType == 'admin'}">Admin Profile</span>
+      <span th:if="${userType == 'premium'}">My Profile</span>
+    </h1>
+    <p class="login-subtitle">
+      <span th:if="${userType == 'admin'}">Administrator account information</span>
+      <span th:if="${userType == 'premium'}">Your account and diving information</span>
+    </p>
+  </div>
+</section>
+
+<!-- Main Profile Section -->
+<section class="login-main-section">
+  <div class="login-container">
+    <div class="login-form-container">
+
+      <div class="login-form-header">
+        <h2 class="form-heading">Profile Information</h2>
+        <p class="form-subheading">Your account details and preferences</p>
+      </div>
+
+      <!-- Success/Error Messages -->
+      <div th:if="${success}" class="alert alert-success">
+        <i class="fas fa-check-circle"></i>
+        <span th:text="${success}">Success message</span>
+      </div>
+
+      <div th:if="${error}" class="alert alert-error">
+        <i class="fas fa-exclamation-circle"></i>
+        <span th:text="${error}">Error message</span>
+      </div>
+
+      <!-- Profile Information Display -->
+      <div class="profile-info-form">
+
+        <!-- Personal Information -->
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-user"></i>
+            First Name
+          </label>
+          <div class="profile-field" th:text="${user.firstName}"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-user"></i>
+            Last Name
+          </label>
+          <div class="profile-field" th:text="${user.lastName}"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-envelope"></i>
+            Email Address
+          </label>
+          <div class="profile-field" th:text="${user.email}"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-phone"></i>
+            Mobile Number
+          </label>
+          <div class="profile-field" th:text="${user.mobile ?: 'Not provided'}"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-id-badge"></i>
+            Username
+          </label>
+          <div class="profile-field" th:text="${user.username}"></div>
+        </div>
+
+        <!-- Dive Certification (only for premium users) -->
+        <div class="form-group" th:if="${userType == 'premium'}">
+          <label class="form-label">
+            <i class="fas fa-certificate"></i>
+            Dive Certification
+          </label>
+          <div class="profile-field" th:text="${user.diveCertification}"></div>
+        </div>
+
+        <!-- Role Limitation (only for admins) -->
+        <div class="form-group" th:if="${userType == 'admin'}">
+          <label class="form-label">
+            <i class="fas fa-shield-alt"></i>
+            Role Limitation
+          </label>
+          <div class="profile-field" th:text="${user.roleLimitation ?: 'None'}"></div>
+        </div>
+
+        <!-- Password (hidden) -->
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-lock"></i>
+            Password
+          </label>
+          <div class="profile-field password-hidden">••••••••••••</div>
+        </div>
+
+        <!-- Account Information -->
+        <div class="form-group" th:if="${user.createdAt}">
+          <label class="form-label">
+            <i class="fas fa-calendar-plus"></i>
+            Member Since
+          </label>
+          <div class="profile-field" th:text="${#temporals.format(user.createdAt, 'MMMM dd, yyyy')}"></div>
+        </div>
+
+        <div class="form-group" th:if="${user.updatedAt}">
+          <label class="form-label">
+            <i class="fas fa-calendar-check"></i>
+            Last Updated
+          </label>
+          <div class="profile-field" th:text="${#temporals.format(user.updatedAt, 'MMMM dd, yyyy HH:mm')}"></div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="profile-actions">
+          <a th:href="@{/profile/edit}" class="btn btn-primary">
+            <i class="fas fa-edit"></i> Edit Profile
+          </a>
+
+          <a th:href="@{/forgot-password}" class="btn btn-secondary">
+            <i class="fas fa-key"></i> Change Password
+          </a>
+        </div>
+
+        <div class="login-divider">
+          <span>Account Actions</span>
+        </div>
+
+        <div class="profile-navigation">
+          <a th:href="@{/dive-log}" class="btn-guest" th:if="${userType == 'premium'}">
+            <i class="fas fa-water"></i> View Dive Log
+          </a>
+
+          <a th:href="@{/courses}" class="btn-guest">
+            <i class="fas fa-graduation-cap"></i> Browse Courses
+          </a>
+
+          <a th:href="@{/admin}" class="btn-guest" th:if="${userType == 'admin'}">
+            <i class="fas fa-cogs"></i> Admin Dashboard
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="footer-fragment" th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

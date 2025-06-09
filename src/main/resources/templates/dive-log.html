@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Dive Log - OceanDive</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/dive-log.css}">
+
+</head>
+<body class="dive-log-page">
+<div id="header-fragment" th:replace="~{fragments/header :: header}"></div>
+
+<main>
+  <div class="container">
+    <div class="dive-log-container">
+      <div class="dive-log-header">
+        <h1>My Dive Log</h1>
+        <p>Track your underwater adventures and diving experiences</p>
+      </div>
+
+      <div class="dive-log-content">
+        <!-- Messages -->
+        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+        <div th:if="${successMessage}" class="alert alert-success"
+             th:text="${successMessage}"></div>
+
+        <!-- Statistics Section -->
+        <div class="stats-section">
+          <table class="stats-table">
+            <thead>
+            <tr>
+              <th>Total Dives</th>
+              <th>Hours Underwater</th>
+              <th>Dive Locations</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>
+                <span class="stat-number" th:text="${totalDives} ?: 0">0</span>
+                <span class="stat-label">Completed dives</span>
+              </td>
+              <td>
+                <span class="stat-number"
+                      th:text="${totalHours != null ? #numbers.formatDecimal(totalHours,1,1) : '0.0'}">0.0</span>
+                <span class="stat-label">Total time underwater</span>
+              </td>
+              <td>
+                <span class="stat-number" th:text="${uniqueLocations} ?: 0">0</span>
+                <span class="stat-label">Unique locations visited</span>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Actions Section -->
+        <div class="actions-section">
+          <div class="actions-left">
+            <a th:href="@{/dive-log/add}" class="button">Add New Dive</a>
+          </div>
+          <div class="actions-right">
+            <form th:action="@{/dive-log}" method="get" class="filter-form">
+              <div class="filter-group">
+                <label>
+                  <select name="location">
+                    <option value="">All Locations</option>
+                    <option th:each="location : ${locations}"
+                            th:value="${location}"
+                            th:text="${location}"
+                            th:selected="${location == selectedLocation}">Location
+                    </option>
+                  </select>
+                </label>
+                <button type="submit" class="button">Filter</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Dives Section -->
+        <div class="dives-section">
+
+          <!-- Empty State (shown when no dives) -->
+          <div th:if="${#lists.isEmpty(diveLogs)}" class="empty-state">
+            <div class="empty-icon">🐠</div>
+            <h2 class="empty-title">No Dive Logs Yet</h2>
+            <p class="empty-description">
+              Start your diving journey by adding your first dive log! Record your underwater
+              adventures,
+              track your progress, and build a comprehensive history of your diving experiences.
+            </p>
+            <a th:href="@{/dive-log/add}" class="btn btn-primary">Add Your First Dive</a>
+          </div>
+
+          <!-- Dives Table (shown when there are dives) -->
+          <div th:if="${!#lists.isEmpty(diveLogs)}">
+            <div class="section-title">
+              <span th:if="${selectedLocation}">Dives in <span th:text="${selectedLocation}"></span></span>
+              <span th:unless="${selectedLocation}">Recent Dives</span>
+            </div>
+            <table class="dives-table">
+              <thead>
+              <tr>
+                <th>Dive #</th>
+                <th>Location</th>
+                <th>Date</th>
+                <th>Duration</th>
+                <th>Water Temp</th>
+                <th>Air Temp</th>
+                <th>Notes</th>
+                <th>Actions</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:each="dive : ${diveLogs}">
+                <td>
+                  <span class="dive-number" th:text="'#' + ${dive.diveNumber}">#1</span>
+                </td>
+                <td th:text="${dive.location}">Location</td>
+                <td th:text="${#temporals.format(dive.diveDate, 'MMM d, yyyy')}">Date</td>
+                <td th:text="${dive.duration} + ' min'">Duration</td>
+                <td>
+    <span th:if="${dive.waterTemperature}"
+          th:text="${dive.waterTemperature != null ? #numbers.formatDecimal(dive.waterTemperature,1,1) + '°C' : '-'}">-</span>
+                  <span th:unless="${dive.waterTemperature}">-</span>
+                </td>
+                <td>
+    <span th:if="${dive.airTemperature}"
+          th:text="${dive.airTemperature != null ? #numbers.formatDecimal(dive.airTemperature,1,1) + '°C' : '-'}">-</span>
+                  <span th:unless="${dive.airTemperature}">-</span>
+                </td>
+                <!-- Notes Column -->
+                <td>
+                  <span th:if="${dive.notes}" title="Notes" th:text="${dive.notes}">No notes available</span>
+                  <span th:unless="${dive.notes}">No notes</span>
+                </td>
+                <td>
+                  <a th:href="@{'/dive-log/edit/' + ${dive.id}}" class="button">Edit</a>
+                  <a th:href="@{'/dive-log/view/' + ${dive.id}}" class="button">View</a>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<div id="footer-fragment" th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

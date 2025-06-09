@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="OceanDive Privacy Policy - Learn how we protect and handle your personal information and data privacy."/>
+  <meta name="keywords" content="privacy policy, data protection, OceanDive, personal information, cookies"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <link rel="stylesheet" th:href="@{/css/main.css}"/>
+  <link rel="stylesheet" th:href="@{/css/privacy.css}"/>
+  <title th:text="${pageTitle}">>Privacy Policy - OceanDive</title>
+</head>
+<body>
+<!-- Header Fragment Container -->
+<div id="header-fragment" th:replace="~{fragments/header :: header}"></div>
+
+<!-- Main Content -->
+<main class="container">
+  <!-- Page Header Section -->
+  <section class="privacy-header-section">
+    <div class="privacy-header-content">
+      <h1 class="section-heading text-center">Privacy Policy</h1>
+      <p class="privacy-subtitle text-center">
+        We are committed to protecting your privacy and ensuring the security of your personal information.
+        This policy explains how we collect, use, and safeguard your data.
+      </p>
+      <p class="privacy-updated text-center">Last updated: June 3, 2025</p>
+    </div>
+  </section>
+
+  <!-- Privacy Content Section -->
+  <section class="privacy-content-section">
+    <!-- Information Collection -->
+    <div class="privacy-section">
+      <h2 class="privacy-section-title">Information We Collect</h2>
+      <div class="privacy-section-content">
+        <p>Metus etiam at consequat ornare amet sollicitudin nostra euismod faucibus ad lectus sociis vivamus tortor cum augue nam inceptos hac. We collect information you provide directly to us, such as when you create an account, make a booking, or contact us for support.</p>
+      </div>
+    </div>
+
+    <!-- Data Usage -->
+    <div class="privacy-section">
+      <h2 class="privacy-section-title">How We Use Your Information</h2>
+      <div class="privacy-section-content">
+        <p>Malesuada inceptos taciti auctor ac mi torquent etiam viverra sem blandit lorem gravida iaculis sociis montes nibh penatibus habitasse pulvinar! Your information helps us provide personalized diving experiences and maintain the highest safety standards.</p>
+      </div>
+    </div>
+
+    <!-- Data Protection -->
+    <div class="privacy-section">
+      <h2 class="privacy-section-title">Data Protection Measures</h2>
+      <div class="privacy-section-content">
+        <p>In est egestas leo adipiscing facilisis hendrerit cubilia massa consectetur leo cras pulvinar libero integer suspendisse ipsum dis semper sapien. We implement comprehensive security measures to protect your personal data.</p>
+      </div>
+    </div>
+
+    <!-- Detailed Policy Points -->
+    <div class="privacy-section">
+      <h2 class="privacy-section-title">Detailed Policy Terms</h2>
+      <div class="privacy-section-content">
+        <ol class="privacy-policy-list">
+          <li>Luctus suscipit cubilia vehicula tellus dignissim ultrices vel lacinia tempor odio auctor proin sodales turpis vel quisque elementum cras euismod.</li>
+          <li>Tempus dictumst sagittis scelerisque phasellus ipsum dignissim pharetra fermentum netus class aliquet magna eget commodo taciti congue eleifend lectus class.</li>
+          <li>Vivamus maecenas posuere taciti sollicitudin euismod justo montes sapien adipiscing volutpat platea hac netus senectus ultrices aptent dis hendrerit lorem.</li>
+          <li>Habitant quam nascetur mi et vestibulum duis vehicula et porttitor nam tincidunt pellentesque taciti quis senectus mi nam porttitor metus!</li>
+          <li>In sapien torquent cubilia suscipit urna lacinia lectus libero congue parturient molestie condimentum potenti sem facilisis mi velit justo etiam.</li>
+          <li>Magna aenean ridiculus pharetra iaculis consectetur commodo laoreet eget a parturient quisque facilisis quisque class potenti ad sodales sodales cursus.</li>
+          <li>Fusce aptent mauris feugiat morbi primis lectus bibendum vestibulum eleifend parturient mattis congue at egestas nullam arcu tincidunt quis hac.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Contact Section -->
+    <div class="privacy-contact-section">
+      <div class="privacy-contact-card">
+        <h3 class="privacy-contact-title">Questions About This Policy?</h3>
+        <p class="privacy-contact-text">
+          If you have any questions about this Privacy Policy or how we handle your data,
+          please don't hesitate to contact us.
+        </p>
+        <p>
+          <a href="mailto:privacy@oceandive.ch" class="privacy-contact-email">
+            <i class="fas fa-envelope"></i> privacy@oceandive.ch
+          </a>
+        </p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Footer Fragment Container -->
+<div id="footer-fragment" th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

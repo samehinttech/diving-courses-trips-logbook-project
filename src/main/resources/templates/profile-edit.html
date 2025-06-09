@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Edit your OceanDive profile information.">
+  <meta name="keywords" content="edit profile, account, OceanDive, update information">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/login.css}">
+  <link rel="stylesheet" th:href="@{/css/profile.css}">
+  <title th:text="${pageTitle}">Edit Profile - OceanDive</title>
+</head>
+<body>
+<div id="header-fragment" th:replace="~{fragments/header :: header}"></div>
+<!-- Profile Edit Header Section -->
+<section class="login-header-section">
+  <div class="login-header-content">
+    <h1 class="section-heading">
+      <span th:if="${userType == 'admin'}">Edit Admin Profile</span>
+      <span th:if="${userType == 'premium'}">Edit Profile</span>
+    </h1>
+    <p class="login-subtitle">Update your account information</p>
+  </div>
+</section>
+<!-- Main Profile Edit Section -->
+<section class="login-main-section">
+  <div class="login-container">
+    <div class="login-form-container">
+
+      <div class="login-form-header">
+        <h2 class="form-heading">Update Information</h2>
+        <p class="form-subheading">Modify your account details below</p>
+      </div>
+      <!-- Success/Error Messages -->
+      <div th:if="${success}" class="alert alert-success">
+        <i class="fas fa-check-circle"></i>
+        <span th:text="${success}">Success message</span>
+      </div>
+      <div th:if="${error}" class="alert alert-error">
+        <i class="fas fa-exclamation-circle"></i>
+        <span th:text="${error}">Error message</span>
+      </div>
+      <!-- Profile Edit Form -->
+      <form class="login-form" th:action="@{/profile/update}" method="post" th:object="${user}">
+        <!-- Hidden ID field -->
+        <input type="hidden" th:field="*{id}" />
+        <!-- First Name -->
+        <div class="form-group">
+          <label class="form-label" for="firstName">
+            <i class="fas fa-user"></i>
+            First Name
+          </label>
+          <input type="text" id="firstName" th:field="*{firstName}"
+                 class="form-input"
+                 placeholder="Enter your first name"
+                 required />
+        </div>
+
+        <!-- Last Name -->
+        <div class="form-group">
+          <label class="form-label" for="lastName">
+            <i class="fas fa-user"></i>
+            Last Name
+          </label>
+          <input type="text" id="lastName" th:field="*{lastName}"
+                 class="form-input"
+                 placeholder="Enter your last name"
+                 required />
+        </div>
+        <!-- Email -->
+        <div class="form-group">
+          <label class="form-label" for="email">
+            <i class="fas fa-envelope"></i>
+            Email Address
+          </label>
+          <input type="email" id="email" th:field="*{email}"
+                 class="form-input"
+                 placeholder="Enter your email address"
+                 required />
+        </div>
+        <!-- Mobile -->
+        <div class="form-group">
+          <label class="form-label" for="mobile">
+            <i class="fas fa-phone"></i>
+            Mobile Number
+          </label>
+          <input type="tel" id="mobile" th:field="*{mobile}"
+                 class="form-input"
+                 placeholder="Enter your mobile number" />
+        </div>
+        <!-- Username (readonly) -->
+        <div class="form-group">
+          <label class="form-label" for="username">
+            <i class="fas fa-id-badge"></i>
+            Username
+          </label>
+          <input type="text" id="username" th:field="*{username}"
+                 class="form-input"
+                 readonly
+                 style="background-color: #f8f9fa; cursor: not-allowed;" />
+          <small class="form-text">Username cannot be changed</small>
+        </div>
+        <!-- Dive Certification (only for premium users) -->
+        <div class="form-group" th:if="${userType == 'premium'}">
+          <label class="form-label" for="diveCertification">
+            <i class="fas fa-certificate"></i>
+            Dive Certification
+          </label>
+          <select id="diveCertification" th:field="*{diveCertification}" class="form-input" required>
+            <option value="">Select your certification level</option>
+            <option value="Open Water Diver">Open Water Diver</option>
+            <option value="Advanced Open Water Diver">Advanced Open Water Diver</option>
+            <option value="Rescue Diver">Rescue Diver</option>
+            <option value="Divemaster">Divemaster</option>
+            <option value="Instructor">Instructor</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <!-- Role Limitation (only for admins) -->
+        <div class="form-group" th:if="${userType == 'admin'}">
+          <label class="form-label" for="roleLimitation">
+            <i class="fas fa-shield-alt"></i>
+            Role Limitation
+          </label>
+          <input type="text" id="roleLimitation" th:field="*{roleLimitation}"
+                 class="form-input"
+                 placeholder="Enter role limitations (optional)" />
+        </div>
+        <!-- Action Buttons -->
+        <div class="form-actions">
+          <button type="submit" class="submit-btn">
+            <i class="fas fa-save"></i> Update Profile
+          </button>
+          <a th:href="@{/profile}" class="btn btn-secondary">
+            <i class="fas fa-times"></i> Cancel
+          </a>
+        </div>
+        <div class="login-divider">
+          <span>Security</span>
+        </div>
+        <div class="security-options">
+          <p class="form-text">To change your password, use the password reset option.</p>
+          <a th:href="@{/forgot-password}" class="btn-guest">
+            <i class="fas fa-key"></i> Change Password
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+<div id="footer-fragment" th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
