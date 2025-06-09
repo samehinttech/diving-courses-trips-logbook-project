@@ -4,6 +4,7 @@ import ch.oceandive.dto.AdminDTO;
 import ch.oceandive.dto.PremiumUserDTO;
 import ch.oceandive.service.AdminService;
 import ch.oceandive.service.PremiumUserService;
+import org.slf4j.Logger;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +23,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
   private final PremiumUserService premiumUserService;
   private final AdminService adminService;
+  Logger logger = org.slf4j.LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
   public UserDetailsServiceImpl(PremiumUserService premiumUserService, AdminService adminService) {
     this.premiumUserService = premiumUserService;
@@ -30,10 +32,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    // debugging to check where the error occurs when trying to login
+    logger.debug("loadUserByUsername: {}", username);
     // Try to find user as Premium User first
     try {
       PremiumUserDTO premiumUserDTO = premiumUserService.getPremiumUserByUsername(username);
       if (premiumUserDTO != null) {
+        logger.debug("Found user as Premium User: {},password hash: {}", username, premiumUserDTO.getPassword()
+        != null? "exists" : "not exists");
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_PREMIUM"));
 
@@ -44,7 +50,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         );
       }
     } catch (Exception e) {
-      // Continue to try admin lookup
+      logger.error("Error finding Premium User: {}", e.getMessage());
     }
     // Try to find user as Admin
     try {
@@ -70,8 +76,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     try {
       return loadUserByUsername(usernameOrEmail);
     } catch (UsernameNotFoundException e) {
-      // If username fails, try as email (you'd need to add these methods to your services)
-      // For now, just rethrow the exception
       throw new UsernameNotFoundException("User not found: " + usernameOrEmail);
     }
   }

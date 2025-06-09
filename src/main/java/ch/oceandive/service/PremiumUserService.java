@@ -119,7 +119,7 @@ public class PremiumUserService {
     }
 
     @Transactional
-    public PremiumUserDTO updatePremiumUser(Long id, PremiumUserDTO premiumUserDTO) {
+    public void updatePremiumUser(Long id, PremiumUserDTO premiumUserDTO) {
 
         PremiumUser existingUser = premiumUserRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
@@ -165,7 +165,7 @@ public class PremiumUserService {
         }
 
         PremiumUser updatedUser = premiumUserRepo.save(existingUser);
-        return convertToDTO(updatedUser);
+        convertToDTO(updatedUser);
     }
 
     @Transactional
@@ -190,7 +190,6 @@ public class PremiumUserService {
                 premiumUser.getCreatedAt(),
                 premiumUser.getUpdatedAt());
     }
-
     private PremiumUser convertToEntity(PremiumUserDTO premiumUserDTO) {
         PremiumUser premiumUser = new PremiumUser(
                 premiumUserDTO.getFirstName(),
@@ -201,34 +200,26 @@ public class PremiumUserService {
                 premiumUserDTO.getUsername(),
                 premiumUserDTO.getPassword(), // Password will be encoded before saving
                 premiumUserDTO.getRole());
-
         if (premiumUserDTO.getId() != null) {
             premiumUser.setId(premiumUserDTO.getId());
         }
-
         return premiumUser;
     }
-
     // Validate required premium user fields
     private void validatePremiumUserFields(PremiumUserDTO premiumUserDTO) {
         // Check required fields
         if (premiumUserDTO.getEmail() == null || premiumUserDTO.getEmail().trim().isEmpty()) {
             throw new IllegalArgumentException("Email cannot be empty");
         }
-
-
         if (premiumUserDTO.getUsername() == null || premiumUserDTO.getUsername().trim().isEmpty()) {
             throw new IllegalArgumentException("Username cannot be empty");
         }
-
         if (premiumUserDTO.getPassword() == null || premiumUserDTO.getPassword().isEmpty()) {
             throw new IllegalArgumentException("Password cannot be empty");
         }
-
         if (premiumUserDTO.getFirstName() == null || premiumUserDTO.getFirstName().trim().isEmpty()) {
             throw new IllegalArgumentException("First name cannot be empty");
         }
-
         if (premiumUserDTO.getLastName() == null || premiumUserDTO.getLastName().trim().isEmpty()) {
             throw new IllegalArgumentException("Last name cannot be empty");
         }

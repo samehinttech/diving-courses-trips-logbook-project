@@ -57,7 +57,6 @@ public class AuthController {
   private final UserDetailsServiceImpl userDetailsService;
   private final PremiumUserService premiumUserService;
   private final AdminService adminService;
-  private final PasswordEncoder passwordEncoder;
   private final AuthenticationManager authenticationManager;
 
   public AuthController(
@@ -65,13 +64,11 @@ public class AuthController {
       UserDetailsServiceImpl userDetailsService,
       PremiumUserService premiumUserService,
       AdminService adminService,
-      PasswordEncoder passwordEncoder,
       AuthenticationManager authenticationManager) {
     this.tokenService = tokenService;
     this.userDetailsService = userDetailsService;
     this.premiumUserService = premiumUserService;
     this.adminService = adminService;
-    this.passwordEncoder = passwordEncoder;
     this.authenticationManager = authenticationManager;
   }
 
@@ -169,35 +166,28 @@ public class AuthController {
   private ResponseEntity<ApiResponse> processLogin(LoginRequest loginRequest, String requiredRole,
       String unauthorizedMessage, String successMessage) {
     String username = loginRequest.getUsername();
-
     // Check if a user is locked out
     if (isUserLockedOut(username)) {
       return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
           .body(new ApiResponse(false, "Account temporarily locked due to too many failed attempts",
               null));
     }
-
     try {
       // Use AuthenticationManager to authenticate the user
       Authentication authentication = authenticationManager.authenticate(
           new UsernamePasswordAuthenticationToken(username, loginRequest.getPassword())
       );
-
       // Check if a user has a required role
       boolean hasRequiredRole = authentication.getAuthorities().stream()
           .anyMatch(a -> a.getAuthority().equals(requiredRole));
-
       if (!hasRequiredRole) {
         recordFailedLoginAttempt(username);
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
             .body(new ApiResponse(false, unauthorizedMessage, null));
       }
-
       // Reset failed login attempts on successful login
       resetFailedLoginAttempts(username);
-
       Map<String, Object> data = generateTokenResponse(authentication);
-
       return ResponseEntity.ok(new ApiResponse(true, successMessage, data));
     } catch (BadCredentialsException e) {
       recordFailedLoginAttempt(username);
@@ -282,7 +272,7 @@ public class AuthController {
           registrationRequest.getDiveCertification(),
           registrationRequest.getUsername(),
           registrationRequest.getPassword(), // Use raw password
-          "PREMIUM", // Set role to PREMIUM
+          "ROLE_PREMIUM", // Set role to PREMIUM
           null, // createdAt will be set by the database
           null  // updatedAt will be set by the database
       );
@@ -337,7 +327,7 @@ public class AuthController {
           registrationRequest.getMobile(),
           registrationRequest.getUsername(),
           registrationRequest.getPassword(),
-          "ADMIN", // Set role to ADMIN
+          "ROLE_ADMIN", // Set role to ADMIN
           registrationRequest.getRoleLimitation(),
           null, // createdAt will be set by the database
           null  // updatedAt will be set by the database
