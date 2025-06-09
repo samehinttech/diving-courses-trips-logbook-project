@@ -4,7 +4,6 @@ package ch.oceandive.model;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.*;
-import ch.fhnw.oceandive.model.PremiumUser;
 import org.springframework.format.annotation.DateTimeFormat;
 
 

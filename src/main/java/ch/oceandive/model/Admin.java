@@ -1,6 +1,6 @@
 package ch.oceandive.model;
 
-import ch.fhnw.oceandive.validation.PasswordPattern;
+import ch.oceandive.validation.PasswordPattern;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,26 +40,31 @@ public class Admin extends BaseUser {
     @Column(nullable = false)
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
     // Default constructor
     public Admin() {
     }
 
     // Parameterized constructor
     public Admin(String firstName, String lastName, String email, String mobile, String password,
-                String role, String roleLimitation) {
+        String role, String roleLimitation) {
         super(firstName, lastName, email, mobile, role);
         this.password = password;
         this.roleLimitation = roleLimitation;
     }
+
     public String getUsername() {
         return username;
     }
+
     public void setUsername(String username) {
         this.username = username;
     }
+
     public String getPassword() {
         return password;
     }
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -72,16 +77,29 @@ public class Admin extends BaseUser {
     public void setRoleLimitation(String roleLimitation) {
         this.roleLimitation = roleLimitation;
     }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
+
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public void cleanupExpiredPasswordResetTokens() {
+        if (getPasswordResetTokenExpiry() != null && getPasswordResetTokenExpiry().isBefore(
+            LocalDateTime.now())) {
+            setPasswordResetToken(null);
+            setPasswordResetTokenExpiry(null);
+        }
     }
 }

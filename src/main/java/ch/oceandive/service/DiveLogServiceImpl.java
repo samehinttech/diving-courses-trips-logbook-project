@@ -1,8 +1,8 @@
 package ch.oceandive.service;
 
-import ch.fhnw.oceandive.model.DiveLog;
-import ch.fhnw.oceandive.model.PremiumUser;
-import ch.fhnw.oceandive.repository.DiveLogRepo;
+import ch.oceandive.model.DiveLog;
+import ch.oceandive.model.PremiumUser;
+import ch.oceandive.repository.DiveLogRepo;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;

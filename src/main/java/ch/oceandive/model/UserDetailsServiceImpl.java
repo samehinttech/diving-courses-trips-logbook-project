@@ -1,65 +1,87 @@
 package ch.oceandive.model;
 
-import ch.fhnw.oceandive.repository.AdminRepo;
-import ch.fhnw.oceandive.repository.PremiumUserRepo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import ch.oceandive.dto.AdminDTO;
+import ch.oceandive.dto.PremiumUserDTO;
+import ch.oceandive.service.AdminService;
+import ch.oceandive.service.PremiumUserService;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * UserDetailsService implementation that loads user details for authentication.
+ */
+@Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-  private static final Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
+  private final PremiumUserService premiumUserService;
+  private final AdminService adminService;
 
-
-  private final PremiumUserRepo premiumUserRepo;
-
-  private final AdminRepo adminRepo;
-
-  public UserDetailsServiceImpl(PremiumUserRepo premiumUserRepo, AdminRepo adminRepo) {
-    this.premiumUserRepo = premiumUserRepo;
-    this.adminRepo = adminRepo;
+  public UserDetailsServiceImpl(PremiumUserService premiumUserService, AdminService adminService) {
+    this.premiumUserService = premiumUserService;
+    this.adminService = adminService;
   }
 
-  /**
-   * Loads user by username or email with priority given to Admin accounts.
-   * If a user exists in both Admin and PremiumUser repositories, the Admin account will be used.
-   */
   @Override
-  public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
-    // First check for Admin by username
-    Admin admin = adminRepo.findByUsername(identifier);
-    if (admin != null) {
-      logger.debug("Found Admin by username: {}", identifier);
-      return new UserDetailsImpl(null, admin); // Admin only
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    // Try to find user as Premium User first
+    try {
+      PremiumUserDTO premiumUserDTO = premiumUserService.getPremiumUserByUsername(username);
+      if (premiumUserDTO != null) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_PREMIUM"));
+
+        return new UserDetailsImpl(
+            premiumUserDTO.getUsername(),
+            premiumUserDTO.getPassword(),
+            authorities
+        );
+      }
+    } catch (Exception e) {
+      // Continue to try admin lookup
     }
-    
-    // Then check for PremiumUser by username
-    PremiumUser premiumUser = premiumUserRepo.findByUsername(identifier);
-    if (premiumUser != null) {
-      logger.debug("Found user by username: {}", identifier);
-      return new UserDetailsImpl(premiumUser, null); // PremiumUser only
+    // Try to find user as Admin
+    try {
+      AdminDTO adminDTO = adminService.getAdminByUsername(username);
+      if (adminDTO != null) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+
+        return new UserDetailsImpl(
+            adminDTO.getUsername(),
+            adminDTO.getPassword(),
+            authorities
+        );
+      }
+    } catch (Exception e) {
+      // Continue to throw exception
     }
-    
-    // If not found by username, check for Admin by email
-    admin = adminRepo.findByEmail(identifier);
-    if (admin != null) {
-      logger.debug("Found Admin by email: {}", identifier);
-      return new UserDetailsImpl(null, admin); // Admin only
+    throw new UsernameNotFoundException("User not found: " + username);
+  }
+  // Maybe I will use it TODO check this method
+  public UserDetails loadUserByUsernameOrEmail(String usernameOrEmail) throws UsernameNotFoundException {
+    // First try as username
+    try {
+      return loadUserByUsername(usernameOrEmail);
+    } catch (UsernameNotFoundException e) {
+      // If username fails, try as email (you'd need to add these methods to your services)
+      // For now, just rethrow the exception
+      throw new UsernameNotFoundException("User not found: " + usernameOrEmail);
     }
-    
-    // Finally, check for PremiumUser by email
-    premiumUser = premiumUserRepo.findByEmail(identifier);
-    if (premiumUser != null) {
-      logger.debug("Found user by email: {}", identifier);
-      return new UserDetailsImpl(premiumUser, null); // PremiumUser only
+  }
+   // Check if a user exists by username
+  public boolean userExists(String username) {
+    try {
+      loadUserByUsername(username);
+      return true;
+    } catch (UsernameNotFoundException e) {
+      return false;
     }
-    
-    // If user not found, throw exception
-    logger.warn("No user found with username/email: {}", identifier);
-    throw new UsernameNotFoundException("User with username/email " + identifier + " not found");
   }
 }

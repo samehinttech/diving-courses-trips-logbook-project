@@ -1,6 +1,6 @@
 package ch.oceandive.dto;
 
-import ch.fhnw.oceandive.model.DiveCertification;
+import ch.oceandive.model.DiveCertification;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

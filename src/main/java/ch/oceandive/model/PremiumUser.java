@@ -1,19 +1,16 @@
 package ch.oceandive.model;
 
-import ch.fhnw.oceandive.validation.PasswordPattern;
-import jakarta.persistence.CascadeType;
+import ch.oceandive.validation.PasswordPattern;
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Index;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -21,6 +18,10 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Table(name = "premium_users", indexes = {
     @Index(name = "idx_premium_user_email", columnList = "email"),
     @Index(name = "idx_premium_user_username", columnList = "username")
+})
+@AttributeOverrides({
+    @AttributeOverride(name = "passwordResetToken", column = @Column(name = "password_reset_token")),
+    @AttributeOverride(name = "passwordResetTokenExpiry", column = @Column(name = "password_reset_token_expiry"))
 })
 public class PremiumUser extends BaseUser implements DiveCertificationHolder {
 
@@ -96,5 +97,11 @@ public class PremiumUser extends BaseUser implements DiveCertificationHolder {
   public void setUpdatedAt(LocalDateTime updatedAt) {
     this.updatedAt = updatedAt;
   }
-
+  @Override
+  public void cleanupExpiredPasswordResetTokens() {
+    if (getPasswordResetTokenExpiry() != null && getPasswordResetTokenExpiry().isBefore(LocalDateTime.now())) {
+      setPasswordResetToken(null);
+      setPasswordResetTokenExpiry(null);
+    }
+  }
 }

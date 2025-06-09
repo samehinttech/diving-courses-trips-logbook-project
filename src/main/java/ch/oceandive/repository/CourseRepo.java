@@ -1,7 +1,8 @@
 package ch.oceandive.repository;
 
-import ch.fhnw.oceandive.model.Course;
-import ch.fhnw.oceandive.model.CourseStatus;
+import ch.oceandive.model.Course;
+import ch.oceandive.model.CourseStatus;
+import ch.oceandive.model.DiveCertification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -84,7 +85,7 @@ public interface CourseRepo extends JpaRepository<Course, Long> {
   // Find courses by certification level.
 
   List<Course> findByMinCertificationRequiredAndStatusOrderByStartDateAsc(
-      ch.fhnw.oceandive.model.DiveCertification certification, CourseStatus status);
+      DiveCertification certification, CourseStatus status);
 
   // Search courses by name or description (for admin search functionality).
 
@@ -125,7 +126,7 @@ public interface CourseRepo extends JpaRepository<Course, Long> {
       "ORDER BY c.startDate ASC")
   List<Course> findSimilarCourses(@Param("courseId") Long courseId,
       @Param("status") CourseStatus status,
-      @Param("certification") ch.fhnw.oceandive.model.DiveCertification certification,
+      @Param("certification") DiveCertification certification,
       @Param("nameKeyword") String nameKeyword,
       Pageable pageable);
 

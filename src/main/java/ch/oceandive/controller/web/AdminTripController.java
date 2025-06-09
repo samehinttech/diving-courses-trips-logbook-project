@@ -1,8 +1,8 @@
 package ch.oceandive.controller.web;
 
-import ch.fhnw.oceandive.model.Trip;
-import ch.fhnw.oceandive.model.DiveCertification;
-import ch.fhnw.oceandive.service.TripService;
+import ch.oceandive.model.Trip;
+import ch.oceandive.model.DiveCertification;
+import ch.oceandive.service.TripService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

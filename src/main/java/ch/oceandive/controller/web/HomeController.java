@@ -1,7 +1,7 @@
 package ch.oceandive.controller.web;
 
-import ch.fhnw.oceandive.model.Course;
-import ch.fhnw.oceandive.service.CourseService;
+import ch.oceandive.model.Course;
+import ch.oceandive.service.CourseService;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;

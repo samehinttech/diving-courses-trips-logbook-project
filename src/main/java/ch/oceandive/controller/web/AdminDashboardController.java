@@ -1,11 +1,11 @@
 package ch.oceandive.controller.web;
 
-import ch.fhnw.oceandive.model.Course;
-import ch.fhnw.oceandive.model.Trip;
-import ch.fhnw.oceandive.service.CourseService;
-import ch.fhnw.oceandive.service.TripService;
-import ch.fhnw.oceandive.service.PremiumUserService;
-import ch.fhnw.oceandive.service.GuestUserService;
+import ch.oceandive.model.Course;
+import ch.oceandive.model.Trip;
+import ch.oceandive.service.CourseService;
+import ch.oceandive.service.TripService;
+import ch.oceandive.service.PremiumUserService;
+import ch.oceandive.service.GuestUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;

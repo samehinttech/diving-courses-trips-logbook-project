@@ -1,10 +1,10 @@
 package ch.oceandive.service;
 
-import ch.fhnw.oceandive.dto.PremiumUserDTO;
-import ch.fhnw.oceandive.exceptionHandler.DuplicateResourceException;
-import ch.fhnw.oceandive.exceptionHandler.ResourceNotFoundException;
-import ch.fhnw.oceandive.model.PremiumUser;
-import ch.fhnw.oceandive.repository.PremiumUserRepo;
+import ch.oceandive.dto.PremiumUserDTO;
+import ch.oceandive.exceptionHandler.DuplicateResourceException;
+import ch.oceandive.exceptionHandler.ResourceNotFoundException;
+import ch.oceandive.model.PremiumUser;
+import ch.oceandive.repository.PremiumUserRepo;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;

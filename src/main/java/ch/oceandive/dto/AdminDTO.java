@@ -1,6 +1,6 @@
 package ch.oceandive.dto;
 
-import ch.fhnw.oceandive.validation.PasswordPattern;
+import ch.oceandive.validation.PasswordPattern;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import java.io.Serializable;

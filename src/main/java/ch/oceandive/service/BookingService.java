@@ -1,9 +1,9 @@
 package ch.oceandive.service;
 
-import ch.fhnw.oceandive.exceptionHandler.BusinessRuleViolationException;
-import ch.fhnw.oceandive.model.*;
-import ch.fhnw.oceandive.repository.*;
-import ch.fhnw.oceandive.validation.ValidationResult;
+import ch.oceandive.exceptionHandler.BusinessRuleViolationException;
+import ch.oceandive.model.*;
+import ch.oceandive.repository.*;
+import ch.oceandive.validation.ValidationResult;
 import java.security.SecureRandom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

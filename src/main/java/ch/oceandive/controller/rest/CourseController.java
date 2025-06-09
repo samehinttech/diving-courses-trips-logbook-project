@@ -1,7 +1,7 @@
 package ch.oceandive.controller.rest;
 
-import ch.fhnw.oceandive.model.Course;
-import ch.fhnw.oceandive.service.CourseService;
+import ch.oceandive.model.Course;
+import ch.oceandive.service.CourseService;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;

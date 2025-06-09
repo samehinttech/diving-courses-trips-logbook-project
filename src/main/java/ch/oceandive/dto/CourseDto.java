@@ -1,7 +1,7 @@
 package ch.oceandive.dto;
 
-import ch.fhnw.oceandive.model.CourseStatus;
-import ch.fhnw.oceandive.model.DiveCertification;
+import ch.oceandive.model.CourseStatus;
+import ch.oceandive.model.DiveCertification;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
- * DTO for {@link ch.fhnw.oceandive.model.Course}
+ * DTO for {@link ch.oceandive.model.Course}
  */
 public class CourseDto implements Serializable {
 

@@ -1,13 +1,13 @@
 package ch.oceandive.controller.rest;
 
-import ch.fhnw.oceandive.dto.ApiResponse;
-import ch.fhnw.oceandive.model.Course;
-import ch.fhnw.oceandive.model.Trip;
-import ch.fhnw.oceandive.service.AdminService;
-import ch.fhnw.oceandive.service.CourseService;
-import ch.fhnw.oceandive.service.GuestUserService;
-import ch.fhnw.oceandive.service.PremiumUserService;
-import ch.fhnw.oceandive.service.TripService;
+import ch.oceandive.dto.ApiResponse;
+import ch.oceandive.model.Course;
+import ch.oceandive.model.Trip;
+import ch.oceandive.service.AdminService;
+import ch.oceandive.service.CourseService;
+import ch.oceandive.service.GuestUserService;
+import ch.oceandive.service.PremiumUserService;
+import ch.oceandive.service.TripService;
 import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;

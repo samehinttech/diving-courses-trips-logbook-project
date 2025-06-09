@@ -6,7 +6,9 @@ import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ExpiredTokensCleanup {
   private static final Logger logger = LoggerFactory.getLogger(ExpiredTokensCleanup.class);
 
@@ -24,10 +26,7 @@ public class ExpiredTokensCleanup {
   @Scheduled(cron = "0 0 0 * * ?") // Run at midnight every day
   @Transactional
   public void cleanupExpiredPasswordResetTokens() {
-    logger.info("Starting cleanup of expired password reset tokens");
     LocalDateTime now = LocalDateTime.now();
-    int count = premiumUserRepo.clearExpiredPasswordResetTokens(now);
-    logger.info("Cleared {} expired password reset tokens", count);
+    premiumUserRepo.clearExpiredPasswordResetTokens(now);
   }
-
 }

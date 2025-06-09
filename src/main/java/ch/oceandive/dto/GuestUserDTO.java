@@ -1,6 +1,6 @@
 package ch.oceandive.dto;
 
-import ch.fhnw.oceandive.model.DiveCertification;
+import ch.oceandive.model.DiveCertification;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import java.io.Serializable;

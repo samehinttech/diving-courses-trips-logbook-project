@@ -1,16 +1,16 @@
 package ch.oceandive.controller.rest;
 
-import ch.fhnw.oceandive.exceptionHandler.BusinessRuleViolationException;
-import ch.fhnw.oceandive.exceptionHandler.ResourceNotFoundException;
-import ch.fhnw.oceandive.model.Course;
-import ch.fhnw.oceandive.model.GuestUser;
-import ch.fhnw.oceandive.model.PremiumUser;
-import ch.fhnw.oceandive.model.Trip;
-import ch.fhnw.oceandive.service.BookingService;
-import ch.fhnw.oceandive.service.CourseService;
-import ch.fhnw.oceandive.service.GuestUserService;
-import ch.fhnw.oceandive.service.PremiumUserService;
-import ch.fhnw.oceandive.service.TripService;
+import ch.oceandive.exceptionHandler.BusinessRuleViolationException;
+import ch.oceandive.exceptionHandler.ResourceNotFoundException;
+import ch.oceandive.model.Course;
+import ch.oceandive.model.GuestUser;
+import ch.oceandive.model.PremiumUser;
+import ch.oceandive.model.Trip;
+import ch.oceandive.service.BookingService;
+import ch.oceandive.service.CourseService;
+import ch.oceandive.service.GuestUserService;
+import ch.oceandive.service.PremiumUserService;
+import ch.oceandive.service.TripService;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package ch.oceandive.controller.web;
 
-import ch.fhnw.oceandive.model.ContactForm;
+import ch.oceandive.model.ContactForm;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

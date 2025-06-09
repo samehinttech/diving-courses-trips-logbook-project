@@ -1,53 +1,24 @@
 package ch.oceandive.model;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+/**
+ * Custom implementation of UserDetails for Spring Security.
+ * This class represents the authenticated user and their roles.
+ * It provides methods to access user information and check roles.
+ */
 public class UserDetailsImpl implements UserDetails {
 
-  private static final Logger logger = LoggerFactory.getLogger(UserDetailsImpl.class);
+  private final String username;
+  private final String password;
+  private final Collection<? extends GrantedAuthority> authorities;
 
-  private String username;
-  private String password;
-  private List<GrantedAuthority> authorities;
-
-  public UserDetailsImpl(PremiumUser premiumUser, Admin admin) {
-    initializeUserDetails(premiumUser, admin);
-  }
-
-  private void initializeUserDetails(PremiumUser premiumUser, Admin admin) {
-    authorities = new ArrayList<>();
-
-    // Log a warning if both user types are provided
-    if (premiumUser != null && admin != null) {
-      logger.warn("Both user  and Admin provided to the user details - this may indicate a security issue");
-    }
-
-    // Handle admin if present (admins have priority)
-    if (admin != null) {
-      username = admin.getUsername();
-      password = admin.getPassword();
-      String role = "ROLE_" + admin.getRole().toUpperCase();
-      authorities.add(new SimpleGrantedAuthority(role));
-      logger.debug("Created UserDetails for Admin: {} with role: {}", username, role);
-    }
-    // Handle premium user if present
-    else if (premiumUser != null) {
-      username = premiumUser.getUsername();
-      password = premiumUser.getPassword();
-      String role = "ROLE_" + premiumUser.getRole().toUpperCase();
-      authorities.add(new SimpleGrantedAuthority(role));
-      logger.debug("Created UserDetails for user: {} with role: {}", username, role);
-    }
-
-    // Add basic read authority
-    authorities.add(new SimpleGrantedAuthority("READ"));
+  public UserDetailsImpl(String username, String password, Collection<? extends GrantedAuthority> authorities) {
+    this.username = username;
+    this.password = password;
+    this.authorities = authorities;
   }
 
   @Override
@@ -67,21 +38,61 @@ public class UserDetailsImpl implements UserDetails {
 
   @Override
   public boolean isAccountNonExpired() {
-    return true; // Default implementation
+    return true;
   }
 
   @Override
   public boolean isAccountNonLocked() {
-    return true; // Default implementation
+    return true;
   }
 
   @Override
   public boolean isCredentialsNonExpired() {
-    return true; // Default implementation
+    return true;
   }
 
   @Override
   public boolean isEnabled() {
-    return true; // Default implementation
+    return true;
+  }
+
+  /**
+   * Get the primary role of the user
+   */
+  public String getRole() {
+    return authorities.stream()
+        .map(GrantedAuthority::getAuthority)
+        .filter(auth -> auth.startsWith("ROLE_"))
+        .findFirst()
+        .orElse("NO_ROLE");
+  }
+
+  /**
+   * Check if user has a specific role
+   */
+  public boolean hasRole(String role) {
+    String roleToCheck = role.startsWith("ROLE_") ? role : "ROLE_" + role;
+    return authorities.stream()
+        .anyMatch(auth -> auth.getAuthority().equals(roleToCheck));
+  }
+
+  @Override
+  public String toString() {
+    return "UserDetailsImpl{" +
+        "username='" + username + '\'' +
+        ", authorities=" + authorities +
+        '}';
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (!(obj instanceof UserDetailsImpl that)) return false;
+    return username.equals(that.username);
+  }
+
+  @Override
+  public int hashCode() {
+    return username.hashCode();
   }
 }

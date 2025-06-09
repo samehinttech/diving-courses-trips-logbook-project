@@ -1,10 +1,10 @@
 package ch.oceandive.service;
 
-import ch.fhnw.oceandive.dto.GuestUserDTO;
-import ch.fhnw.oceandive.exceptionHandler.DuplicateResourceException;
-import ch.fhnw.oceandive.exceptionHandler.ResourceNotFoundException;
-import ch.fhnw.oceandive.model.GuestUser;
-import ch.fhnw.oceandive.repository.GuestUserRepo;
+import ch.oceandive.dto.GuestUserDTO;
+import ch.oceandive.exceptionHandler.DuplicateResourceException;
+import ch.oceandive.exceptionHandler.ResourceNotFoundException;
+import ch.oceandive.model.GuestUser;
+import ch.oceandive.repository.GuestUserRepo;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

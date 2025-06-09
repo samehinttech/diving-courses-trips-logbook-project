@@ -1,10 +1,10 @@
 package ch.oceandive.service;
 
-import ch.fhnw.oceandive.dto.TripDTO;
-import ch.fhnw.oceandive.exceptionHandler.ResourceNotFoundException;
-import ch.fhnw.oceandive.model.DiveCertification;
-import ch.fhnw.oceandive.model.Trip;
-import ch.fhnw.oceandive.repository.TripRepo;
+import ch.oceandive.dto.TripDTO;
+import ch.oceandive.exceptionHandler.ResourceNotFoundException;
+import ch.oceandive.model.DiveCertification;
+import ch.oceandive.model.Trip;
+import ch.oceandive.repository.TripRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;

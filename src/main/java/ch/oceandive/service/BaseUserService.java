@@ -83,8 +83,8 @@ public abstract class BaseUserService<T, D, ID> {
     // Validate user fields - subclass-specific (for CREATE)
     validateUserFieldsForCreate(dto);
     // Validate unique username and email across all user types
-    userValidationService.validateUniqueUsername(username);
-    userValidationService.validateUniqueEmail(getEmailFromDto(dto));
+    userValidationService.validateUniqueUsername(username, null);
+    userValidationService.validateUniqueEmail(getEmailFromDto(dto), null);
     T entity = convertToEntity(dto);
     // Set an encoded password
     setPasswordForEntity(entity, encodePassword(getPasswordFromDto(dto)));

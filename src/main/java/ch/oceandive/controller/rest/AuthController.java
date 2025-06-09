@@ -1,15 +1,15 @@
 package ch.oceandive.controller.rest;
 
-import ch.fhnw.oceandive.dto.AdminDTO;
-import ch.fhnw.oceandive.dto.ApiResponse;
-import ch.fhnw.oceandive.dto.LoginRequest;
-import ch.fhnw.oceandive.dto.PremiumUserDTO;
-import ch.fhnw.oceandive.dto.RegistrationRequest;
-import ch.fhnw.oceandive.exceptionHandler.DuplicateResourceException;
-import ch.fhnw.oceandive.model.UserDetailsServiceImpl;
-import ch.fhnw.oceandive.security.TokenService;
-import ch.fhnw.oceandive.service.AdminService;
-import ch.fhnw.oceandive.service.PremiumUserService;
+import ch.oceandive.dto.AdminDTO;
+import ch.oceandive.dto.ApiResponse;
+import ch.oceandive.dto.LoginRequest;
+import ch.oceandive.dto.PremiumUserDTO;
+import ch.oceandive.dto.RegistrationRequest;
+import ch.oceandive.exceptionHandler.DuplicateResourceException;
+import ch.oceandive.model.UserDetailsServiceImpl;
+import ch.oceandive.security.TokenService;
+import ch.oceandive.service.AdminService;
+import ch.oceandive.service.PremiumUserService;
 import jakarta.validation.Valid;
 import java.time.Duration;
 import java.time.Instant;

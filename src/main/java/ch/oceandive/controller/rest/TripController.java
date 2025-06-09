@@ -1,7 +1,7 @@
 package ch.oceandive.controller.rest;
 
-import ch.fhnw.oceandive.model.Trip;
-import ch.fhnw.oceandive.service.TripService;
+import ch.oceandive.model.Trip;
+import ch.oceandive.service.TripService;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

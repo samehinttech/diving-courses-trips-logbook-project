@@ -1,9 +1,9 @@
 package ch.oceandive.controller.web;
 
-import ch.fhnw.oceandive.model.DiveLog;
-import ch.fhnw.oceandive.model.PremiumUser;
-import ch.fhnw.oceandive.service.DiveLogService;
-import ch.fhnw.oceandive.service.PremiumUserService;
+import ch.oceandive.model.DiveLog;
+import ch.oceandive.model.PremiumUser;
+import ch.oceandive.service.DiveLogService;
+import ch.oceandive.service.PremiumUserService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

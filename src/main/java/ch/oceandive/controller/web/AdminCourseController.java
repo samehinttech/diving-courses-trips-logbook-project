@@ -1,9 +1,9 @@
 package ch.oceandive.controller.web;
 
-import ch.fhnw.oceandive.model.Course;
-import ch.fhnw.oceandive.model.CourseStatus;
-import ch.fhnw.oceandive.model.DiveCertification;
-import ch.fhnw.oceandive.service.CourseService;
+import ch.oceandive.model.Course;
+import ch.oceandive.model.CourseStatus;
+import ch.oceandive.model.DiveCertification;
+import ch.oceandive.service.CourseService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
