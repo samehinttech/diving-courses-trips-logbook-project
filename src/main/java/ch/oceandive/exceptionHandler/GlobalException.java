@@ -1,6 +1,5 @@
 package ch.oceandive.exceptionHandler;
 
-
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,13 +10,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
-/**
- * {@code GlobalException.java} To handle all exceptions in the application.
- */
 
-@ControllerAdvice
+@ControllerAdvice(annotations = RestController.class)
 public class GlobalException {
 
   // To handle ResourceNotFoundException
@@ -54,12 +51,12 @@ public class GlobalException {
     return getValidationErrorResponseResponseEntity(request, ex.getBindingResult(), ex);
   }
 
+
   private ResponseEntity<ValidationErrorResponse> getValidationErrorResponseResponseEntity(
       WebRequest request, BindingResult bindingResult, MethodArgumentNotValidException ex) {
     Map<String, String> errors = new HashMap<>();
-    bindingResult.getFieldErrors().forEach(error -> {
-      errors.put(error.getField(), error.getDefaultMessage());
-    });
+    bindingResult.getFieldErrors().forEach(error -> errors.put(error.getField(),
+        error.getDefaultMessage()));
     ValidationErrorResponse errorResponse = new ValidationErrorResponse(
         HttpStatus.BAD_REQUEST.value(),
         "Validation failed",
@@ -75,9 +72,8 @@ public class GlobalException {
   public ResponseEntity<ValidationErrorResponse> handleBindException(
       BindException ex, WebRequest request) {
     Map<String, String> errors = new HashMap<>();
-    ex.getBindingResult().getFieldErrors().forEach(error -> {
-      errors.put(error.getField(), error.getDefaultMessage());
-    });
+    ex.getBindingResult().getFieldErrors().forEach(error ->
+        errors.put(error.getField(), error.getDefaultMessage()));
     ValidationErrorResponse errorResponse = new ValidationErrorResponse(
         HttpStatus.BAD_REQUEST.value(),
         "Validation failed",

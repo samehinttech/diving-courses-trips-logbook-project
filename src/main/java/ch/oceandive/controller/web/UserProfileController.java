@@ -1,11 +1,11 @@
 package ch.oceandive.controller.web;
 
+
 import ch.oceandive.model.Admin;
 import ch.oceandive.model.DiveCertification;
 import ch.oceandive.model.PremiumUser;
 import ch.oceandive.repository.AdminRepo;
 import ch.oceandive.repository.PremiumUserRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
@@ -17,16 +17,14 @@ import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping("/my-profile")
-public class ProfileController {
-
+public class UserProfileController {
 
   private final PremiumUserRepo premiumUserRepo;
   private final AdminRepo adminRepo;
 
-  public ProfileController(PremiumUserRepo premiumUserRepo, AdminRepo adminRepo) {
+  public UserProfileController(PremiumUserRepo premiumUserRepo, AdminRepo adminRepo) {
     this.premiumUserRepo = premiumUserRepo;
     this.adminRepo = adminRepo;
-
   }
 
   /**
@@ -34,7 +32,8 @@ public class ProfileController {
    */
   @GetMapping
   public String viewProfile(Model model, Authentication authentication) {
-    if (!authentication.isAuthenticated()) {
+    // Check if authentication exists AND is authenticated
+    if (authentication == null || !authentication.isAuthenticated()) {
       return "redirect:/login";
     }
 
@@ -75,9 +74,10 @@ public class ProfileController {
    */
   @GetMapping("/edit")
   public String editProfile(Model model, Authentication authentication) {
-    if (authentication == null) {
+    if (authentication == null || !authentication.isAuthenticated()) {
       return "redirect:/login";
     }
+
     String username = authentication.getName();
     Object user = null;
     String userType = null;
@@ -115,7 +115,6 @@ public class ProfileController {
    */
   @PostMapping("/update")
   public String updateProfile(
-      @ModelAttribute("user") Object userForm,
       @RequestParam(required = false) String firstName,
       @RequestParam(required = false) String lastName,
       @RequestParam(required = false) String email,
@@ -125,7 +124,7 @@ public class ProfileController {
       Authentication authentication,
       RedirectAttributes redirectAttributes) {
 
-    if (authentication == null) {
+    if (authentication == null || !authentication.isAuthenticated()) {
       return "redirect:/login";
     }
 
@@ -155,7 +154,15 @@ public class ProfileController {
           premiumUser.setLastName(lastName);
           premiumUser.setEmail(email);
           premiumUser.setMobile(mobile);
-          premiumUser.setDiveCertification(DiveCertification.valueOf(diveCertification));
+          if (diveCertification != null && !diveCertification.isEmpty()) {
+            try {
+              premiumUser.setDiveCertification(DiveCertification.valueOf(diveCertification));
+            } catch (IllegalArgumentException e) {
+              // Handle invalid enum value
+              redirectAttributes.addFlashAttribute("error", "Invalid dive certification selected");
+              return "redirect:/my-profile/edit";
+            }
+          }
           premiumUser.setUpdatedAt(LocalDateTime.now());
           premiumUserRepo.save(premiumUser);
           updated = true;
@@ -174,12 +181,5 @@ public class ProfileController {
 
     return "redirect:/my-profile";
   }
-
-  /**
-   * Alternative: Direct mapping from header/navigation
-   */
-  @GetMapping("/user-profile")
-  public String userProfile(Authentication authentication) {
-    return viewProfile(new org.springframework.ui.ExtendedModelMap(), authentication);
-  }
 }
+

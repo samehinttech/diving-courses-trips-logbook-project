@@ -32,7 +32,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -205,7 +204,7 @@ public class AuthController {
    *
    * @return The user profile
    */
-  @GetMapping("/user/profile")
+  @GetMapping("/user/my-profile")
   @PreAuthorize("hasRole('PREMIUM')")
   public ResponseEntity<ApiResponse> getUserProfile(Authentication authentication) {
     return getProfile(authentication,
@@ -219,7 +218,7 @@ public class AuthController {
    *
    * @return The admin profile
    */
-  @GetMapping("/admin/profile")
+  @GetMapping("/admin/my-profile")
   @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<ApiResponse> getAdminProfile(Authentication authentication) {
     return getProfile(authentication,

@@ -12,8 +12,5 @@ public class RestConfiguration implements RepositoryRestConfigurer {
   public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {
     // Change the base path for all REST endpoints
     config.setBasePath("/api");
-
-    // Optional: Disable REST endpoints for specific entities
-   // config.disableDefaultExposure();
   }
 }

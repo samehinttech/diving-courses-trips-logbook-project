@@ -37,7 +37,7 @@
 
       <!-- Authenticated User Links -->
       <a th:href="@{/dive-log}" th:if="${#authorization.expression('isAuthenticated()')}">DIVE-LOG</a>
-      <a th:href="@{/profile}" th:if="${#authorization.expression('isAuthenticated()')}">PROFILE</a>
+      <a th:href="@{/my-profile}"th:if="${#authorization.expression('isAuthenticated()')}">PROFILE</a>
     </div>
 
     <!-- Authentication Section -->
