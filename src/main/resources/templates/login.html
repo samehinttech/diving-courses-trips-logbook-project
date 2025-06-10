@@ -49,6 +49,7 @@
         </div>
 
         <!-- Custom Error Message -->
+        <!--/*@thymesVar id="errorMessage" type="java"*/-->
         <div th:if="${errorMessage}" class="alert alert-error">
           <i class="fas fa-exclamation-circle"></i>
           <span th:text="${errorMessage}" id="errorMessageText">Error message will be displayed here</span>
@@ -58,6 +59,7 @@
         </script>
 
         <!-- Login Form -->
+        <!--/*@thymesVar id="loginRequest" type="java"*/-->
         <form th:action="@{/login}" method="post" class="login-form" th:object="${loginRequest}" id="loginForm">
 
           <!-- Username Field -->
@@ -149,7 +151,6 @@
         if (loginForm) {
             loginForm.addEventListener('submit', function(event) {
                 console.log('Login form submitted');
-                // Don't prevent default - let the form submit normally
             });
         }
     });

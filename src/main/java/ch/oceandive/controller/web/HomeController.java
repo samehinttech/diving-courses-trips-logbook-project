@@ -31,6 +31,7 @@ public class HomeController {
   private static final String PAGE_TITLE_ABOUT = "About - OceanDive";
   private static final String PAGE_TITLE_PRIVACY = "Privacy Policy - OceanDive";
   private static final String PAGE_TITLE_TERMS = "Terms & Conditions - OceanDive";
+  private static final String PAGE_TITLE_LOGIN = "Login - OceanDive";
   private static final String PAGE_TITLE_404 = "Page Not Found - OceanDive";
 
   // Constants for about page
@@ -128,7 +129,6 @@ public class HomeController {
   }
 
   // This method was removed to resolve ambiguous mapping with coursesList method
-
   @GetMapping("/trips")
   public String trips(Model model) {
     model.addAttribute("pageTitle", PAGE_TITLE_TRIPS);
@@ -154,6 +154,11 @@ public class HomeController {
   public String termsAndConditions(Model model) {
     model.addAttribute("pageTitle", PAGE_TITLE_TERMS);
     return "terms";
+  }
+  @GetMapping("/login")
+  public String showLoginForm(Model model) {
+    model.addAttribute("pageTitle", PAGE_TITLE_LOGIN);
+    return "login";
   }
 
   @GetMapping("/404")
