@@ -39,7 +39,7 @@
             <tr>
               <td>
                 <span class="stat-number" th:text="${totalDives} ?: 0">0</span>
-                <span class="stat-label">Completed dives</span>
+                <span class="stat-label">Total dives</span>
               </td>
               <td>
                 <span class="stat-number"
@@ -48,7 +48,7 @@
               </td>
               <td>
                 <span class="stat-number" th:text="${uniqueLocations} ?: 0">0</span>
-                <span class="stat-label">Unique locations visited</span>
+                <span class="stat-label">Locations visited</span>
               </td>
             </tr>
             </tbody>
@@ -84,14 +84,13 @@
 
           <!-- Empty State (shown when no dives) -->
           <div th:if="${#lists.isEmpty(diveLogs)}" class="empty-state">
-            <div class="empty-icon">🐠</div>
-            <h2 class="empty-title">No Dive Logs Yet</h2>
+            <h2 class="empty-title">NO LOGGED DIVE YET</h2>
             <p class="empty-description">
               Start your diving journey by adding your first dive log! Record your underwater
               adventures,
-              track your progress, and build a comprehensive history of your diving experiences.
+              track your progress, and build a history of your diving experiences.
             </p>
-            <a th:href="@{/dive-log/add}" class="btn btn-primary">Add Your First Dive</a>
+            <a th:href="@{/dive-log/add}" class="button">Add Your First Dive</a>
           </div>
 
           <!-- Dives Table (shown when there are dives) -->

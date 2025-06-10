@@ -337,6 +337,7 @@ PASSWORD TOGGLE FUNCTIONALITY - FIXED VERSION
 }
 .button:hover {
   background: #0688fa linear-gradient(to bottom, #0688fa 5%, #2dabf9 100%);
+  color: var(--color-black);
 }
 .button:active {
   position:relative;

@@ -87,7 +87,7 @@ public class SecurityConfig {
             .requestMatchers("/register", "/login", "/forgot-password", "/reset-password", "/reset/**", "/h2-console/**").permitAll()
             .requestMatchers("/admin/**").hasRole("ADMIN")
             .requestMatchers("/dive-log/**").hasRole("PREMIUM")
-            .requestMatchers("/user-profile/**", "/profile").hasAnyRole("PREMIUM", "ADMIN")
+            .requestMatchers("/user-profile/**", "/profile-edit","/my-profile/","/my-profile/update").hasAnyRole("PREMIUM", "ADMIN")
             .anyRequest().authenticated()
         )
         .formLogin(form -> form
