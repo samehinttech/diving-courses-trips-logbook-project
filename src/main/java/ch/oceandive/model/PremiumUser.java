@@ -3,14 +3,18 @@ package ch.oceandive.model;
 import ch.oceandive.validation.PasswordPattern;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Index;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -43,6 +47,10 @@ public class PremiumUser extends BaseUser implements DiveCertificationHolder {
   @Column(nullable = false)
   @UpdateTimestamp
   private LocalDateTime updatedAt;
+
+  @OneToMany
+      (mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<DiveLog> diveLogs;
 
   // Default constructor
   public PremiumUser() {
@@ -92,6 +100,14 @@ public class PremiumUser extends BaseUser implements DiveCertificationHolder {
 
   public LocalDateTime getUpdatedAt() {
     return updatedAt;
+  }
+  public List<DiveLog> getDiveLogs() {
+    return diveLogs;
+  }
+
+  public PremiumUser setDiveLogs(List<DiveLog> diveLogs) {
+    this.diveLogs = diveLogs;
+    return this;
   }
 
   public void setUpdatedAt(LocalDateTime updatedAt) {

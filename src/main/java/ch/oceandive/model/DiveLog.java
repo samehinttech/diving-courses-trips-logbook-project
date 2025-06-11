@@ -207,11 +207,11 @@ public class DiveLog {
         '}';
   }
 
-  // equals and hashCode based on business key (user + diveNumber)
+  // equals and hashCode based on (user + diveNumber)
   @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof DiveLog diveLog)) return false;
+  public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (!(obj instanceof DiveLog diveLog)) return false;
     return user != null && diveNumber != null &&
         user.equals(diveLog.user) && diveNumber.equals(diveLog.diveNumber);
   }

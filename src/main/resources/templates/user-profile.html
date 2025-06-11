@@ -139,29 +139,28 @@
 
         <!-- Action Buttons -->
         <div class="profile-actions">
-          <a th:href="@{/my-profile/edit}" class="btn btn-primary">
+          <a th:href="@{/my-profile/edit}" class="btn button">
             <i class="fas fa-edit"></i> Edit Profile
           </a>
 
-          <a th:href="@{/forgot-password}" class="btn btn-secondary">
+          <a th:href="@{/forgot-password}" class="btn button">
             <i class="fas fa-key"></i> Change Password
           </a>
         </div>
 
         <div class="login-divider">
-          <span>Account Actions</span>
         </div>
 
         <div class="profile-navigation">
-          <a th:href="@{/dive-log}" class="btn-guest" th:if="${userType == 'premium'}">
+          <a th:href="@{/dive-log}" class="btn button" th:if="${userType == 'premium'}">
             <i class="fas fa-water"></i> View Dive Log
           </a>
 
-          <a th:href="@{/courses}" class="btn-guest">
+          <a th:href="@{/courses}" class="btn button">
             <i class="fas fa-graduation-cap"></i> Browse Courses
           </a>
 
-          <a th:href="@{/admin}" class="btn-guest" th:if="${userType == 'admin'}">
+          <a th:href="@{/admin}" class="btn button" th:if="${userType == 'admin'}">
             <i class="fas fa-cogs"></i> Admin Dashboard
           </a>
         </div>

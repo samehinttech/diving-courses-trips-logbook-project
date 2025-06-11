@@ -28,9 +28,14 @@
 
 .profile-actions {
   display: flex;
+  justify-content: center;
   gap: var(--space-md);
   margin-top: var(--space-xl);
   flex-wrap: wrap;
+}
+.profile-actions .button {
+  width: 190px;
+  text-align: center;
 }
 
 .profile-navigation {
@@ -39,16 +44,10 @@
   justify-content: center;
   flex-wrap: wrap;
 }
-
-.btn-secondary {
-  background: #6c757d linear-gradient(to bottom, #6c757d 5%, #5a6268 100%);
-  border: 1px solid #495057;
+.profile-navigation .button {
+  width: 190px;
+  text-align: center;
 }
-
-.btn-secondary:hover {
-  background: #5a6268 linear-gradient(to bottom, #5a6268 5%, #6c757d 100%);
-}
-
 /* Responsive adjustments */
 @media screen and (max-width: 768px) {
   .profile-actions {
@@ -64,10 +63,9 @@
     flex-direction: column;
     align-items: center;
   }
-
-  .profile-navigation .btn-guest {
+  .profile-navigation .btn{
     width: 100%;
-    max-width: 300px;
+    text-align: center;
   }
 }
 /* Profile Edit specific styles */
@@ -99,7 +97,6 @@
   .form-actions {
     flex-direction: column;
   }
-
   .form-actions .btn,
   .form-actions .submit-btn {
     width: 100%;

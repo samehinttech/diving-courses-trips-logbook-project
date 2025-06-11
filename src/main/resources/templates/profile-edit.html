@@ -42,16 +42,16 @@
         <span th:text="${error}">Error message</span>
       </div>
       <!-- Profile Edit Form -->
-      <form class="login-form" th:action="@{/profile/update}" method="post" th:object="${user}">
-        <!-- Hidden ID field -->
-        <input type="hidden" th:field="*{id}" />
+      <!-- FIXED: Changed action to /my-profile/update and removed th:object -->
+      <form class="login-form" th:action="@{/my-profile/update}" method="post">
         <!-- First Name -->
         <div class="form-group">
           <label class="form-label" for="firstName">
             <i class="fas fa-user"></i>
             First Name
           </label>
-          <input type="text" id="firstName" th:field="*{firstName}"
+          <input type="text" id="firstName" name="firstName"
+                 th:value="${user.firstName}"
                  class="form-input"
                  placeholder="Enter your first name"
                  required />
@@ -63,7 +63,8 @@
             <i class="fas fa-user"></i>
             Last Name
           </label>
-          <input type="text" id="lastName" th:field="*{lastName}"
+          <input type="text" id="lastName" name="lastName"
+                 th:value="${user.lastName}"
                  class="form-input"
                  placeholder="Enter your last name"
                  required />
@@ -74,7 +75,8 @@
             <i class="fas fa-envelope"></i>
             Email Address
           </label>
-          <input type="email" id="email" th:field="*{email}"
+          <input type="email" id="email" name="email"
+                 th:value="${user.email}"
                  class="form-input"
                  placeholder="Enter your email address"
                  required />
@@ -85,7 +87,8 @@
             <i class="fas fa-phone"></i>
             Mobile Number
           </label>
-          <input type="tel" id="mobile" th:field="*{mobile}"
+          <input type="tel" id="mobile" name="mobile"
+                 th:value="${user.mobile}"
                  class="form-input"
                  placeholder="Enter your mobile number" />
         </div>
@@ -95,7 +98,8 @@
             <i class="fas fa-id-badge"></i>
             Username
           </label>
-          <input type="text" id="username" th:field="*{username}"
+          <input type="text" id="username" name="username"
+                 th:value="${user.username}"
                  class="form-input"
                  readonly
                  style="background-color: #f8f9fa; cursor: not-allowed;" />
@@ -107,14 +111,13 @@
             <i class="fas fa-certificate"></i>
             Dive Certification
           </label>
-          <select id="diveCertification" th:field="*{diveCertification}" class="form-input" required>
+          <select id="diveCertification" name="diveCertification" class="form-input" required>
             <option value="">Select your certification level</option>
-            <option value="Open Water Diver">Open Water Diver</option>
-            <option value="Advanced Open Water Diver">Advanced Open Water Diver</option>
-            <option value="Rescue Diver">Rescue Diver</option>
-            <option value="Divemaster">Divemaster</option>
-            <option value="Instructor">Instructor</option>
-            <option value="Other">Other</option>
+            <option value="OPEN_WATER" th:selected="${user.diveCertification?.toString() == 'OPEN_WATER'}">Open Water Diver</option>
+            <option value="ADVANCED_OPEN_WATER" th:selected="${user.diveCertification?.toString() == 'ADVANCED_OPEN_WATER'}">Advanced Open Water Diver</option>
+            <option value="RESCUE_DIVER" th:selected="${user.diveCertification?.toString() == 'RESCUE_DIVER'}">Rescue Diver</option>
+            <option value="DIVE_MASTER" th:selected="${user.diveCertification?.toString() == 'DIVE_MASTER'}">Divemaster</option>
+            <option value="INSTRUCTOR" th:selected="${user.diveCertification?.toString() == 'INSTRUCTOR'}">Instructor</option>
           </select>
         </div>
         <!-- Role Limitation (only for admins) -->
@@ -123,7 +126,8 @@
             <i class="fas fa-shield-alt"></i>
             Role Limitation
           </label>
-          <input type="text" id="roleLimitation" th:field="*{roleLimitation}"
+          <input type="text" id="roleLimitation" name="roleLimitation"
+                 th:value="${user.roleLimitation}"
                  class="form-input"
                  placeholder="Enter role limitations (optional)" />
         </div>
@@ -132,16 +136,15 @@
           <button type="submit" class="submit-btn">
             <i class="fas fa-save"></i> Update Profile
           </button>
-          <a th:href="@{/profile}" class="btn btn-secondary">
+          <a th:href="@{/my-profile}" class="btn submit-btn">
             <i class="fas fa-times"></i> Cancel
           </a>
         </div>
         <div class="login-divider">
-          <span>Security</span>
         </div>
         <div class="security-options">
           <p class="form-text">To change your password, use the password reset option.</p>
-          <a th:href="@{/forgot-password}" class="btn-guest">
+          <a th:href="@{/forgot-password}" class="btn button">
             <i class="fas fa-key"></i> Change Password
           </a>
         </div>

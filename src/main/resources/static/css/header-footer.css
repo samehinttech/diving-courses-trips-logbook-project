@@ -116,9 +116,7 @@
 
 /* Enhanced Logout Buttons - Fixed background colors */
 .btn-logout-simple {
-  background-color: rgba(255, 255, 255, 0.15); /* Semi-transparent white background */
   color: var(--color-white-90);
-  border: 1px solid rgba(255, 255, 255, 0.3);
   font-weight: 400;
   font-size: var(--text-sm);
   padding: var(--space-xs) var(--space-md);
@@ -141,8 +139,7 @@
 
 .btn-logout-mobile {
   width: 100%;
-  background-color: rgba(239, 68, 68, 0.9); /* Red background for logout */
-  border: 1px solid rgba(239, 68, 68, 0.9);
+  background-color: var(--color-primary);
   color: var(--color-white);
   padding: var(--space-sm) var(--space-lg);
   font-weight: 500;
@@ -156,8 +153,7 @@
 }
 
 .btn-logout-mobile:hover {
-  background-color: rgba(220, 38, 38, 1); /* Darker red on hover */
-  border-color: rgba(220, 38, 38, 1);
+  background: #0688fa linear-gradient(to bottom, #0688fa 5%, #2dabf9 100%);
   text-decoration: none;
   transform: translateY(-1px);
 }
@@ -364,8 +360,6 @@
 .mobile-user-info {
   padding: var(--space-lg);
   text-align: center;
-  border-top: 1px solid var(--bg-border);
-  background-color: var(--bg-light);
 }
 
 .mobile-user-info span {
