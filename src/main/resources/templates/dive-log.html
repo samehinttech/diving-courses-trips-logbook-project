@@ -138,6 +138,8 @@
                 <td data-label="Actions">
                   <a th:href="@{'/dive-log/edit/' + ${dive.id}}" class="button">Edit</a>
                   <a th:href="@{'/dive-log/view/' + ${dive.id}}" class="button">View</a>
+                  <a th:href="@{'/dive-log/delete/' + ${dive.id}}" class="button delete-button"
+                     onclick="return confirm('Are you sure you want to delete this dive log?');">Delete</a>
                 </td>
               </tr>
               </tbody>

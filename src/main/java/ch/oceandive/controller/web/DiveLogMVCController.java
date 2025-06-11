@@ -184,14 +184,14 @@ public class DiveLogMVCController {
     // Create a new dive log with default values
     DiveLog diveLog = new DiveLog();
 
-    // Set default date to today
+    // Set the default date today
     diveLog.setDiveDate(java.time.LocalDate.now());
 
-    // Set default start time to current hour
+    // Set the default start time to the current hour
     java.time.LocalDateTime now = java.time.LocalDateTime.now();
     diveLog.setStartTime(now.withMinute(0).withSecond(0).withNano(0));
 
-    // Set default end time to one hour later
+    // Set the default end time to one hour later
     diveLog.setEndTime(now.withMinute(0).withSecond(0).withNano(0).plusHours(1));
 
     // Calculate derived fields (duration, character count)
@@ -258,7 +258,7 @@ public class DiveLogMVCController {
         bindingResult.rejectValue("endTime", "error.endTime",
             "End time must be after start time.");
       } else {
-        // Check if duration is reasonable (not more than 24 hours)
+        // Check if the duration is reasonable (not more than 24 hours)
         long durationMinutes = java.time.Duration.between(diveLog.getStartTime(), diveLog.getEndTime()).toMinutes();
         if (durationMinutes > 1440) { // 24 hours
           bindingResult.rejectValue("endTime", "error.endTime",
@@ -310,36 +310,29 @@ public class DiveLogMVCController {
   @PostMapping("/dive-log/preview")
   public String previewDiveLog(@ModelAttribute DiveLog diveLog, Model model) {
     model.addAttribute("pageTitle", "Add New Dive - OceanDive");
-
     // Calculate derived fields
     calculateDerivedFields(diveLog, model);
-
     // Add preview message
     if (diveLog.getDuration() != null && diveLog.getDuration() > 0) {
       model.addAttribute("previewMessage",
           "Duration calculated: " + diveLog.getFormattedDuration() + ". Review your details and save when ready.");
     }
-
     model.addAttribute("diveLog", diveLog);
     return "add-dive-log";
   }
-
   /**
    * Calculate dive statistics (kept for potential future use)
    */
   private Map<String, Object> calculateDiveStats(List<DiveLog> diveLogs) {
     Map<String, Object> statistics = new HashMap<>();
-
     int totalDives = diveLogs.size();
     int totalMinutes = diveLogs.stream()
         .mapToInt(dive -> dive.getDuration() != null ? dive.getDuration() : 0).sum();
     double totalHours = Math.round(totalMinutes / 60.0 * 10.0) / 10.0;
     long uniqueLocations = diveLogs.stream().map(DiveLog::getLocation).distinct().count();
-
     statistics.put("totalDives", totalDives);
     statistics.put("totalHours", totalHours);
     statistics.put("uniqueLocations", uniqueLocations);
-
     return statistics;
   }
 
