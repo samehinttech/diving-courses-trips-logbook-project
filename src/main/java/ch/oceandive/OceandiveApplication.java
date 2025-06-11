@@ -24,13 +24,13 @@ public class OceandiveApplication {
   public static void main(String[] args) {
     ApplicationContext ctx = SpringApplication.run(OceandiveApplication.class, args);
 
-    // Print all controller beans
-    System.out.println("\n=== Registered Controllers ===");
-    String[] beanNames = ctx.getBeanDefinitionNames();
-    Arrays.stream(beanNames)
-        .filter(name -> name.toLowerCase().contains("controller"))
-        .sorted()
-        .forEach(name -> System.out.println("Controller Bean: " + name));
-    System.out.println("=== End Controllers ===\n");
+    // Print all controller beans NOTE: I used that to track the mapped controllers for debugging
+//    System.out.println("\n=== Registered Controllers ===");
+//    String[] beanNames = ctx.getBeanDefinitionNames();
+//    Arrays.stream(beanNames)
+//        .filter(name -> name.toLowerCase().contains("controller"))
+//        .sorted()
+//        .forEach(name -> System.out.println("Controller Bean: " + name));
+//    System.out.println("=== End Controllers ===\n");
   }
 }

@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Dive Log - OceanDive</title>
+  <title th:text="${pageTitle}">My Dive Log - OceanDive</title>
   <link rel="stylesheet" th:href="@{/css/main.css}">
   <link rel="stylesheet" th:href="@{/css/dive-log.css}">
-
+  <link rel="stylesheet" th:href="@{/css/dive-log-modals.css}">
 </head>
 <body class="dive-log-page">
 <div id="header-fragment" th:replace="~{fragments/header :: header}"></div>
@@ -42,8 +42,8 @@
                 <span class="stat-label">Total dives</span>
               </td>
               <td>
-                <span class="stat-number"
-                      th:text="${totalHours != null ? #numbers.formatDecimal(totalHours,1,1) : '0.0'}">0.0</span>
+                                <span class="stat-number"
+                                      th:text="${totalHours != null ? #numbers.formatDecimal(totalHours,1,1) : '0.0'}">0.0</span>
                 <span class="stat-label">Total time underwater</span>
               </td>
               <td>
@@ -58,7 +58,7 @@
         <!-- Actions Section -->
         <div class="actions-section">
           <div class="actions-left">
-            <a th:href="@{/dive-log/add}" class="button">Add New Dive</a>
+            <a th:href="@{/dive-log/add}" class="button">Add New</a>
           </div>
           <div class="actions-right">
             <form th:action="@{/dive-log}" method="get" class="filter-form">
@@ -81,8 +81,7 @@
 
         <!-- Dives Section -->
         <div class="dives-section">
-
-          <!-- Empty State (shown when no dives) -->
+          <!-- Empty State -->
           <div th:if="${#lists.isEmpty(diveLogs)}" class="empty-state">
             <h2 class="empty-title">NO LOGGED DIVE YET</h2>
             <p class="empty-description">
@@ -93,7 +92,7 @@
             <a th:href="@{/dive-log/add}" class="button">Add Your First Dive</a>
           </div>
 
-          <!-- Dives Table (shown when there are dives) -->
+          <!-- Dives Table -->
           <div th:if="${!#lists.isEmpty(diveLogs)}">
             <div class="section-title">
               <span th:if="${selectedLocation}">Dives in <span th:text="${selectedLocation}"></span></span>
@@ -118,28 +117,38 @@
                   <span class="dive-number" th:text="'#' + ${dive.diveNumber}">#1</span>
                 </td>
                 <td data-label="Location" th:text="${dive.location}">Location</td>
-                <td data-label="Date" th:text="${#temporals.format(dive.diveDate, 'MMM d, yyyy')}">Date</td>
+                <td data-label="Date" th:text="${#temporals.format(dive.diveDate, 'MMM d, yyyy')}">
+                  Date
+                </td>
                 <td data-label="Duration" th:text="${dive.duration} + ' min'">Duration</td>
                 <td data-label="Water Temp">
-                  <span th:if="${dive.waterTemperature}"
-                        th:text="${dive.waterTemperature != null ? #numbers.formatDecimal(dive.waterTemperature,1,1) + '°C' : '-'}">-</span>
+                                  <span th:if="${dive.waterTemperature}"
+                                        th:text="${#numbers.formatDecimal(dive.waterTemperature,1,1) + '°C'}">-</span>
                   <span th:unless="${dive.waterTemperature}">-</span>
                 </td>
                 <td data-label="Air Temp">
-                  <span th:if="${dive.airTemperature}"
-                        th:text="${dive.airTemperature != null ? #numbers.formatDecimal(dive.airTemperature,1,1) + '°C' : '-'}">-</span>
+                                  <span th:if="${dive.airTemperature}"
+                                        th:text="${#numbers.formatDecimal(dive.airTemperature,1,1) + '°C'}">-</span>
                   <span th:unless="${dive.airTemperature}">-</span>
                 </td>
-                <!-- Notes Column -->
-                <td data-label="Notes">
-                  <span th:if="${dive.notes}" title="Notes" th:text="${dive.notes}">No notes available</span>
+                <td data-label="Notes" class="notes-cell">
+                                  <span th:if="${dive.notes}"
+                                        th:text="${#strings.abbreviate(dive.notes, 50)}"
+                                        th:title="${dive.notes}">Notes</span>
                   <span th:unless="${dive.notes}">No notes</span>
                 </td>
                 <td data-label="Actions">
-                  <a th:href="@{'/dive-log/edit/' + ${dive.id}}" class="button">Edit</a>
-                  <a th:href="@{'/dive-log/view/' + ${dive.id}}" class="button">View</a>
-                  <a th:href="@{'/dive-log/delete/' + ${dive.id}}" class="button delete-button"
-                     onclick="return confirm('Are you sure you want to delete this dive log?');">Delete</a>
+                  <button class="button btn-view" th:onclick="'viewDive(' + ${dive.id} + ')'">View
+                  </button>
+                  <button class="button btn-edit" th:onclick="'editDive(' + ${dive.id} + ')'">Edit
+                  </button>
+                  <form th:action="@{/dive-log/delete/{id}(id=${dive.id})}" method="post"
+                        style="display: inline;" class="delete-form">
+                    <button type="submit" class="button btn-delete"
+                            onclick="return confirm('Are you sure you want to delete this dive log?');">
+                      Delete
+                    </button>
+                  </form>
                 </td>
               </tr>
               </tbody>
@@ -150,6 +159,98 @@
     </div>
   </div>
 </main>
+
+<!-- View Dive Log Modal -->
+<div id="viewDiveModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Dive Log Details</h2>
+      <span class="close" onclick="closeViewModal()">&times;</span>
+    </div>
+    <div class="modal-body" id="viewDiveContent">
+      <!-- Content will be dynamically loaded here -->
+    </div>
+    <div class="modal-footer">
+      <button class="button" onclick="closeViewModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Dive Log Modal -->
+<div id="editDiveModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Edit Dive Log</h2>
+      <span class="close" onclick="closeEditModal()">&times;</span>
+    </div>
+    <div class="modal-body">
+      <form id="editDiveForm">
+        <input type="hidden" id="editDiveId" name="id">
+
+        <div class="form-group">
+          <label for="editDiveNumber">Dive Number *</label>
+          <input type="number" id="editDiveNumber" name="diveNumber" min="1" required>
+        </div>
+
+        <div class="form-group">
+          <label for="editLocation">Location *</label>
+          <input type="text" id="editLocation" name="location" maxlength="255" required>
+        </div>
+
+        <div class="form-group">
+          <label for="editDiveDate">Dive Date *</label>
+          <input type="date" id="editDiveDate" name="diveDate" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="editStartTime">Start Time *</label>
+            <input type="time" id="editStartTime" name="startTime" required>
+          </div>
+
+          <div class="form-group">
+            <label for="editEndTime">End Time *</label>
+            <input type="time" id="editEndTime" name="endTime" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="editWaterTemp">Water Temperature (°C)</label>
+            <input type="number" id="editWaterTemp" name="waterTemperature"
+                   min="-5" max="40" step="0.1">
+          </div>
+
+          <div class="form-group">
+            <label for="editAirTemp">Air Temperature (°C)</label>
+            <input type="number" id="editAirTemp" name="airTemperature"
+                   min="-20" max="50" step="0.1">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="editNotes">Notes</label>
+          <textarea id="editNotes" name="notes" rows="4" maxlength="2000"></textarea>
+          <small class="char-count">0 / 2000 characters</small>
+        </div>
+
+        <div id="editDuration" class="form-info" style="display: none;">
+          <strong>Duration:</strong> <span id="durationDisplay"></span>
+        </div>
+
+        <div id="editFormError" class="alert alert-danger" style="display: none;"></div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="button" onclick="closeEditModal()">Cancel</button>
+      <button class="button" onclick="saveDiveLog()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
 <div id="footer-fragment" th:replace="~{fragments/footer :: footer}"></div>
+
+<!-- Scripts -->
+<script th:src="@{/js/dive-log-modals.js}"></script>
 </body>
 </html>

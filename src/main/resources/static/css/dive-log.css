@@ -205,12 +205,12 @@ DIVE LOG PAGE STYLES
 .filter-group select {
   padding: var(--space-sm) var(--space-md);
   border: 2px solid #e2e8f0;
-  border-radius: var(--radius-md);
   font-size: var(--text-sm);
   font-family: var(--font-primary), sans-serif;
   background: var(--color-white);
   color: #1a202c;
   transition: var(--transition-base);
+  border-radius: 0 !important;
 }
 
 .filter-group select:focus {

@@ -334,6 +334,7 @@ PASSWORD TOGGLE FUNCTIONALITY - FIXED VERSION
   padding:9px 23px;
   text-decoration:none;
   text-shadow:0 1px 0 #263666;
+  -webkit-tap-highlight-color: transparent;
 }
 .button:hover {
   background: #0688fa linear-gradient(to bottom, #0688fa 5%, #2dabf9 100%);

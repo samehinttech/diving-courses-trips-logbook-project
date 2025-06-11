@@ -1,112 +1,202 @@
 package ch.oceandive.controller.rest;
 
 import ch.oceandive.dto.DiveLogDTO;
-import ch.oceandive.model.DiveLog;
+import ch.oceandive.exceptionHandler.*;
+import ch.oceandive.exceptionHandler.ResourceNotFoundException.UnauthorizedException;
 import ch.oceandive.model.PremiumUser;
 import ch.oceandive.service.DiveLogService;
 import ch.oceandive.service.PremiumUserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
-import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
+/**
+ * REST API controller for dive log operations
+ */
 @RestController
 @RequestMapping("/api/dive-logs")
+@Tag(name = "Dive Logs", description = "Operations related to dive logs")
 public class DiveLogController {
 
+  private static final Logger logger = LoggerFactory.getLogger(DiveLogController.class);
   private final DiveLogService diveLogService;
   private final PremiumUserService premiumUserService;
-  private static final Logger logger = LoggerFactory.getLogger(DiveLogController.class);
 
+  @Autowired
   public DiveLogController(DiveLogService diveLogService, PremiumUserService premiumUserService) {
     this.diveLogService = diveLogService;
     this.premiumUserService = premiumUserService;
   }
 
+
+  @GetMapping
+  public ResponseEntity<Map<String, Object>> getAllDiveLogs(
+      @RequestParam(required = false) String location) {
+    try {
+      PremiumUser currentUser = getCurrentUser();
+
+      List<DiveLogDTO> diveLogs;
+      if (location != null && !location.trim().isEmpty()) {
+        diveLogs = diveLogService.findByUserAndLocation(currentUser, location.trim());
+      } else {
+        diveLogs = diveLogService.findByUserOrderByDiveDateDesc(currentUser);
+      }
+
+      Map<String, Object> statistics = diveLogService.getUserStatistics(currentUser);
+
+      Map<String, Object> response = new HashMap<>();
+      response.put("diveLogs", diveLogs);
+      response.putAll(statistics);
+
+      return ResponseEntity.ok(response);
+    } catch (Exception e) {
+      logger.error("Error retrieving dive logs", e);
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body(Map.of("error", "Failed to retrieve dive logs"));
+    }
+  }
+
   /**
-   * Get the currently authenticated PremiumUser.
+   * GET /api/dive-logs/{id} - Get a specific dive log
+   */
+  @Operation(summary = "Get all dive logs for the current user")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "List of dive logs"),
+      @ApiResponse(responseCode = "500", description = "Internal server error")
+  })
+  @GetMapping("/{id}")
+  public ResponseEntity<?> getDiveLog(@PathVariable Long id) {
+    try {
+      PremiumUser currentUser = getCurrentUser();
+      DiveLogDTO diveLog = diveLogService.findByIdAndUser(id, currentUser);
+      return ResponseEntity.ok(diveLog);
+    } catch (ResourceNotFoundException e) {
+      return ResponseEntity.notFound().build();
+    } catch (UnauthorizedException e) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN)
+          .body(Map.of("error", "Access denied"));
+    } catch (Exception e) {
+      logger.error("Error retrieving dive log", e);
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body(Map.of("error", "Failed to retrieve dive log"));
+    }
+  }
+
+  /**
+   * POST /api/dive-logs - Create a new dive log
+   */
+  @PostMapping
+  public ResponseEntity<?> createDiveLog(@Valid @RequestBody DiveLogDTO diveLogDTO,
+      BindingResult bindingResult) {
+    if (bindingResult.hasErrors()) {
+      return handleValidationErrors(bindingResult);
+    }
+
+    try {
+      PremiumUser currentUser = getCurrentUser();
+      DiveLogDTO createdDiveLog = diveLogService.create(diveLogDTO, currentUser);
+      return ResponseEntity.status(HttpStatus.CREATED).body(createdDiveLog);
+    } catch (IllegalArgumentException e) {
+      return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+    } catch (Exception e) {
+      logger.error("Error creating dive log", e);
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body(Map.of("error", "Failed to create dive log"));
+    }
+  }
+
+  /**
+   * PUT /api/dive-logs/{id} - Update an existing dive log
+   */
+  @PutMapping("/{id}")
+  public ResponseEntity<?> updateDiveLog(@PathVariable Long id,
+      @Valid @RequestBody DiveLogDTO diveLogDTO,
+      BindingResult bindingResult) {
+    if (bindingResult.hasErrors()) {
+      return handleValidationErrors(bindingResult);
+    }
+
+    try {
+      PremiumUser currentUser = getCurrentUser();
+      DiveLogDTO updatedDiveLog = diveLogService.update(id, diveLogDTO, currentUser);
+      return ResponseEntity.ok(updatedDiveLog);
+    } catch (ResourceNotFoundException e) {
+      return ResponseEntity.notFound().build();
+    } catch (UnauthorizedException e) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN)
+          .body(Map.of("error", "Access denied"));
+    } catch (IllegalArgumentException e) {
+      return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+    } catch (Exception e) {
+      logger.error("Error updating dive log", e);
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body(Map.of("error", "Failed to update dive log"));
+    }
+  }
+
+  /**
+   * DELETE /api/dive-logs/{id} - Delete a dive log
+   */
+  @DeleteMapping("/{id}")
+  public ResponseEntity<?> deleteDiveLog(@PathVariable Long id) {
+    try {
+      PremiumUser currentUser = getCurrentUser();
+      diveLogService.delete(id, currentUser);
+      return ResponseEntity.ok(Map.of("message", "Dive log deleted successfully"));
+    } catch (ResourceNotFoundException e) {
+      return ResponseEntity.notFound().build();
+    } catch (UnauthorizedException e) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN)
+          .body(Map.of("error", "Access denied"));
+    } catch (Exception e) {
+      logger.error("Error deleting dive log", e);
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body(Map.of("error", "Failed to delete dive log"));
+    }
+  }
+
+  /**
+   * GET /api/dive-logs/locations - Get all unique locations for the current user
+   */
+  @GetMapping("/locations")
+  public ResponseEntity<?> getUserLocations() {
+    try {
+      PremiumUser currentUser = getCurrentUser();
+      List<String> locations = diveLogService.getUserLocations(currentUser);
+      return ResponseEntity.ok(locations);
+    } catch (Exception e) {
+      logger.error("Error retrieving locations", e);
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body(Map.of("error", "Failed to retrieve locations"));
+    }
+  }
+
+  /**
+   * Helper method to get the current logged-in user
    */
   private PremiumUser getCurrentUser() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    if (authentication != null && authentication.isAuthenticated()) {
-      String username = authentication.getName();
-      return premiumUserService.getPremiumUserEntityByUsername(username);
-    }
-    throw new UsernameNotFoundException("User not authenticated");
+    String username = authentication.getName();
+    return premiumUserService.getPremiumUserEntityByUsername(username);
   }
 
   /**
-   * Convert DiveLog Entity to DTO
-   */
-  private DiveLogDTO convertToDTO(DiveLog diveLog) {
-    return new DiveLogDTO(
-        diveLog.getId(),
-        diveLog.getDiveNumber(),
-        diveLog.getLocation(),
-        diveLog.getStartTime(),
-        diveLog.getEndTime(),
-        diveLog.getDuration(),
-        diveLog.getWaterTemperature(),
-        diveLog.getAirTemperature(),
-        diveLog.getNotes(),
-        diveLog.getDiveDate()
-    );
-  }
-
-  /**
-   * Convert DiveLog DTO to Entity
-   */
-  private DiveLog convertToEntity(DiveLogDTO dto, PremiumUser currentUser) {
-    DiveLog diveLog = new DiveLog();
-    diveLog.setId(dto.getId());
-    diveLog.setDiveNumber(dto.getDiveNumber());
-    diveLog.setLocation(dto.getLocation());
-    diveLog.setStartTime(dto.getStartTime());
-    diveLog.setEndTime(dto.getEndTime());
-    diveLog.setDuration(dto.getDuration());
-    diveLog.setWaterTemperature(dto.getWaterTemperature());
-    diveLog.setAirTemperature(dto.getAirTemperature());
-    diveLog.setNotes(dto.getNotes());
-    diveLog.setDiveDate(dto.getDiveDate());
-    diveLog.setUser(currentUser);
-    calculateDiveProperties(diveLog); // Reuse calculation logic
-    return diveLog;
-  }
-
-  /**
-   * Calculate and set derived dive log properties like duration and dive date.
-   */
-  private void calculateDiveProperties(DiveLog diveLog) {
-    if (diveLog.getDuration() == null && diveLog.getStartTime() != null && diveLog.getEndTime() != null) {
-      long durationMinutes = java.time.Duration.between(diveLog.getStartTime(), diveLog.getEndTime()).toMinutes();
-      diveLog.setDuration((int) durationMinutes);
-    }
-    if (diveLog.getDiveDate() == null && diveLog.getStartTime() != null) {
-      diveLog.setDiveDate(diveLog.getStartTime().toLocalDate());
-    }
-  }
-
-  /**
-   * Verify if a dive log belongs to the current user.
-   */
-  private void verifyOwnership(DiveLog diveLog, PremiumUser currentUser) {
-    if (!diveLog.getUser().getId().equals(currentUser.getId())) {
-      throw new RuntimeException("Access denied");
-    }
-  }
-
-  /**
-   * Handle validation errors in a reusable way.
+   * Helper method to handle validation errors
    */
   private ResponseEntity<?> handleValidationErrors(BindingResult bindingResult) {
     Map<String, String> errors = new HashMap<>();
@@ -114,177 +204,5 @@ public class DiveLogController {
         errors.put(error.getField(), error.getDefaultMessage())
     );
     return ResponseEntity.badRequest().body(Map.of("errors", errors));
-  }
-
-  /**
-   * Get all dive logs for the current user.
-   */
-  @GetMapping
-  public ResponseEntity<Map<String, Object>> getAllDiveLogs(@RequestParam(required = false) String location) {
-    try {
-      PremiumUser currentUser = getCurrentUser();
-      List<DiveLog> diveLogs = (location != null && !location.isBlank()) ?
-          diveLogService.findByUserAndLocation(currentUser, location.trim()) :
-          diveLogService.findByUserOrderByDiveDateDesc(currentUser);
-
-      List<DiveLogDTO> diveLogDTOs = diveLogs.stream().map(this::convertToDTO).collect(Collectors.toList());
-      return ResponseEntity.ok(Map.of(
-          "diveLogs", diveLogDTOs,
-          "totalDives", diveLogService.countByUser(currentUser),
-          "totalHours", diveLogService.getTotalHoursByUser(currentUser),
-          "uniqueLocations", diveLogService.getUniqueLocationsByUser(currentUser)
-      ));
-    } catch (Exception e) {
-      logger.error("Error retrieving dive logs", e);
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Failed to retrieve dive logs"));
-    }
-  }
-
-  /**
-   * Get a specific dive log by ID.
-   */
-  @GetMapping("/{id}")
-  public ResponseEntity<?> getDiveLog(@PathVariable Long id) {
-    try {
-      PremiumUser currentUser = getCurrentUser();
-      DiveLog diveLog = diveLogService.findById(id).orElseThrow(() -> new RuntimeException("Dive log not found"));
-      verifyOwnership(diveLog, currentUser);
-      return ResponseEntity.ok(convertToDTO(diveLog));
-    } catch (Exception e) {
-      logger.error("Error retrieving dive log", e);
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Failed to retrieve dive log"));
-    }
-  }
-
-  /**
-   * Create a new dive log.
-   */
-  @PostMapping
-  public ResponseEntity<?> createDiveLog(@Valid @RequestBody DiveLogDTO diveLogDTO, BindingResult bindingResult) {
-    if (bindingResult.hasErrors()) {
-      return handleValidationErrors(bindingResult);
-    }
-    try {
-      PremiumUser currentUser = getCurrentUser();
-      DiveLog diveLog = convertToEntity(diveLogDTO, currentUser); // Reuse entity conversion
-      String validationError = validateDiveLog(diveLog, currentUser, false);
-      if (validationError != null) {
-        return ResponseEntity.badRequest().body(Map.of("error", validationError));
-      }
-      DiveLog savedDiveLog = diveLogService.save(diveLog);
-      return ResponseEntity.status(HttpStatus.CREATED).body(convertToDTO(savedDiveLog));
-    } catch (Exception e) {
-      logger.error("Error creating dive log", e);
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Failed to create dive log"));
-    }
-  }
-
-  /**
-   * Update an existing dive log.
-   */
-  @PutMapping("/{id}")
-  public ResponseEntity<?> updateDiveLog(@PathVariable Long id, @Valid @RequestBody DiveLogDTO diveLogDTO, BindingResult bindingResult) {
-    if (bindingResult.hasErrors()) {
-      return handleValidationErrors(bindingResult);
-    }
-    try {
-      PremiumUser currentUser = getCurrentUser();
-      DiveLog existingDiveLog = diveLogService.findById(id).orElseThrow(() -> new RuntimeException("Dive log not found"));
-      verifyOwnership(existingDiveLog, currentUser);
-      DiveLog updatedDiveLog = convertToEntity(diveLogDTO, currentUser); // Reuse entity conversion
-      updatedDiveLog.setId(existingDiveLog.getId()); // Preserve the ID
-      String validationError = validateDiveLog(updatedDiveLog, currentUser, true);
-      if (validationError != null) {
-        return ResponseEntity.badRequest().body(Map.of("error", validationError));
-      }
-      diveLogService.save(updatedDiveLog);
-      return ResponseEntity.ok(convertToDTO(updatedDiveLog));
-    } catch (Exception e) {
-      logger.error("Error updating dive log", e);
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Failed to update dive log"));
-    }
-  }
-
-  /**
-   * Delete a dive log.
-   */
-  @DeleteMapping("/{id}")
-  public ResponseEntity<?> deleteDiveLog(@PathVariable Long id) {
-    try {
-      PremiumUser currentUser = getCurrentUser();
-      DiveLog diveLog = diveLogService.findById(id).orElseThrow(() -> new RuntimeException("Dive log not found"));
-      verifyOwnership(diveLog, currentUser);
-      diveLogService.deleteById(id);
-      return ResponseEntity.ok(Map.of("message", "Dive log deleted successfully"));
-    } catch (Exception e) {
-      logger.error("Error deleting dive log", e);
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Failed to delete dive log"));
-    }
-  }
-
-  /**
-   * Get all unique locations for the current user.
-   */
-  @GetMapping("/locations")
-  public ResponseEntity<?> getUserLocations() {
-    try {
-      PremiumUser currentUser = getCurrentUser();
-      List<String> locations = diveLogService.findByUser(currentUser).stream()
-          .map(DiveLog::getLocation)
-          .distinct()
-          .sorted()
-          .collect(Collectors.toList());
-      return ResponseEntity.ok(locations);
-    } catch (Exception e) {
-      logger.error("Error retrieving locations", e);
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Failed to retrieve locations"));
-    }
-  }
-
-  /**
-   * Validate dive log business rules
-   */
-  private String validateDiveLog(DiveLog diveLog, PremiumUser user, boolean isUpdate) {
-    // Validate time logic
-    if (diveLog.getStartTime() != null && diveLog.getEndTime() != null) {
-      if (diveLog.getEndTime().isBefore(diveLog.getStartTime()) ||
-          diveLog.getEndTime().isEqual(diveLog.getStartTime())) {
-        return "End time must be after start time";
-      }
-      long durationMinutes = java.time.Duration.between(
-          diveLog.getStartTime(),
-          diveLog.getEndTime()
-      ).toMinutes();
-      if (durationMinutes > 1440) { // 24 hours
-        return "Dive duration cannot exceed 24 hours";
-      } else if (durationMinutes < 1) {
-        return "Dive must be at least 1 minute long";
-      }
-    }
-    // Validate dive date consistency
-    if (diveLog.getDiveDate() != null && diveLog.getStartTime() != null) {
-      if (!diveLog.getDiveDate().equals(diveLog.getStartTime().toLocalDate())) {
-        return "Dive date must match the date of the start time";
-      }
-    }
-    // Check for future dates
-    if (diveLog.getDiveDate() != null && diveLog.getDiveDate().isAfter(LocalDate.now())) {
-      return "Dive date cannot be in the future";
-    }
-    // Check if the dive number already exists (for new dives or when changing dive number)
-    if (diveLog.getDiveNumber() != null) {
-      Optional<DiveLog> existingDive = diveLogService.findByUserAndDiveNumber(user, diveLog.getDiveNumber());
-      if (existingDive.isPresent() && (!isUpdate || !existingDive.get().getId().equals(diveLog.getId()))) {
-        return "Dive number " + diveLog.getDiveNumber() + " already exists";
-      }
-    }
-    // Validate temperature ranges
-    if (diveLog.getWaterTemperature() != null && diveLog.getAirTemperature() != null) {
-      double tempDiff = diveLog.getWaterTemperature() - diveLog.getAirTemperature();
-      if (tempDiff > 20) {
-        return "Water temperature seems unusually high compared to air temperature";
-      }
-    }
-    return null; // No validation errors
   }
 }

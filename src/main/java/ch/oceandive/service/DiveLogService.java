@@ -1,41 +1,43 @@
 package ch.oceandive.service;
 
-import ch.oceandive.model.DiveLog;
+import ch.oceandive.dto.DiveLogDTO;
 import ch.oceandive.model.PremiumUser;
-import ch.oceandive.repository.DiveLogRepo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 /**
  * Service interface for DiveLog operations
  */
 public interface DiveLogService {
 
-  List<DiveLog> findAll();
+  // Get all dive logs for a user
+  List<DiveLogDTO> findAllByUser(PremiumUser user);
 
-  List<DiveLog> findByUser(PremiumUser user);
+  //Get all dive logs for a user ordered by dive date descending
+  List<DiveLogDTO> findByUserOrderByDiveDateDesc(PremiumUser user);
 
-  List<DiveLog> findByUserOrderByDiveDateDesc(PremiumUser user);
+  // Get dive logs for a user filtered by location
+  List<DiveLogDTO> findByUserAndLocation(PremiumUser user, String location);
 
-  List<DiveLog> findByUserAndLocation(PremiumUser user, String location);
+  // Get a dive log by ID for a specific user
+  DiveLogDTO findByIdAndUser(Long id, PremiumUser user);
 
-  Optional<DiveLog> findById(Long id);
+  // Create a new dive log
+  DiveLogDTO create(DiveLogDTO diveLogDTO, PremiumUser user);
 
-  Optional<DiveLog> findByUserAndDiveNumber(PremiumUser user, Integer diveNumber);
+  //Update an existing dive log
+  DiveLogDTO update(Long id, DiveLogDTO diveLogDTO, PremiumUser user);
 
-  DiveLog save(DiveLog diveLog);
+  // Delete a dive log
+  void delete(Long id, PremiumUser user);
 
-  void delete(DiveLog diveLog);
+  //Get dive log statistics for a user
+  Map<String, Object> getUserStatistics(PremiumUser user);
 
-  void deleteById(Long id);
+  // Get all unique locations for a user
+  List<String> getUserLocations(PremiumUser user);
 
-  long countByUser(PremiumUser user);
-
-  Double getTotalHoursByUser(PremiumUser user);
-
-  Long getUniqueLocationsByUser(PremiumUser user);
+// Validate a dive log DTO
+  String validate(DiveLogDTO diveLogDTO, PremiumUser user, boolean isUpdate);
 }
-

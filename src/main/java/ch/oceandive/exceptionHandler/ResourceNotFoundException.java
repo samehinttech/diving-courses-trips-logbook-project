@@ -30,4 +30,15 @@ public class ResourceNotFoundException extends RuntimeException {
     return new ResourceNotFoundException(
         String.format("%s not found with %s: '%s'", resourceName, fieldName, fieldValue));
   }
+  // Exception for Unauthorized access
+ public static class UnauthorizedException extends RuntimeException {
+
+    public UnauthorizedException(String message) {
+      super(message);
+    }
+
+    public UnauthorizedException(String message, Throwable cause) {
+      super(message, cause);
+    }
+  }
 }

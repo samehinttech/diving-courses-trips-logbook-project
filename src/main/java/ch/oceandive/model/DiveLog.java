@@ -1,15 +1,11 @@
 package ch.oceandive.model;
 
-
 import jakarta.persistence.*;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "dive_logs")
@@ -31,13 +27,13 @@ public class DiveLog {
 
   @NotNull(message = "Start time is required")
   @Column(nullable = false)
-  @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-  private LocalDateTime startTime;
+  @DateTimeFormat(pattern = "HH:mm")
+  private LocalTime startTime;
 
   @NotNull(message = "End time is required")
   @Column(nullable = false)
-  @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-  private LocalDateTime endTime;
+  @DateTimeFormat(pattern = "HH:mm")
+  private LocalTime endTime;
 
   @NotNull(message = "Dive date is required")
   @Column(name = "dive_date", nullable = false)
@@ -70,8 +66,8 @@ public class DiveLog {
   }
 
   // Constructor with essential fields
-  public DiveLog(Integer diveNumber, String location, LocalDateTime startTime,
-      LocalDateTime endTime, LocalDate diveDate, Integer duration) {
+  public DiveLog(Integer diveNumber, String location, LocalTime startTime,
+      LocalTime endTime, LocalDate diveDate, Integer duration) {
     this.diveNumber = diveNumber;
     this.location = location;
     this.startTime = startTime;
@@ -105,19 +101,19 @@ public class DiveLog {
     this.location = location;
   }
 
-  public LocalDateTime getStartTime() {
+  public LocalTime getStartTime() {
     return startTime;
   }
 
-  public void setStartTime(LocalDateTime startTime) {
+  public void setStartTime(LocalTime startTime) {
     this.startTime = startTime;
   }
 
-  public LocalDateTime getEndTime() {
+  public LocalTime getEndTime() {
     return endTime;
   }
 
-  public void setEndTime(LocalDateTime endTime) {
+  public void setEndTime(LocalTime endTime) {
     this.endTime = endTime;
   }
 
@@ -171,7 +167,9 @@ public class DiveLog {
 
   // Business logic methods
   public String getFormattedDuration() {
-    if (duration == null) return "0 min";
+    if (duration == null) {
+      return "0 min";
+    }
 
     int hours = duration / 60;
     int minutes = duration % 60;
@@ -210,8 +208,12 @@ public class DiveLog {
   // equals and hashCode based on (user + diveNumber)
   @Override
   public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (!(obj instanceof DiveLog diveLog)) return false;
+    if (this == obj) {
+      return true;
+    }
+    if (!(obj instanceof DiveLog diveLog)) {
+      return false;
+    }
     return user != null && diveNumber != null &&
         user.equals(diveLog.user) && diveNumber.equals(diveLog.diveNumber);
   }

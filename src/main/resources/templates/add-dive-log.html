@@ -3,235 +3,124 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Add New Dive Log - OceanDive</title>
+  <title th:text="${pageTitle}">Add New Dive - OceanDive</title>
   <link rel="stylesheet" th:href="@{/css/main.css}">
-  <link rel="stylesheet" th:href="@{/css/add-dive-log.css}">
+  <link rel="stylesheet" th:href="@{/css/dive-log.css}">
+  <link rel="stylesheet" th:href="@{/css/dive-log-forms.css}">
 </head>
-<body class="add-dive-page">
+<body class="dive-log-page">
 <div id="header-fragment" th:replace="~{fragments/header :: header}"></div>
 
 <main>
   <div class="container">
-    <div class="add-dive-container">
-      <div class="add-dive-header">
-        <h1>Add New Dive Log</h1>
-        <p>Record the details of your latest diving adventure</p>
+    <div class="dive-log-container">
+      <div class="dive-log-header">
+        <h1>Add New Dive</h1>
+        <p>Record your latest underwater adventure</p>
       </div>
 
-      <div class="add-dive-content">
-        <a th:href="@{/dive-log}" class="back-link">← Back to Dive Log</a>
-
-        <!-- Error Messages -->
+      <div class="dive-log-content">
+        <!-- Messages -->
         <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
-        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+        <div th:if="${previewMessage}" class="alert alert-info" th:text="${previewMessage}"></div>
 
-        <!-- Preview Message -->
-        <div th:if="${previewMessage}" class="alert alert-success">
-          <strong>✓ </strong><span th:text="${previewMessage}"></span>
-        </div>
+        <!-- Add Dive Form -->
+        <form th:action="@{/dive-log/add}" method="post" th:object="${diveLog}" class="dive-form">
 
-        <form th:action="@{/dive-log/add}" th:object="${diveLog}" method="post" id="diveLogForm">
+          <div class="form-section">
+            <h3>Basic Information</h3>
 
-          <!-- Form Errors (inside form context) -->
-          <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger">
-            <ul style="margin: 0; padding-left: 20px;">
-              <li th:each="error : ${#fields.globalErrors()}" th:text="${error}">Global error</li>
-            </ul>
+            <div class="form-group">
+              <label for="diveNumber">Dive Number *</label>
+              <input type="number" id="diveNumber" th:field="*{diveNumber}"
+                     min="1" required class="form-control">
+              <span th:if="${#fields.hasErrors('diveNumber')}"
+                    th:errors="*{diveNumber}" class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="location">Location *</label>
+              <input type="text" id="location" th:field="*{location}"
+                     maxlength="255" required class="form-control">
+              <span th:if="${#fields.hasErrors('location')}"
+                    th:errors="*{location}" class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="diveDate">Dive Date *</label>
+              <input type="date" id="diveDate" th:field="*{diveDate}"
+                     required class="form-control">
+              <span th:if="${#fields.hasErrors('diveDate')}"
+                    th:errors="*{diveDate}" class="error-message"></span>
+            </div>
           </div>
 
           <div class="form-section">
-            <div class="section-title">Basic Information</div>
-            <table class="form-table">
-              <tr>
-                <td>
-                  <label class="form-label">Dive Number <span class="required">*</span></label>
-                </td>
-                <td>
-                  <label>
-                    <input type="number"
-                           th:field="*{diveNumber}"
-                           th:class="${#fields.hasErrors('diveNumber')} ? 'error' : ''"
-                           min="1" required>
-                  </label>
-                  <div th:if="${#fields.hasErrors('diveNumber')}"
-                       th:errors="*{diveNumber}"
-                       class="error-message"></div>
-                  <div class="input-note">Sequential number for your dive</div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label class="form-label">Location <span class="required">*</span></label>
-                </td>
-                <td>
-                  <label>
-                    <input type="text"
-                           th:field="*{location}"
-                           th:class="${#fields.hasErrors('location')} ? 'error' : ''"
-                           placeholder="e.g., Red Sea, Egypt" required>
-                  </label>
-                  <div th:if="${#fields.hasErrors('location')}"
-                       th:errors="*{location}"
-                       class="error-message"></div>
-                  <div class="input-note">Dive site or general location</div>
-                </td>
-              </tr>
-            </table>
+            <h3>Time Information</h3>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="startTime">Start Time *</label>
+                <input type="time" id="startTime" th:field="*{startTime}"
+                       required class="form-control" onchange="calculateDuration()">
+                <span th:if="${#fields.hasErrors('startTime')}"
+                      th:errors="*{startTime}" class="error-message"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="endTime">End Time *</label>
+                <input type="time" id="endTime" th:field="*{endTime}"
+                       required class="form-control" onchange="calculateDuration()">
+                <span th:if="${#fields.hasErrors('endTime')}"
+                      th:errors="*{endTime}" class="error-message"></span>
+              </div>
+            </div>
+
+            <div class="form-info" id="durationInfo" style="display: none;">
+              <strong>Calculated Duration:</strong> <span id="durationDisplay"></span>
+            </div>
           </div>
 
           <div class="form-section">
-            <div class="section-title">Time Information</div>
-            <table class="form-table">
-              <tr>
-                <td>
-                  <label class="form-label">Dive Date <span class="required">*</span></label>
-                </td>
-                <td>
-                  <label>
-                    <input type="date"
-                           th:field="*{diveDate}"
-                           th:class="${#fields.hasErrors('diveDate')} ? 'error' : ''"
-                           required>
-                  </label>
-                  <div th:if="${#fields.hasErrors('diveDate')}"
-                       th:errors="*{diveDate}"
-                       class="error-message"></div>
-                  <div class="input-note">Date of the dive</div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label class="form-label">Start Time <span class="required">*</span></label>
-                </td>
-                <td>
-                  <label>
-                    <input type="datetime-local"
-                           th:field="*{startTime}"
-                           th:class="${#fields.hasErrors('startTime')} ? 'error' : ''"
-                           required>
-                  </label>
-                  <div th:if="${#fields.hasErrors('startTime')}"
-                       th:errors="*{startTime}"
-                       class="error-message"></div>
-                  <div class="input-note">When you entered the water</div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label class="form-label">End Time <span class="required">*</span></label>
-                </td>
-                <td>
-                  <label>
-                    <input type="datetime-local"
-                           th:field="*{endTime}"
-                           th:class="${#fields.hasErrors('endTime')} ? 'error' : ''"
-                           required>
-                  </label>
-                  <div th:if="${#fields.hasErrors('endTime')}"
-                       th:errors="*{endTime}"
-                       class="error-message"></div>
-                  <div class="input-note">When you exited the water</div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label class="form-label">Duration (minutes)</label>
-                </td>
-                <td>
-                  <!-- Hidden field for duration - calculated server-side -->
-                  <input type="hidden" th:field="*{duration}">
+            <h3>Environmental Conditions</h3>
 
-                  <!-- Display calculated duration -->
-                  <div class="duration-display" th:style="${diveLog.duration != null and diveLog.duration > 0} ? 'display: block;' : 'display: none;'">
-                    <span th:if="${diveLog.duration != null and diveLog.duration > 0}">
-                      <strong>Calculated Duration:</strong> <span th:text="${diveLog.duration}">0</span> minutes
-                      <span th:if="${diveLog.duration >= 60}">
-                        (<span th:text="${diveLog.formattedDuration}">0 min</span>)
-                      </span>
-                    </span>
-                  </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="waterTemperature">Water Temperature (°C)</label>
+                <input type="number" id="waterTemperature" th:field="*{waterTemperature}"
+                       min="-5" max="40" step="0.1" class="form-control">
+                <span th:if="${#fields.hasErrors('waterTemperature')}"
+                      th:errors="*{waterTemperature}" class="error-message"></span>
+              </div>
 
-                  <div class="input-note" th:if="${diveLog.duration == null or diveLog.duration == 0}">
-                    Enter start and end times, then click "Calculate Duration" to see the dive length
-                  </div>
-
-                  <div th:if="${#fields.hasErrors('duration')}"
-                       th:errors="*{duration}"
-                       class="error-message"></div>
-                </td>
-              </tr>
-            </table>
+              <div class="form-group">
+                <label for="airTemperature">Air Temperature (°C)</label>
+                <input type="number" id="airTemperature" th:field="*{airTemperature}"
+                       min="-20" max="50" step="0.1" class="form-control">
+                <span th:if="${#fields.hasErrors('airTemperature')}"
+                      th:errors="*{airTemperature}" class="error-message"></span>
+              </div>
+            </div>
           </div>
 
           <div class="form-section">
-            <div class="section-title">Environmental Conditions</div>
-            <table class="form-table">
-              <tr>
-                <td>
-                  <label class="form-label">Water Temperature (°C)</label>
-                </td>
-                <td>
-                  <label>
-                    <input type="number"
-                           th:field="*{waterTemperature}"
-                           th:class="${#fields.hasErrors('waterTemperature')} ? 'error' : ''"
-                           step="0.1" min="-5" max="40" placeholder="e.g., 24.5">
-                  </label>
-                  <div th:if="${#fields.hasErrors('waterTemperature')}"
-                       th:errors="*{waterTemperature}"
-                       class="error-message"></div>
-                  <div class="input-note">Optional - water temperature in Celsius</div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label class="form-label">Air Temperature (°C)</label>
-                </td>
-                <td>
-                  <label>
-                    <input type="number"
-                           th:field="*{airTemperature}"
-                           th:class="${#fields.hasErrors('airTemperature')} ? 'error' : ''"
-                           step="0.1" min="-20" max="50" placeholder="e.g., 28.0">
-                  </label>
-                  <div th:if="${#fields.hasErrors('airTemperature')}"
-                       th:errors="*{airTemperature}"
-                       class="error-message"></div>
-                  <div class="input-note">Optional - air temperature in Celsius</div>
-                </td>
-              </tr>
-            </table>
+            <h3>Notes</h3>
+
+            <div class="form-group">
+              <label for="notes">Dive Notes</label>
+              <textarea id="notes" th:field="*{notes}" rows="5" maxlength="2000"
+                        class="form-control" oninput="updateNoteCount()"></textarea>
+              <small class="char-count">
+                <span th:text="${noteCount}">0</span> / 2000 characters
+              </small>
+              <span th:if="${#fields.hasErrors('notes')}"
+                    th:errors="*{notes}" class="error-message"></span>
+            </div>
           </div>
 
-          <div class="form-section">
-            <div class="section-title">Notes</div>
-            <table class="form-table">
-              <tr>
-                <td>
-                  <label class="form-label">Dive Notes (Optional)</label>
-                </td>
-                <td>
-                  <label>
-<textarea th:field="*{notes}"
-          th:class="${#fields.hasErrors('notes')} ? 'error' : ''"
-          maxlength="2000"
-          placeholder="Describe what you saw, conditions, equipment used, etc."></textarea>
-                  </label>
-                  <div th:if="${#fields.hasErrors('notes')}"
-                       th:errors="*{notes}"
-                       class="error-message"></div>
-                  <div class="char-counter">
-                    <span th:text="${noteCount ?: 0}">0</span>/2000 characters
-                  </div>
-                </td>
-              </tr>
-            </table>
-          </div>
-
-          <div class="button-group">
-            <button type="submit" class="button">Save</button>
-            <button type="submit" th:formaction="@{/dive-log/preview}" class="button">Calculate Duration</button>
+          <div class="form-actions">
             <a th:href="@{/dive-log}" class="button">Cancel</a>
+            <button type="submit" class="button">Save</button>
           </div>
         </form>
       </div>
@@ -240,5 +129,54 @@
 </main>
 
 <div id="footer-fragment" th:replace="~{fragments/footer :: footer}"></div>
+
+<!-- Scripts -->
+<script>
+  // Calculate duration when times change
+  function calculateDuration() {
+    const startTime = document.getElementById('startTime').value;
+    const endTime = document.getElementById('endTime').value;
+
+    if (startTime && endTime) {
+      // Parse "HH:mm" format
+      const [startHour, startMinute] = startTime.split(':').map(Number);
+      const [endHour, endMinute] = endTime.split(':').map(Number);
+
+      const start = startHour * 60 + startMinute;
+      const end = endHour * 60 + endMinute;
+
+      if (end > start) {
+        const durationMinutes = end - start;
+        const hours = Math.floor(durationMinutes / 60);
+        const minutes = durationMinutes % 60;
+
+        let durationText;
+        if (hours > 0) {
+          durationText = `${hours}h ${minutes.toString().padStart(2, '0')}m`;
+        } else {
+          durationText = `${minutes} min`;
+        }
+
+        document.getElementById('durationDisplay').textContent = durationText;
+        document.getElementById('durationInfo').style.display = 'block';
+      } else {
+        document.getElementById('durationInfo').style.display = 'none';
+      }
+    }
+  }
+
+  // Update note character count
+  function updateNoteCount() {
+    const notes = document.getElementById('notes').value;
+    const count = notes ? notes.length : 0;
+    document.querySelector('.char-count').innerHTML = `${count} / 2000 characters`;
+  }
+
+  // Initialize on page load
+  document.addEventListener('DOMContentLoaded', function () {
+    calculateDuration();
+    updateNoteCount();
+  });
+</script>
 </body>
 </html>

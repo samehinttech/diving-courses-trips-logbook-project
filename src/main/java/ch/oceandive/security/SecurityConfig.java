@@ -58,6 +58,8 @@ public class SecurityConfig {
                 "/api/about", "/api/contact", "/api/privacy", "/api/terms", "/api/debug/**",
                 "/api/courses/**", "/api/trips/**","/api/index"
             ).permitAll()
+            // API Documentation endpoints
+            .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
             .anyRequest().authenticated()
         )
         .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)));
