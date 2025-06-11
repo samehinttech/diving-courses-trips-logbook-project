@@ -15,7 +15,6 @@ Updated with gray/white color scheme and dark black text
 .add-dive-container {
   max-width: var(--container-md);
   background: var(--color-white);
-  border-radius: var(--radius-lg);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   margin: var(--space-2xl) auto;

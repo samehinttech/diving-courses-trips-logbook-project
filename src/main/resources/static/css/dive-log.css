@@ -1,8 +1,7 @@
 /*
 =================================
-DIVE LOG PAGE STYLES - GRAY/WHITE THEME
+DIVE LOG PAGE STYLES
 =================================
-Updated with gray/white color scheme and dark black text
 */
 
 .dive-log-page {
@@ -12,16 +11,15 @@ Updated with gray/white color scheme and dark black text
 
 /* Container styling */
 .dive-log-container {
-  max-width: var(--container-lg);
+  width: max-content;
   background: var(--color-white);
-  border-radius: var(--radius-lg);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   overflow: hidden;
-  margin: var(--space-2xl) auto;
+  margin: var(--space-xl) auto;
   border: 1px solid #e5e5e5;
 }
 
-/* Header Section - Updated to gray theme */
+/* Header Section */
 .dive-log-header {
   background: var(--color-primary);
   color: var(--color-white);
@@ -50,7 +48,7 @@ Updated with gray/white color scheme and dark black text
   background: var(--color-white);
 }
 
-/* Alert Messages - Updated for gray theme */
+/* Alert Messages */
 .alert {
   padding: var(--space-lg);
   margin-bottom: var(--space-lg);
@@ -71,7 +69,7 @@ Updated with gray/white color scheme and dark black text
   color: #1a202c;
 }
 
-/* Statistics Section - Updated to gray/white theme */
+/* Statistics Section */
 .stats-section {
   margin-bottom: var(--space-3xl);
 }
@@ -80,7 +78,6 @@ Updated with gray/white color scheme and dark black text
   width: 100%;
   border-collapse: collapse;
   background: var(--color-white);
-  border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
   border: 1px solid #e2e8f0;
@@ -130,7 +127,6 @@ Updated with gray/white color scheme and dark black text
   gap: var(--space-lg);
   padding: var(--space-lg);
   background: #fafafa;
-  border-radius: var(--radius-md);
   border: 1px solid #e2e8f0;
 }
 
@@ -142,7 +138,7 @@ Updated with gray/white color scheme and dark black text
   flex: 0 0 auto;
 }
 
-/* Buttons - Updated for gray theme */
+/* Buttons override */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -236,17 +232,14 @@ Updated with gray/white color scheme and dark black text
   font-weight: 700;
   font-size: var(--text-lg);
   color: #1a202c;
-  border-radius: var(--radius-sm);
-  border: 1px solid #e2e8f0;
   border-left: 4px solid #4a5568;
 }
 
-/* Dives Table - Updated to gray/white theme */
+/* Dives Table  */
 .dives-table {
   width: 100%;
   border-collapse: collapse;
   background: var(--color-white);
-  border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
   border: 1px solid #e2e8f0;
@@ -292,7 +285,7 @@ Updated with gray/white color scheme and dark black text
   text-align: center;
 }
 
-/* Empty State - Updated to gray theme */
+/* Empty State */
 .empty-state {
   text-align: center;
   padding: var(--space-5xl) var(--space-xl);
@@ -323,21 +316,21 @@ Updated with gray/white color scheme and dark black text
 =================================
 RESPONSIVE DESIGN
 =================================
-*/
-
-/* Large Tablets (768px and down) */
+ */
 @media screen and (max-width: 768px) {
   .dive-log-container {
-    margin: var(--space-lg);
-    border-radius: var(--radius-md);
+    width: 100%;
+    margin: var(--space-lg) auto;
+    border: none;
+    box-shadow: none;
   }
 
   .dive-log-content {
-    padding: var(--space-2xl);
+    padding: var(--space-xl);
   }
 
   .dive-log-header {
-    padding: var(--space-2xl);
+    padding: var(--space-2xl) var(--space-xl);
   }
 
   .stats-table {
@@ -350,176 +343,248 @@ RESPONSIVE DESIGN
   }
 
   .stat-number {
-    font-size: clamp(1.5rem, 4vw, 1.8rem);
+    font-size: clamp(1.2rem, 4vw, 1.5rem);
   }
 
   .actions-section {
     flex-direction: column;
     align-items: stretch;
     text-align: center;
+    gap: var(--space-md);
   }
 
-  .btn {
+  .btn, .button {
     width: 100%;
     justify-content: center;
   }
 
   .filter-form {
-    justify-content: center;
+    width: 100%;
   }
 
   .filter-group {
-    flex-direction: column;
     width: 100%;
+    gap: var(--space-sm);
   }
 
   .filter-group select {
-    width: 100%;
+    flex: 1;
   }
 
   .dives-table {
-    font-size: var(--text-xs);
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
   }
 
   .dives-table th,
   .dives-table td {
-    padding: var(--space-sm) var(--space-xs);
+    padding: var(--space-md) var(--space-sm);
   }
 }
 
 /* Mobile (480px and down) */
 @media screen and (max-width: 480px) {
   .dive-log-container {
-    margin: var(--space-sm);
+    width: 100%;
+    margin: var(--space-sm) auto;
   }
 
   .dive-log-content {
-    padding: var(--space-lg);
+    padding: var(--space-lg) var(--space-md);
   }
 
   .dive-log-header {
-    padding: var(--space-lg);
+    padding: var(--space-xl) var(--space-lg);
+  }
+
+  .dive-log-header h1 {
+    font-size: var(--text-2xl);
+  }
+
+  .dive-log-header p {
+    font-size: var(--text-sm);
+  }
+  .stat-label {
+    font-size: var(--text-xs);
+    .stat-number {
+      font-size: var(--text-xl);
+    }
   }
 
   .empty-state {
-    padding: var(--space-3xl) var(--space-md);
+    padding: var(--space-2xl) var(--space-md);
   }
 
   .actions-section {
     padding: var(--space-md);
+    margin-bottom: var(--space-lg);
   }
 
-  /* Hide some table columns on mobile for better readability */
-  .dives-table th:nth-child(4),
-  .dives-table td:nth-child(4),
-  .dives-table th:nth-child(5),
-  .dives-table td:nth-child(5),
-  .dives-table th:nth-child(6),
-  .dives-table td:nth-child(6) {
+  /* Convert table to card layout on mobile */
+  .dives-table {
+    display: block;
+    border: none;
+    box-shadow: none;
+  }
+
+  .dives-table thead {
     display: none;
+  }
+
+  .dives-table tbody {
+    display: block;
+  }
+
+  .dives-table tr {
+    display: block;
+    margin-bottom: var(--space-lg);
+    border: 1px solid #e2e8f0;
+    padding: var(--space-md);
+    background: var(--color-white);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .dives-table td {
+    display: block;
+    padding: var(--space-xs) 0;
+    border: none;
+    text-align: left;
+    position: relative;
+    padding-left: 35%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .dives-table td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    width: 30%;
+    font-weight: 600;
+    color: #4a5568;
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+  }
+
+  /* Special handling for notes column on mobile */
+  .dives-table td:nth-child(7) {
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  /* Specific mobile adjustments for each cell */
+  .dives-table td:nth-child(1) {
+    padding-left: 0;
+    margin-bottom: var(--space-sm);
+  }
+
+  .dives-table td:nth-child(1):before {
+    display: none;
+  }
+
+  .dives-table td:nth-child(8) {
+    padding-left: 0;
+    display: flex;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+  }
+
+  .dives-table td:nth-child(8):before {
+    display: none;
+  }
+
+  .dives-table td:nth-child(8) .button,
+  .dives-table td:nth-child(8) .btn {
+    flex: 1;
+    padding: var(--space-sm);
+    font-size: var(--text-xs);
+  }
+
+  /* Stats table adjustments */
+  .stats-table th,
+  .stats-table td {
+    padding: var(--space-md) var(--space-xs);
+  }
+
+  .stat-number {
+    font-size: 1.2rem;
+  }
+
+  .stat-label {
+    font-size: 0.625rem;
   }
 }
 
 /* Extra Small Mobile (360px and down) */
 @media screen and (max-width: 360px) {
   .dive-log-container {
-    margin: var(--space-xs);
+    width: 100%;
+    margin: var(--space-md) auto;
   }
 
   .dive-log-content {
-    padding: var(--space-md);
+    padding: var(--space-md) var(--space-sm);
   }
 
   .dive-log-header {
-    padding: var(--space-md);
+    padding: var(--space-lg) var(--space-md);
+  }
+
+  .dive-log-header h1 {
+    font-size: var(--text-xl);
   }
 
   .stats-section {
-    margin-bottom: var(--space-2xl);
+    margin-bottom: var(--space-xl);
+  }
+
+  .stats-table {
+    font-size: var(--text-xs);
+  }
+
+  .stat-label {
+    font-size: 1.25rem;
+    .stat-number {
+      font-size: var(--text-xl);
+    }
   }
 
   .actions-section {
     padding: var(--space-sm);
-  }
-}
-
-/*
-=================================
-ACCESSIBILITY IMPROVEMENTS
-=================================
-*/
-
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  .btn:hover {
-    transform: none;
+    gap: var(--space-sm);
   }
 
-  .btn {
-    transition: none;
+  .btn, .button {
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--text-sm);
   }
-}
 
-/* High contrast support */
-@media (prefers-contrast: high) {
-  .stats-table,
-  .dives-table,
+  .filter-group select {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--text-xs);
+  }
+
+  .section-title {
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--text-sm);
+  }
+
   .empty-state {
-    border: 2px solid #1a202c;
+    padding: var(--space-xl) var(--space-sm);
   }
 
-  .dive-number {
-    border: 1px solid var(--color-white);
-  }
-
-  .actions-section {
-    border: 2px solid #2d3748;
-  }
-}
-
-/*
-=================================
-PRINT STYLES
-=================================
-*/
-@media print {
-  .dive-log-container {
-    box-shadow: none !important;
-    margin: 0 !important;
-  }
-
-  .dive-log-header {
-    background: none !important;
-    color: black !important;
-  }
-
-  .dive-log-header h1,
-  .dive-log-header p {
-    color: black !important;
-  }
-
-  .stats-table,
-  .dives-table,
-  .empty-state {
-    box-shadow: none !important;
-    border: 1px solid black !important;
-  }
-
-  .section-title,
   .empty-title {
-    color: black !important;
+    font-size: var(--text-lg);
   }
 
-  .btn {
-    display: none !important;
-  }
-
-  .filter-form {
-    display: none !important;
-  }
-
-  .actions-section {
-    background: #f5f5f5 !important;
-    border: 1px solid black !important;
+  .empty-description {
+    font-size: var(--text-sm);
   }
 }

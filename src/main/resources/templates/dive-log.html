@@ -114,28 +114,28 @@
               </thead>
               <tbody>
               <tr th:each="dive : ${diveLogs}">
-                <td>
+                <td data-label="Dive #">
                   <span class="dive-number" th:text="'#' + ${dive.diveNumber}">#1</span>
                 </td>
-                <td th:text="${dive.location}">Location</td>
-                <td th:text="${#temporals.format(dive.diveDate, 'MMM d, yyyy')}">Date</td>
-                <td th:text="${dive.duration} + ' min'">Duration</td>
-                <td>
-    <span th:if="${dive.waterTemperature}"
-          th:text="${dive.waterTemperature != null ? #numbers.formatDecimal(dive.waterTemperature,1,1) + '°C' : '-'}">-</span>
+                <td data-label="Location" th:text="${dive.location}">Location</td>
+                <td data-label="Date" th:text="${#temporals.format(dive.diveDate, 'MMM d, yyyy')}">Date</td>
+                <td data-label="Duration" th:text="${dive.duration} + ' min'">Duration</td>
+                <td data-label="Water Temp">
+                  <span th:if="${dive.waterTemperature}"
+                        th:text="${dive.waterTemperature != null ? #numbers.formatDecimal(dive.waterTemperature,1,1) + '°C' : '-'}">-</span>
                   <span th:unless="${dive.waterTemperature}">-</span>
                 </td>
-                <td>
-    <span th:if="${dive.airTemperature}"
-          th:text="${dive.airTemperature != null ? #numbers.formatDecimal(dive.airTemperature,1,1) + '°C' : '-'}">-</span>
+                <td data-label="Air Temp">
+                  <span th:if="${dive.airTemperature}"
+                        th:text="${dive.airTemperature != null ? #numbers.formatDecimal(dive.airTemperature,1,1) + '°C' : '-'}">-</span>
                   <span th:unless="${dive.airTemperature}">-</span>
                 </td>
                 <!-- Notes Column -->
-                <td>
+                <td data-label="Notes">
                   <span th:if="${dive.notes}" title="Notes" th:text="${dive.notes}">No notes available</span>
                   <span th:unless="${dive.notes}">No notes</span>
                 </td>
-                <td>
+                <td data-label="Actions">
                   <a th:href="@{'/dive-log/edit/' + ${dive.id}}" class="button">Edit</a>
                   <a th:href="@{'/dive-log/view/' + ${dive.id}}" class="button">View</a>
                 </td>
