@@ -35,11 +35,16 @@
       <a th:href="@{/about}">ABOUT</a>
       <a th:href="@{/contact}">CONTACT</a>
 
-      <!-- Authenticated User Links -->
+      <!-- Authenticated User Links (for all authenticated users including admins) -->
       <a th:href="@{/dive-log}" th:if="${#authorization.expression('isAuthenticated()')}">DIVE-LOG</a>
-      <a th:href="@{/my-profile}"th:if="${#authorization.expression('isAuthenticated()')}">PROFILE</a>
-    </div>
+      <a th:href="@{/my-profile}" th:if="${#authorization.expression('isAuthenticated()')}">PROFILE</a>
 
+      <!-- Admin-Only Link (admins get this dashboard link) -->
+      <a th:href="@{/admin-dashboard}"
+         th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+        ADMIN-DASHBOARD
+      </a>
+    </div>
     <!-- Authentication Section -->
     <div class="nav-auth">
       <!-- Guest Users -->
@@ -50,7 +55,13 @@
 
       <!-- Authenticated Users -->
       <div th:if="${#authorization.expression('isAuthenticated()')}">
-        <span class="user-name" th:text="'Hi👋' + ${#authentication.principal.username}"></span>
+        <!-- Show role indicator for admin users -->
+        <span class="user-name" th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
+              th:text="'Hi Admin 👋 ' + ${#authentication.principal.username}"></span>
+        <!-- Regular user greeting -->
+        <span class="user-name" th:if="${!#authorization.expression('hasRole(''ADMIN'')')}"
+              th:text="'Hi👋' + ${#authentication.principal.username}"></span>
+
         <form th:action="@{/logout}" method="post" style="display: inline-block;">
           <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
           <button type="submit" class="btn-logout-simple button">Logout</button>
@@ -67,9 +78,15 @@
         <a th:href="@{/about}">ABOUT</a>
         <a th:href="@{/contact}">CONTACT</a>
 
-        <!-- Authenticated User Links -->
+        <!-- Authenticated User Links (for all authenticated users including admins) -->
         <a th:href="@{/dive-log}" th:if="${#authorization.expression('isAuthenticated()')}">DIVE-LOG</a>
         <a th:href="@{/my-profile}" th:if="${#authorization.expression('isAuthenticated()')}">PROFILE</a>
+
+        <!-- Admin Only Link - Mobile (admins get this extra link) -->
+        <a th:href="@{/admin-dashboard}"
+           th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+          ADMIN-DASHBOARD
+        </a>
       </div>
 
       <!-- Mobile Authentication Section -->
@@ -83,7 +100,12 @@
         <!-- Authenticated Users -->
         <div th:if="${#authorization.expression('isAuthenticated()')}">
           <div class="mobile-user-info">
-            <span th:text="'Hi👋' + ${#authentication.name}"></span>
+            <!-- Show role indicator for admin users -->
+            <span th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
+                  th:text="'Hi Admin ' + ${#authentication.name}"></span>
+            <!-- Regular user greeting -->
+            <span th:if="${!#authorization.expression('hasRole(''ADMIN'')')}"
+                  th:text="'Hi👋' + ${#authentication.name}"></span>
           </div>
           <form th:action="@{/logout}" method="post">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
