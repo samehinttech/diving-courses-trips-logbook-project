@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="keyword" content="diving core values, commitment to safety, conservation, community in the diving world.">
+  <meta name="description" content="Learn about OceanDive's core values, our commitment to safety, conservation, and community in the diving world. Discover our story and what drives us to provide exceptional diving experiences.">
+  <title th:text="${pageTitle}">about - OceanDive</title>
+
+  <link >
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<div id="header-fragment" th:replace="~{fragments/header :: header}"></div>
+
+<section class="about-story-section">
+  <div class="container">
+    <div class="about-story-content">
+      <div class="about-story-text">
+        <h2 class="section-heading">Our Story</h2>
+        <div class="story-text-content">
+          <p>Founded in 2017 by a group of passionate scuba divers, OceanDive began as a small dive shop with a big dream: to share the wonder and beauty of the underwater world with everyone.</p>
+          <p>What started as weekend diving trips for friends has grown into a comprehensive diving education and adventure company, serving thousands of divers from around Switzerland. Our commitment to safety, environmental conservation, and exceptional customer service has made us a trusted name in the diving community.</p>
+          <p>Today we continue to operate with the same passion and dedication that inspired our founding, always putting our divers' safety and satisfaction first.</p>
+        </div>
+      </div>
+      <div class="about-story-image">
+        <div class="story-image" style="background-image: url('/images/dive-center.jpg');" aria-label="OceanDive Location"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="about-values-section">
+  <div class="container">
+    <h2 class="section-heading text-center">Our Core Values</h2>
+    <div class="values-grid">
+      <div class="value-card">
+        <h3 class="value-title">Safety Excellence</h3>
+        <p class="value-description">We maintain the highest safety standards with regular equipment maintenance, comprehensive training, and experienced dive masters on every trip.</p>
+      </div>
+      <div class="value-card">
+        <h3 class="value-title">Ocean Conservation</h3>
+        <p class="value-description">We're dedicated to protecting marine ecosystems through sustainable diving practices and supporting local conservation efforts.</p>
+      </div>
+      <div class="value-card">
+        <h3 class="value-title">Continuous Learning</h3>
+        <p class="value-description">Our instructors stay current with the latest diving techniques and safety protocols to provide the best education possible.</p>
+      </div>
+      <div class="value-card">
+        <h3 class="value-title">Community Focus</h3>
+        <p class="value-description">We believe diving is better when shared, fostering a welcoming community where divers of all levels can learn and grow together.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div id="footer-fragment" th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

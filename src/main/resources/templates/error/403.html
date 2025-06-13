@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <title>Ocean Dive</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/error-pages.css}">
+</head>
+<body>
+<div class="error-container">
+  <h1>Access Restricted</h1>
+  <p>You need to log in to access this area.</p>
+  <div class="error-actions">
+    <a href="/login" class="btn btn-outline">Login</a>
+    <a href="/" class="btn btn-outline">Go Home</a>
+    <a href="javascript:history.back()" class="btn btn-outline">Go Back</a>
+  </div>
+</div>
+</body>
+</html>

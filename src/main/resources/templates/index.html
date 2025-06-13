@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Oceandive offers professional diving services including courses, trips, and expert guidance for all levels of divers. Join us for an unforgettable underwater adventure!"/>
+  <meta name="keywords" content="diving, scuba diving, diving courses, diving trips, underwater adventure, Oceandive"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <link rel="stylesheet" th:href="@{/css/main.css}"/>
+  <link rel="stylesheet" th:href="@{/css/index.css}"/>
+  <link rel="stylesheet" th:href="@{/css/courses.css}"/>
+  <title th:text="${pageTitle}">Home - Dive into Adventure</title>
+</head>
+<body>
+<!-- Header Fragment Container -->
+<div id="header-fragment" th:replace="~{fragments/header :: header}"></div>
+<!-- Hero Section -->
+<section class="hero-section" style="background-image: url('/images/sand-tiger-shark-01.PNG')"
+         aria-label="Underwater scene with a sand tiger shark">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-text">
+      <h1 class="hero-title">DISCOVER THE OCEAN'S SECRETS</h1>
+      <p class="hero-description">
+        Experience the underwater world with our professional diving courses and guided adventures.
+        From beginners to advanced divers, we have the perfect program for you.
+      </p>
+    </div>
+
+    <!-- Statistics Section -->
+    <div class="hero-statistics" aria-label="OceanDive Qualifications and Achievements">
+      <div class="statistics-item">
+        <div class="statistics-icon">
+          <i class="fas fa-certificate"></i>
+        </div>
+        <div class="statistics-number">5k+</div>
+        <div class="statistics-label">Certified Divers</div>
+      </div>
+      <div class="statistics-item">
+        <div class="statistics-icon">
+          <i class="fas fa-calendar-alt"></i>
+        </div>
+        <div class="statistics-number">10+</div>
+        <div class="statistics-label">Years of Experience</div>
+      </div>
+      <div class="statistics-item">
+        <div class="statistics-icon">
+          <i class="fas fa-medal"></i>
+        </div>
+        <div class="statistics-number">50+</div>
+        <div class="statistics-label">Dive Expeditions</div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Courses Section -->
+<section id="courses" class="courses-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Dive Courses</h2>
+      <p class="section-description">
+        Whether you're a beginner or an experienced diver, we offer a range of courses to suit your needs.
+        Join us to enhance your skills and explore the underwater world.
+      </p>
+    </div>
+
+    <div class="courses-wrapper">
+      <div class="courses-grid-centered">
+        <div th:each="course, iterStat : ${featuredCourses}"
+             th:if="${iterStat.index < 3}"
+             class="course-card">
+          <div class="course-card-header">
+            <div class="course-image"
+                 th:style="'background-image: url(' + ${course.imageUrl} + '); background-size: cover; background-position: center;'">
+            </div>
+            <div class="course-badge" th:if="${course.featured}">Featured</div>
+            <div class="course-status-badge"
+                 th:classappend="${course.currentBookings >= course.capacity ? 'full' : 'available'}"
+                 th:text="${course.currentBookings >= course.capacity ? 'Full' : 'Available'}">
+            </div>
+          </div>
+          <div class="course-card-body">
+            <div class="course-header">
+              <h3 class="course-title" th:text="${course.name}"></h3>
+              <div class="course-price">
+                <span class="price-amount" th:text="'$' + ${course.price}"></span>
+              </div>
+            </div>
+            <p class="course-description" th:text="${#strings.abbreviate(course.description, 120)}"></p>
+            <div class="course-meta">
+              <div class="course-meta-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span th:text="${#temporals.format(course.startDate, 'MMM d')} + ' - ' + ${#temporals.format(course.endDate, 'MMM d')}"></span>
+              </div>
+              <div class="course-meta-item">
+                <i class="fas fa-users"></i>
+                <span th:text="${course.currentBookings} + '/' + ${course.capacity}"></span>
+              </div>
+              <div class="course-meta-item">
+                <i class="fas fa-clock"></i>
+                <span th:text="${T(java.time.temporal.ChronoUnit).DAYS.between(course.startDate, course.endDate) + 1} + ' days'"></span>
+              </div>
+            </div>
+            <div class="course-certification">
+              <div class="certification-requirement">
+                <span th:text="'Required Certification (' + ${course.minCertificationRequired.displayName} + ')'"></span>
+              </div>
+            </div>
+          </div>
+          <div class="course-card-footer">
+            <a th:href="@{/not-available}" class="submit-btn">Learn More</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Trips Section -->
+<section id="trips" class="featured-courses-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Adventure Trips</h2>
+      <p class="section-description">
+        Explore breathtaking dive sites around the world with our guided expedition trips
+      </p>
+    </div>
+
+    <div class="courses-wrapper">
+      <div class="courses-grid-centered">
+        <div th:each="trip, iterStat : ${featuredTrips}"
+             th:if="${iterStat.index < 3}"
+             class="course-card">
+          <div class="course-card-header">
+            <div class="course-image"
+                 th:style="'background-image: url(' + ${trip.imageUrl} + '); background-size: cover; background-position: center;'">
+            </div>
+            <div class="course-status-badge"
+                 th:classappend="${trip.currentBookings >= trip.capacity} ? 'full' : 'available'"
+                 th:text="${trip.currentBookings >= trip.capacity} ? 'Full' : 'Available'">
+            </div>
+          </div>
+
+          <div class="course-card-body">
+            <div class="course-header">
+              <h3 class="course-title" th:text="${trip.location}"></h3>
+              <div class="course-price">
+                <span class="price-amount" th:text="'$' + ${#numbers.formatDecimal(trip.price, 0, 2)}"></span>
+              </div>
+            </div>
+
+            <p class="course-description" th:text="${trip.description}"></p>
+
+            <div class="course-meta">
+              <div class="course-meta-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span th:text="${#temporals.format(trip.startDate, 'MMM d')} + ' - ' + ${#temporals.format(trip.endDate, 'MMM d')}"></span>
+              </div>
+
+              <div class="course-meta-item">
+                <i class="fas fa-users"></i>
+                <span th:text="${trip.currentBookings} + '/' + ${trip.capacity}"></span>
+              </div>
+
+              <div class="course-meta-item">
+                <i class="fas fa-clock"></i>
+                <span th:text="${T(java.time.temporal.ChronoUnit).DAYS.between(trip.startDate, trip.endDate) + 1} + ' days'"></span>
+              </div>
+            </div>
+
+            <div class="course-certification">
+              <div class="certification-requirement">
+                <span th:text="'Required Certification (' + ${trip.minCertificationRequired.displayName} + ')'"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="course-card-footer">
+            <a th:href="@{/not-available}" class="submit-btn">View Details</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer Fragment Container -->
+<div id="footer-fragment" th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

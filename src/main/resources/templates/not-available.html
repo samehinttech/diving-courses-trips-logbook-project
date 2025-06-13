@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Not Available - Coming Soon</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <style>
+    body {
+      background-color: #FFFFFF;
+      color: #000000;
+    }
+
+    .content-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: calc(100vh - 200px);
+      text-align: center;
+    }
+
+    .message {
+      font-family: Arial, sans-serif;
+    }
+
+    .message h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #000000;
+    }
+
+    .message h2 {
+      font-size: 1.5rem;
+      color: #000000;
+    }
+  </style>
+</head>
+<body>
+<div id="header-fragment" th:replace="~{fragments/header :: header}"></div>
+
+<main>
+  <div class="content-container">
+    <div class="message">
+      <h1>Not Available</h1>
+      <h2>Coming Soon</h2>
+    </div>
+  </div>
+</main>
+
+<div id="footer-fragment" th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

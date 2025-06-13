@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Admin Dashboard for OceanDive - Manage courses, trips, users and bookings.">
+  <meta name="keywords" content="admin, dashboard, courses, trips, users, bookings, OceanDive">
+  <meta name="author" content="OceanDive Team">
+  <title th:text="${pageTitle}">Admin Dashboard - OceanDive</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/courses.css}">
+  <link rel="stylesheet" th:href="@{/css/admin-dashboard.css}">
+</head>
+<body>
+<div id="header-fragment" th:replace="~{fragments/header :: header}"></div>
+
+<main>
+  <div class="dashboard-container">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+      <div class="container">
+        <h1 class="section-title">ADMIN DASHBOARD</h1>
+        <p class="section-description">Start to manage business operations</p>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Messages -->
+      <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+      <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+      <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+      <!-- Statistics Overview -->
+      <div class="dashboard-stats">
+        <div class="stat-card">
+          <i class="fa fa-graduation-cap stat-icon"></i>
+          <div class="stat-number" th:text="${totalCourses} ?: 0">0</div>
+          <div class="stat-label">Total Courses</div>
+        </div>
+        <div class="stat-card">
+          <i class="fa fa-plane stat-icon"></i>
+          <div class="stat-number" th:text="${totalTrips} ?: 0">0</div>
+          <div class="stat-label">Total Trips</div>
+        </div>
+        <div class="stat-card">
+          <i class="fa fa-users stat-icon"></i>
+          <div class="stat-number" th:text="${totalUsers} ?: 0">0</div>
+          <div class="stat-label">Total Users</div>
+        </div>
+        <div class="stat-card">
+          <i class="fa fa-calendar stat-icon"></i>
+          <div class="stat-number" th:text="${totalBookings} ?: 0">0</div>
+          <div class="stat-label">Total Bookings</div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="dashboard-section">
+        <div class="section-header-admin">
+          <h2 class="section-title-admin">Quick Actions</h2>
+        </div>
+        <div class="quick-actions">
+          <a th:href="@{/not-available}" class="quick-action-card">
+            <i class="fa fa-plus stat-icon"></i>
+            <div class="quick-action-title">Add Course</div>
+            <div class="quick-action-desc">Create new diving courses</div>
+          </a>
+          <a th:href="@{/not-available}" class="quick-action-card">
+            <i class="fa fa-globe stat-icon"></i>
+            <div class="quick-action-title">Add Trip</div>
+            <div class="quick-action-desc">Plan new diving trips</div>
+          </a>
+          <a th:href="@{/not-available}" class="quick-action-card">
+            <i class="fa fa-users stat-icon"></i>
+            <div class="quick-action-title">Manage Users</div>
+            <div class="quick-action-desc">View and manage users</div>
+          </a>
+          <a th:href="@{/not-available}" class="quick-action-card">
+            <i class="fa fa-calendar stat-icon"></i>
+            <div class="quick-action-title">View Bookings</div>
+            <div class="quick-action-desc">Check all reservations</div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Recent Courses -->
+      <div class="dashboard-section">
+        <div class="section-header-admin">
+          <h2 class="section-title-admin">Recent Courses</h2>
+          <div class="section-actions">
+            <a th:href="@{/not-available}" class="button">View All</a>
+            <a th:href="@{/not-available}" class="button">Add Course</a>
+          </div>
+        </div>
+
+        <!-- Empty state for courses -->
+        <div th:if="${#lists.isEmpty(recentCourses)}" class="empty-state">
+          <div class="empty-state-icon"></div>
+          <h3>No Courses</h3>
+          <a th:href="@{/not-available}" class="button">Create Course</a>
+        </div>
+
+        <!-- Courses grid -->
+        <div th:if="${!#lists.isEmpty(recentCourses)}" class="admin-grid">
+          <div th:each="course, iterStat : ${recentCourses}"
+               th:if="${iterStat.index < 3}"
+               class="course-card admin-card">
+            <div class="course-card-header">
+              <div class="course-image"
+                   th:style="${course.imageUrl != null and !#strings.isEmpty(course.imageUrl)} ? 'background-image: url(' + ${course.imageUrl} + '); background-size: cover; background-position: center;' : ''"
+                   th:classappend="${course.imageUrl == null or #strings.isEmpty(course.imageUrl)} ? 'placeholder-image' : ''">
+                <span th:if="${course.imageUrl == null or #strings.isEmpty(course.imageUrl)}"
+                      th:text="${course.name}"
+                      class="placeholder-text">
+                </span>
+              </div>
+              <div class="course-badge" th:if="${course.featured}">Featured</div>
+              <div class="course-status-badge"
+                   th:classappend="${course.status?.name()?.toLowerCase() ?: 'draft'}"
+                   th:text="${course.status?.displayName ?: 'Draft'}">
+                Published
+              </div>
+            </div>
+            <div class="course-card-body">
+              <div class="course-header">
+                <h3 class="course-title" th:text="${course.name}">Course Name</h3>
+                <div class="course-price">
+                  <span class="price-amount" th:text="'$' + ${course.price}"></span>
+                </div>
+              </div>
+              <p class="course-description" th:text="${course.description ?: 'No description available'}">
+                Course description...
+              </p>
+              <div class="course-meta">
+                <div class="course-meta-item">
+                  <i class="fa fa-calendar"></i>
+                  <span th:text="${course.startDate != null ? #temporals.format(course.startDate, 'MMM d, yyyy') : 'No date'}">Start Date</span>
+                </div>
+                <div class="course-meta-item">
+                  <i class="fa fa-users"></i>
+                  <span th:text="${course.currentBookings ?: 0} + '/' + ${course.capacity ?: 0}">0/12</span>
+                </div>
+                <div class="course-meta-item">
+                  <i class="fa fa-certificate"></i>
+                  <span th:text="${course.minCertificationRequired?.displayName ?: 'No Prerequisites'}">Level</span>
+                </div>
+              </div>
+            </div>
+            <div class="course-card-footer">
+              <a th:href="@{/not-available}" class="button">Edit Course</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Trips -->
+      <div class="dashboard-section">
+        <div class="section-header-admin">
+          <h2 class="section-title-admin">Recent Trips</h2>
+          <div class="section-actions">
+            <a th:href="@{/not-available}" class="button">View All</a>
+            <a th:href="@{/not-available}" class="button">Add Trip</a>
+          </div>
+        </div>
+
+        <!-- Empty state for trips -->
+        <div th:if="${#lists.isEmpty(recentTrips)}" class="empty-state">
+          <h3>No Trips</h3>
+          <a th:href="@{/not-available}" class="button">Create Trip</a>
+        </div>
+
+        <!-- Trips grid -->
+        <div th:if="${!#lists.isEmpty(recentTrips)}" class="admin-grid">
+          <div th:each="trip, iterStat : ${recentTrips}"
+               th:if="${iterStat.index < 3}"
+               class="course-card admin-card">
+            <div class="course-card-header">
+              <div class="course-image"
+                   th:style="${trip.imageUrl != null and !#strings.isEmpty(trip.imageUrl)} ? 'background-image: url(' + ${trip.imageUrl} + '); background-size: cover; background-position: center;' : ''"
+                   th:classappend="${trip.imageUrl == null or #strings.isEmpty(trip.imageUrl)} ? 'placeholder-image' : ''">
+                <span th:if="${trip.imageUrl == null or #strings.isEmpty(trip.imageUrl)}"
+                      th:text="${trip.location}"
+                      class="placeholder-text">
+                </span>
+              </div>
+              <div class="course-status-badge"
+                   th:classappend="${trip.currentBookings >= trip.capacity ? 'full' : 'available'}"
+                   th:text="${trip.currentBookings >= trip.capacity ? 'Full' : 'Available'}">
+                Available
+              </div>
+            </div>
+            <div class="course-card-body">
+              <div class="course-header">
+                <h3 class="course-title" th:text="${trip.location}">Trip Location</h3>
+                <div class="course-price">
+                  <span class="price-amount" th:text="'$' + ${trip.price}"></span>
+                </div>
+              </div>
+              <p class="course-description" th:text="${trip.description ?: 'No description available'}">
+                Trip description...
+              </p>
+              <div class="course-meta">
+                <div class="course-meta-item">
+                  <i class="fa fa-calendar"></i>
+                  <span th:text="${trip.startDate != null ? #temporals.format(trip.startDate, 'MMM d, yyyy') : 'No date'}">Start Date</span>
+                </div>
+                <div class="course-meta-item">
+                  <i class="fa fa-users"></i>
+                  <span th:text="${trip.currentBookings ?: 0} + '/' + ${trip.capacity ?: 0}">0/15</span>
+                </div>
+                <div class="course-meta-item">
+                  <i class="fa fa-certificate"></i>
+                  <span th:text="${trip.minCertificationRequired?.displayName}">Required Level</span>
+                </div>
+              </div>
+            </div>
+            <div class="course-card-footer">
+              <a th:href="@{/not-available}" class="button">Edit Trip</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Operation Overview-->
+      <div class="dashboard-section">
+        <div class="section-header-admin">
+          <h2 class="section-title-admin">Operation Overview</h2>
+        </div>
+        <div class="dashboard-stats">
+          <div class="stat-card">
+            <i class="fa fa-bar-chart stat-icon"></i>
+            <div class="stat-number" th:text="${availableCourses} ?: 0">0</div>
+            <div class="stat-label">Available Courses</div>
+          </div>
+          <div class="stat-card">
+            <i class="fa fa-plane stat-icon"></i>
+            <div class="stat-number" th:text="${availableTrips} ?: 0">0</div>
+            <div class="stat-label">Available Trips</div>
+          </div>
+          <div class="stat-card">
+            <i class="fa fa-users stat-icon"></i>
+            <div class="stat-number" th:text="${premiumUsers} ?: 0">0</div>
+            <div class="stat-label">Premium Users</div>
+          </div>
+          <div class="stat-card">
+            <i class="fa fa-users stat-icon"></i>
+            <div class="stat-number" th:text="${guestUsers} ?: 0">0</div>
+            <div class="stat-label">Guest Users</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="footer-fragment" th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

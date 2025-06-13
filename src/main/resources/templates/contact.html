@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${pageTitle}">Contact - OceanDive</title>
+  <meta name="description" content="Get in touch with OceanDive for diving courses, trips, and underwater adventures. We're here to help plan your next diving experience.">
+  <meta name="keywords" content="diving, scuba, courses, trips, contact, OceanDive">
+  <link rel="stylesheet" href="/css/main.css">
+  <!-- Add contact-specific styles -->
+  <style>
+    @import url("/css/contact.css");
+  </style>
+</head>
+<body>
+<!-- Navigation Fragment -->
+<!--/*@thymesVar id="fragmentExists" type="templates.fragments"*/-->
+<div id="header-fragment" th:replace="~{fragments/header :: header}"></div>
+<!-- Skip to the main content for accessibility -->
+<a href="#main-content" class="skip-to-main">Skip to main content</a>
+
+<!-- Main Content -->
+<main id="main-content">
+  <!-- Contact Main Section -->
+  <section class="contact-main-section">
+    <div class="container">
+      <div class="contact-grid">
+        <!-- Contact Form -->
+        <div class="contact-form-container">
+          <div class="contact-form-header">
+            <h2 class="form-heading">Send us a Message</h2>
+            <p class="form-subheading">Fill out the form below and we'll get back to you within 24 hours.</p>
+          </div>
+
+          <!-- Success/Error Messages (handled by server-side) -->
+          <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}">
+            Thank you for your message! We'll get back to you within 24 hours.
+          </div>
+          <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}">
+            There was an error sending your message. Please try again.
+          </div>
+
+          <form class="contact-form" method="post" th:action="@{/contact}" th:object="${contactForm}">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="name" class="form-label">Full Name</label>
+                <input type="text" id="name" name="name" class="form-input"
+                       th:field="*{name}" required
+                       placeholder="Enter your full name">
+                <div th:if="${#fields.hasErrors('name')}" class="field-error" th:errors="*{name}"></div>
+              </div>
+              <div class="form-group">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" id="email" name="email" class="form-input"
+                       th:field="*{email}" required
+                       placeholder="your.email@example.com">
+                <div th:if="${#fields.hasErrors('email')}" class="field-error" th:errors="*{email}"></div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="phone" class="form-label">Phone Number</label>
+                <input type="tel" id="phone" name="phone" class="form-input"
+                       th:field="*{phone}"
+                       placeholder="+41 000 000 000">
+              </div>
+              <div class="form-group">
+                <label for="subject" class="form-label">Subject</label>
+                <input type="text" id="subject" name="subject" class="form-input"
+                       th:field="*{subject}" required
+                       placeholder="What's your inquiry about?">
+                <div th:if="${#fields.hasErrors('subject')}" class="field-error" th:errors="*{subject}"></div>
+              </div>
+            </div>
+
+            <div class="form-group form-group-full">
+              <label for="message" class="form-label">Message</label>
+              <textarea id="message" name="message" class="form-textarea"
+                        th:field="*{message}" required rows="6"
+                        placeholder="Tell us about your diving experience, questions, or how we can help you..."></textarea>
+              <div th:if="${#fields.hasErrors('message')}" class="field-error" th:errors="*{message}"></div>
+            </div>
+
+            <button type="submit" class="submit-btn button">
+              <span class="btn-text">Send Message</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="contact-info-container">
+          <div class="contact-info-header">
+            <h2 class="info-heading">Get in Touch</h2>
+            <p class="info-subheading">Multiple ways to reach our diving experts</p>
+          </div>
+
+          <div class="contact-info-grid">
+            <div class="contact-item">
+              <div class="contact-details">
+                <h3 class="contact-title">Visit Our Center</h3>
+                <p class="contact-text">
+                  Sea Strasse 0<br>
+                  0000 Oceanside<br>
+                  Switzerland
+                </p>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-details">
+                <h3 class="contact-title">Call Us</h3>
+                <p class="contact-text">
+                  <a href="tel:+00000000000" class="contact-link">+00 000 000 000</a><br>
+                  <small class="contact-hours">
+                    Mon-Fri: 8AM-6PM CET<br>
+                    Sat-Sun: 9AM-5PM CET
+                  </small>
+                </p>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-details">
+                <h3 class="contact-title">Email Us</h3>
+                <p class="contact-text">
+                  <a href="mailto:info@oceandive.ch" class="contact-link">info@oceandive.ch</a><br>
+                  <small class="contact-hours">We respond within 24 hours</small>
+                </p>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-details">
+                <h3 class="contact-title">Emergency Contact</h3>
+                <p class="contact-text">
+                  <a href="tel:+00000000000" class="contact-link">+00 000 000 000</a><br>
+                  <small class="contact-hours">24/7 Emergency Support</small>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Map Section -->
+  <section class="map-section">
+    <div class="container">
+      <div class="map-header">
+        <h2 class="section-heading">Find Our Location</h2>
+        <p class="map-description">Located in beautiful Switzerland with easy access to magical diving spots</p>
+      </div>
+
+      <div class="map-container">
+        <!-- FREE Google Maps Embed - Switzerland -->
+        <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2831928.517055371!2d6.143158!3d46.818188!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x478c64ef6f596927%3A0x5c56b5110fcb7b15!2sSwitzerland!5e0!3m2!1sen!2sus!4v1703123456789!5m2!1sen!2sus"
+            width="100%"
+            height="400"
+            style="border:0; border-radius: 8px;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="OceanDive Location - Switzerland">
+        </iframe>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="map-actions">
+        <a href="https://maps.app.goo.gl/cuDH76znhGzyymzp9"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="direction-btn button">
+          Get Directions
+        </a>
+        <a href="tel:+00000000000" class="call-btn button">
+          Call Us
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section id="faq" class="faq-section">
+    <div class="container">
+      <div class="faq-header">
+        <h2 class="section-heading">Frequently Asked Questions</h2>
+        <p class="faq-description">Quick answers to common questions about our diving services</p>
+      </div>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h3 class="faq-question">What are your operating hours?</h3>
+          <p class="faq-answer">We're open Monday – Friday 8AM-6PM and weekends 9AM-5PM (CET). Our dive center is closed on major holidays.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-question">Do you offer equipment rental?</h3>
+          <p class="faq-answer">Yes! We have a full range of high-quality diving equipment available for rent, including masks, fins, wetsuits, BCDs, and regulators.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-question">What certifications do you accept?</h3>
+          <p class="faq-answer">We accept all major diving certifications, including Some diving organizations. Bring your certification card for verification.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-question">Can beginners join your trips?</h3>
+          <p class="faq-answer">Absolutely! We have trips suitable for all skill levels. Our beginner-friendly trips include extra guidance and support.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-question">What's your cancellation policy?</h3>
+          <p class="faq-answer">Courses can be cancelled 48 hours in advance for a full refund. Trip cancellations vary by package - please check your booking details.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-question">Do you provide transportation?</h3>
+          <p class="faq-answer">Transportation is included in most of our trip packages. Local dive sites include boat transportation from our dive center.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Footer Fragment -->
+<div id="footer-fragment" th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

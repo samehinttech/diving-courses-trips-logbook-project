@@ -1,0 +1,203 @@
+/*
+================================================
+GLOBAL STYLES & VARIABLES, RESET, AND BASE STYLES
+=================================================
+*/
+html, body{
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+:root {
+  /* Typography */
+  --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  --font-logo: 'Arial Black', 'Helvetica', sans-serif;
+  --font-mobile: 'Noto Sans', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+
+  /* Font Sizes */
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 18px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  --text-3xl: 30px;
+  --text-4xl: 36px;
+
+  /* Logo Sizes */
+  --logo-sm: 1.2rem;
+  --logo-md: 1.4rem;
+  --logo-lg: 1.8rem;
+  --logo-xl: 2rem;
+
+  /* Colors - Brand Palette */
+  --color-primary: hsl(210, 100%, 30%);                /* Dark blue */
+  --color-primary-20: hsl(210, 100%, 20%);            /* Darker blue for padding */
+  --color-primary-light: hsl(210, 100%, 50%);          /* Medium blue */
+  --color-primary-dark: hsl(210, 100%, 25%);           /* Darker blue for hover */
+  --color-accent: #87CEEB;                            /* Light blue accent */
+  --color-accent-dark: #5DADE2;                       /* Darker accent for hover */
+  --color-white: hsl(0, 0%, 100%);                     /* Pure white */
+  --color-black: hsl(0, 0%, 0%);                       /* Pure black */
+  --color-text-dark: #1f1f1f;                          /* Dark text */
+  --color-text-light: hsl(220, 10%, 70%);               /* Light text */
+  --color-text-muted: #6b7280;                          /* Muted text */
+
+  /* Status Colors */
+  --color-success: #28a745;
+  --color-success-light: #d4edda;
+  --color-warning: #ffc107;
+  --color-warning-light: #fff3cd;
+  --color-error: #dc3545;
+  --color-error-light: #f8d7da;
+  --color-info: #17a2b8;
+  --color-muted: #6c757d;
+
+  /* White variants */
+  --color-white-90: rgba(255, 255, 255, 0.9);
+  --color-white-70: rgba(255, 255, 255, 0.7);
+  --color-white-30: rgba(255, 255, 255, 0.3);
+
+  /* Background Colors */
+  --bg-primary: #ffffff;           /* Light blue background */
+  --bg-light: #f5f5f5;
+  --bg-border: hsl(220, 10%, 90%);
+
+  /* Spacing Scale */
+  --space-xxs: 2px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 20px;
+  --space-2xl: 24px;
+  --space-3xl: 32px;
+  --space-4xl: 48px;
+  --space-5xl: 64px;
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 4px 15px rgba(0, 0, 0, 0.15);
+  --shadow-xl: 0 6px 20px rgba(0, 0, 0, 0.2);
+  --shadow-blue: 0 4px 20px rgba(0, 123, 255, 0.15);
+  --shadow-text: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.3s ease;
+  --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 0.3s ease-in-out;
+
+  /* Layout Widths */
+  --container-xs: 480px;
+  --container-sm: 768px;
+  --container-md: 1024px;
+  --container-lg: 1200px;
+  --container-xl: 1400px;
+
+  /* Component Heights */
+  --nav-height-mobile: 60px;
+  --nav-height-tablet: 70px;
+  --nav-height-desktop: 80px;
+
+  /* Z-index Scale */
+  --z-dropdown: 10;
+  --z-modal: 50;
+  --z-navigation: 100;
+  --z-tooltip: 200;
+}
+
+/*
+=================================
+CSS RESET & BASE STYLES
+=================================
+*/
+
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Base HTML & Body */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-primary), sans-serif;
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--color-text-dark);
+  background-color: var(--bg-light);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+  overflow-x: hidden;
+}
+
+/* Typography Base */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: var(--space-md);
+}
+
+p {
+  margin-bottom: var(--space-lg);
+}
+
+/* Links */
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: var(--transition-base);
+}
+
+/* Buttons */
+button {
+  font-family: inherit;
+  font-size: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: var(--transition-base);
+}
+
+button:focus,
+a:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Images */
+img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Responsive Images */
+* {
+  max-width: 100%;
+}

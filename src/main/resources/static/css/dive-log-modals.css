@@ -1,0 +1,256 @@
+/* Modal Base Styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.3s ease;
+}
+
+.modal[style*="display: block"] {
+  display: block !important;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  background-color: var(--color-white, #ffffff);
+  margin: 5% auto;
+  padding: 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 600px;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Modal Header */
+.modal-header {
+  background: linear-gradient(90deg, #f7fafc 0%, #edf2f7 100%);
+  padding: 1.5rem;
+  border-bottom: 2px solid #e2e8f0;
+  border-radius: 12px 12px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: #1a202c;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.close {
+  color: #718096;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.2s;
+  line-height: 1;
+  padding: 0;
+  background: none;
+  border: none;
+}
+
+.close:hover {
+  color: #1a202c;
+}
+
+/* Modal Body */
+.modal-body {
+  padding: 2rem;
+}
+
+/* Modal Footer */
+.modal-footer {
+  background: #fafafa;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #e2e8f0;
+  border-radius: 0 0 12px 12px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+/* Form Styles for Edit Modal */
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 0.875rem;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #4a5568;
+  box-shadow: 0 0 0 2px rgba(74, 85, 104, 0.1);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.char-count {
+  display: block;
+  text-align: right;
+  color: #718096;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.form-info {
+  background-color: #f7fafc;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-top: 1rem;
+  color: #2d3748;
+  font-size: 0.875rem;
+}
+
+/* View Modal  */
+.dive-detail {
+  margin-bottom: 1.25rem;
+}
+
+.dive-detail-label {
+  font-weight: 600;
+  color: #718096;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.25rem;
+}
+
+.dive-detail-value {
+  color: #2d3748;
+  font-size: 1rem;
+}
+
+.dive-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+/* Alert Styles */
+.alert {
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.alert-danger {
+  background-color: #fee;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.alert-success {
+  background-color: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.alert-info {
+  background-color: #eff6ff;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    margin: 2% auto;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .dive-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-body {
+    padding: 1.25rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .modal-footer button,
+  .form-actions .button {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  .modal-footer button:last-child,
+  .form-actions .button:last-child {
+    margin-bottom: 0;
+  }
+  .modal-footer {
+    flex-direction: column;
+  }
+
+  .modal-footer button {
+    width: 100%;
+  }
+}
+
+/* Table Action Buttons */
+.dives-table td button {
+  margin-right: 0.25rem;
+}
+
+.dives-table td form {
+  display: inline-block;
+  margin: 0;
+}
+
+/* Notes Cell */
+.notes-cell {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

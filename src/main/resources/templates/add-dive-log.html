@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${pageTitle}">Add New Dive - OceanDive</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/dive-log.css}">
+  <link rel="stylesheet" th:href="@{/css/dive-log-forms.css}">
+</head>
+<body class="dive-log-page">
+<div id="header-fragment" th:replace="~{fragments/header :: header}"></div>
+
+<main>
+  <div class="container">
+    <div class="dive-log-container">
+      <div class="dive-log-header">
+        <h1>Add New Dive</h1>
+        <p>Record your latest underwater adventure</p>
+      </div>
+
+      <div class="dive-log-content">
+        <!-- Messages -->
+        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+        <div th:if="${previewMessage}" class="alert alert-info" th:text="${previewMessage}"></div>
+
+        <!-- Add Dive Form -->
+        <form th:action="@{/dive-log/add}" method="post" th:object="${diveLog}" class="dive-form">
+
+          <div class="form-section">
+            <h3>Basic Information</h3>
+
+            <div class="form-group">
+              <label for="diveNumber">Dive Number *</label>
+              <input type="number" id="diveNumber" th:field="*{diveNumber}"
+                     min="1" required class="form-control">
+              <span th:if="${#fields.hasErrors('diveNumber')}"
+                    th:errors="*{diveNumber}" class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="location">Location *</label>
+              <input type="text" id="location" th:field="*{location}"
+                     maxlength="255" required class="form-control">
+              <span th:if="${#fields.hasErrors('location')}"
+                    th:errors="*{location}" class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="diveDate">Dive Date *</label>
+              <input type="date" id="diveDate" th:field="*{diveDate}"
+                     required class="form-control">
+              <span th:if="${#fields.hasErrors('diveDate')}"
+                    th:errors="*{diveDate}" class="error-message"></span>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Time Information</h3>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="startTime">Start Time *</label>
+                <input type="time" id="startTime" th:field="*{startTime}"
+                       required class="form-control" onchange="calculateDuration()">
+                <span th:if="${#fields.hasErrors('startTime')}"
+                      th:errors="*{startTime}" class="error-message"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="endTime">End Time *</label>
+                <input type="time" id="endTime" th:field="*{endTime}"
+                       required class="form-control" onchange="calculateDuration()">
+                <span th:if="${#fields.hasErrors('endTime')}"
+                      th:errors="*{endTime}" class="error-message"></span>
+              </div>
+            </div>
+
+            <div class="form-info" id="durationInfo" style="display: none;">
+              <strong>Calculated Duration:</strong> <span id="durationDisplay"></span>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Environmental Conditions</h3>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="waterTemperature">Water Temperature (°C)</label>
+                <input type="number" id="waterTemperature" th:field="*{waterTemperature}"
+                       min="-5" max="40" step="0.1" class="form-control">
+                <span th:if="${#fields.hasErrors('waterTemperature')}"
+                      th:errors="*{waterTemperature}" class="error-message"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="airTemperature">Air Temperature (°C)</label>
+                <input type="number" id="airTemperature" th:field="*{airTemperature}"
+                       min="-20" max="50" step="0.1" class="form-control">
+                <span th:if="${#fields.hasErrors('airTemperature')}"
+                      th:errors="*{airTemperature}" class="error-message"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Notes</h3>
+
+            <div class="form-group">
+              <label for="notes">Dive Notes</label>
+              <textarea id="notes" th:field="*{notes}" rows="5" maxlength="2000"
+                        class="form-control" oninput="updateNoteCount()"></textarea>
+              <small class="char-count">
+                <span th:text="${noteCount}">0</span> / 2000 characters
+              </small>
+              <span th:if="${#fields.hasErrors('notes')}"
+                    th:errors="*{notes}" class="error-message"></span>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <a th:href="@{/dive-log}" class="button">Cancel</a>
+            <button type="submit" class="button">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="footer-fragment" th:replace="~{fragments/footer :: footer}"></div>
+
+<!-- Scripts -->
+<script>
+  // Calculate duration when times change
+  function calculateDuration() {
+    const startTime = document.getElementById('startTime').value;
+    const endTime = document.getElementById('endTime').value;
+
+    if (startTime && endTime) {
+      // Parse "HH:mm" format
+      const [startHour, startMinute] = startTime.split(':').map(Number);
+      const [endHour, endMinute] = endTime.split(':').map(Number);
+
+      const start = startHour * 60 + startMinute;
+      const end = endHour * 60 + endMinute;
+
+      if (end > start) {
+        const durationMinutes = end - start;
+        const hours = Math.floor(durationMinutes / 60);
+        const minutes = durationMinutes % 60;
+
+        let durationText;
+        if (hours > 0) {
+          durationText = `${hours}h ${minutes.toString().padStart(2, '0')}m`;
+        } else {
+          durationText = `${minutes} min`;
+        }
+
+        document.getElementById('durationDisplay').textContent = durationText;
+        document.getElementById('durationInfo').style.display = 'block';
+      } else {
+        document.getElementById('durationInfo').style.display = 'none';
+      }
+    }
+  }
+
+  // Update note character count
+  function updateNoteCount() {
+    const notes = document.getElementById('notes').value;
+    const count = notes ? notes.length : 0;
+    document.querySelector('.char-count').innerHTML = `${count} / 2000 characters`;
+  }
+
+  // Initialize on a page load
+  document.addEventListener('DOMContentLoaded', function () {
+    calculateDuration();
+    updateNoteCount();
+  });
+</script>
+</body>
+</html>

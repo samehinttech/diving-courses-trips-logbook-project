@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <title>Ocean Dive</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/error-pages.css}">
+</head>
+<body>
+<div class="error-container">
+  <h1>Already Exists</h1>
+  <p>This information is already in use. Please try a different option.</p>
+
+  <div class="error-suggestions">
+    <h3>What you can do:</h3>
+    <ul>
+      <li>Try using a different username or email address</li>
+      <li>Check if you already have an account and try logging in</li>
+      <li>Contact us if you need assistance</li>
+    </ul>
+  </div>
+
+  <div class="error-actions">
+    <a href="/register" class="btn btn-outline">Try Again</a>
+    <a href="/login" class="btn btn-outline">Login Instead</a>
+    <a href="javascript:history.back()" class="btn btn-outline">Go Back</a>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<header th:fragment="header" class="header" role="banner">
+  <!-- CSRF Meta Tags for AJAX requests -->
+  <meta name="_csrf" th:content="${_csrf?.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf?.headerName}"/>
+  <meta name="_csrf_parameter" th:content="${_csrf?.parameterName}"/>
+  <meta name="keywords" content="diving, scuba, courses, trips, ocean, dive, scuba diving, underwater adventure, marine life" />
+  <meta name="description" content="Explore the depths with OceanDive. Join our diving courses, book exciting trips, and connect
+   with fellow divers. Your underwater adventure awaits!" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <meta title="${pageTitle}">
+  <link rel="icon" href="data:,">
+
+  <nav class="nav-container">
+    <!-- Logo Section -->
+    <div class="nav-logo">
+      <a th:href="@{/}">
+        <div class="logo-design"><span>Ocean</span>Dive</div>
+      </a>
+    </div>
+
+    <!-- Hamburger Menu Checkbox -->
+    <input type="checkbox" class="mobile-menu-checkbox" id="menu-toggle" />
+    <label for="menu-toggle" class="hamburger-menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </label>
+
+    <!-- Desktop Navigation Links -->
+    <div class="nav-links">
+      <a th:href="@{/}">HOME</a>
+      <a th:href="@{/#courses}">COURSES</a>
+      <a th:href="@{/#trips}">TRIPS</a>
+      <a th:href="@{/about}">ABOUT</a>
+      <a th:href="@{/contact}">CONTACT</a>
+
+      <!-- Authenticated User Links (for all authenticated users including admins) -->
+      <a th:href="@{/dive-log}" th:if="${#authorization.expression('isAuthenticated()')}">DIVE-LOG</a>
+      <a th:href="@{/my-profile}" th:if="${#authorization.expression('isAuthenticated()')}">PROFILE</a>
+
+      <!-- Admin-Only Link (admins get this dashboard link) -->
+      <a th:href="@{/admin-dashboard}"
+         th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+        ADMIN-DASHBOARD
+      </a>
+    </div>
+    <!-- Authentication Section -->
+    <div class="nav-auth">
+      <!-- Guest Users -->
+      <div th:if="${!#authorization.expression('isAuthenticated()')}">
+        <a th:href="@{/login}">LOGIN</a>
+        <a th:href="@{/register}" class="btn-register">REGISTER</a>
+      </div>
+
+      <!-- Authenticated Users -->
+      <div th:if="${#authorization.expression('isAuthenticated()')}">
+        <!-- Show role indicator for admin users -->
+        <span class="user-name" th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
+              th:text="'Hi Admin 👋 ' + ${#authentication.principal.username}"></span>
+        <!-- Regular user greeting -->
+        <span class="user-name" th:if="${!#authorization.expression('hasRole(''ADMIN'')')}"
+              th:text="'Hi👋' + ${#authentication.principal.username}"></span>
+
+        <form th:action="@{/logout}" method="post" style="display: inline-block;">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+          <button type="submit" class="btn-logout-simple button">Logout</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Links -->
+    <div class="mobile-nav">
+      <div class="mobile-nav-links">
+        <a th:href="@{/}">HOME</a>
+        <a th:href="@{/#courses}">COURSES</a>
+        <a th:href="@{/#trips}">TRIPS</a>
+        <a th:href="@{/about}">ABOUT</a>
+        <a th:href="@{/contact}">CONTACT</a>
+
+        <!-- Authenticated User Links (for all authenticated users including admins) -->
+        <a th:href="@{/dive-log}" th:if="${#authorization.expression('isAuthenticated()')}">DIVE-LOG</a>
+        <a th:href="@{/my-profile}" th:if="${#authorization.expression('isAuthenticated()')}">PROFILE</a>
+
+        <!-- Admin Only Link - Mobile (admins get this extra link) -->
+        <a th:href="@{/admin-dashboard}"
+           th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+          ADMIN-DASHBOARD
+        </a>
+      </div>
+
+      <!-- Mobile Authentication Section -->
+      <div class="mobile-nav-auth">
+        <!-- Guest Users -->
+        <div th:if="${!#authorization.expression('isAuthenticated()')}">
+          <a th:href="@{/login}" class="mobile-login-link">LOGIN</a>
+          <a th:href="@{/register}" class="mobile-register-link">REGISTER</a>
+        </div>
+
+        <!-- Authenticated Users -->
+        <div th:if="${#authorization.expression('isAuthenticated()')}">
+          <div class="mobile-user-info">
+            <!-- Show role indicator for admin users -->
+            <span th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
+                  th:text="'Hi Admin ' + ${#authentication.name}"></span>
+            <!-- Regular user greeting -->
+            <span th:if="${!#authorization.expression('hasRole(''ADMIN'')')}"
+                  th:text="'Hi👋' + ${#authentication.name}"></span>
+          </div>
+          <form th:action="@{/logout}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <button type="submit" class="btn-logout-mobile">LOGOUT</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>

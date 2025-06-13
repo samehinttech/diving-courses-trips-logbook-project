@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="eng">
+<head>
+  <title>Server Error - Ocean Dive</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/error-pages.css}">
+</head>
+<body>
+<div class="error-container">
+  <h1>Server Error</h1>
+  <!--/*@thymesVar id="error" type="java"*/-->
+  <h2 th:text="${error}">Internal Server Error</h2>
+  <div class="error-actions">
+    <button onclick="history.back()" class="btn btn-outline">Go Back</button>
+  </div>
+</div>
+</body>
+</html>

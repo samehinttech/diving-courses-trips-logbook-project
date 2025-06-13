@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Page Not Found - OceanDive</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/error-pages.css}">
+</head>
+<div style="text-align: center; padding: 50px;">
+  <h1>404—Page Not Found</h1>
+  <!--/*@thymesVar id="message" type="templates"*/-->
+  <p th:text="${message}">The page you're looking for doesn't exist.</p>
+
+  <div class="error-actions">
+    <button onclick="history.back()" class="btn btn-outline">Go Back</button>
+  </div>
+</div>
+</html>
