@@ -1,19 +1,25 @@
+# --- Stage 1: Build stage using Maven ---
+FROM maven:3.8.3-openjdk-21 AS build
 
-# DockerFile
-# Java 21 with Spring Boot 3.5.0 and H2 database
-FROM eclipse-temurin:21-jdk-alpine
-
-# Set working directory inside the container
 WORKDIR /app
 
-# Copy the Spring Boot JAR into the image
-COPY target/oceandive-0.0.1-SNAPSHOT.jar app.jar
+# Copy all source code
+COPY . .
 
-# Copy the H2 database file (must be in ./data/ locally)
-COPY data/ /app/data/
+# Build the Spring Boot application
+RUN mvn clean package -DskipTests
 
-# Expose the Spring Boot default port
+# --- Stage 2: Final image ---
+FROM eclipse-temurin:21-jdk-alpine
+
+WORKDIR /app
+
+# Copy only the built JAR from the previous stage
+COPY --from=build /app/target/oceandive-0.0.1-SNAPSHOT.jar app.jar
+
+# Copy database file if it's in the repo
+COPY --from=build /app/data/ /app/data/
+
 EXPOSE 8080
 
-# Run the app
 ENTRYPOINT ["java", "-jar", "app.jar"]
