@@ -22,7 +22,7 @@ COPY --from=build /app/target/*.jar app.jar
 RUN mkdir -p /app/uploads
 
 # Expose port 8080 (your fixed port)
-EXPOSE 8080
+EXPOSE 10000
 
 # Health check on port 8080 - try actuator endpoint
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
