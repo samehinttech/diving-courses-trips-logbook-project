@@ -10,6 +10,7 @@ Import Order:
 3. Component styles (header-footer.css)
 4. Page-specific styles (index.css, about.css, contact.css)
 5. Responsive overrides (responsive.css) - MUST BE LAST to override other styles
+6. Global accessibility
 */
 
 /* Base Styles & CSS Variables */
@@ -20,6 +21,7 @@ Import Order:
 @import url("about.css");
 @import url("contact.css");
 @import url("responsive.css");
+@import url("accessibility.css");
 
 /*
 GLOBAL LAYOUT

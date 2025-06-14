@@ -1,0 +1,560 @@
+/*
+Global accessibility features extracted
+This file is completely done by GithHub Copilot, extracted from all other CSS files in the project.
+*/
+
+/*
+=================================
+REDUCED MOTION SUPPORT
+=================================
+Respects users' motion sensitivity preferences
+*/
+
+@media (prefers-reduced-motion: reduce) {
+  /* Remove all animations and transforms */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Disable specific hover transforms */
+  .value-card:hover,
+  .contact-item:hover,
+  .faq-item:hover,
+  .submit-btn:hover,
+  .btn:hover,
+  .btn-calculate:hover,
+  .statistics-item:hover {
+    transform: none !important;
+  }
+
+  /* Disable transition effects */
+  .value-card,
+  .contact-item,
+  .faq-item,
+  .submit-btn,
+  .btn,
+  .btn-calculate,
+  .statistics-item {
+    transition: none !important;
+  }
+
+  /* Disable hero content animation */
+  .hero-content {
+    animation: none !important;
+  }
+
+  /* Disable statistics animations */
+  .statistics-item {
+    animation: none !important;
+  }
+
+  /* Disable FAQ highlight animation */
+  #faq:target {
+    animation: none !important;
+  }
+}
+
+/*
+=================================
+HIGH CONTRAST MODE SUPPORT
+=================================
+Enhanced visual elements for users with visual impairments
+*/
+
+@media (prefers-contrast: high) {
+  /* Enhanced form borders */
+  .add-dive-container,
+  .contact-form-container,
+  .contact-info-container {
+    border: 2px solid var(--color-primary) !important;
+  }
+
+  /* Stronger input focus indicators */
+  input[type="text"]:focus,
+  input[type="number"]:focus,
+  input[type="date"]:focus,
+  input[type="time"]:focus,
+  input[type="datetime-local"]:focus,
+  textarea:focus,
+  select:focus,
+  .form-input:focus,
+  .form-textarea:focus,
+  .form-control:focus {
+    border-width: 3px !important;
+    outline: 2px solid var(--color-primary) !important;
+    outline-offset: 2px !important;
+  }
+
+  /* Enhanced card borders */
+  .value-card,
+  .contact-item,
+  .faq-item {
+    border: 2px solid var(--color-primary) !important;
+  }
+
+  /* Enhanced duration display */
+  .duration-display {
+    border: 2px solid #2d3748 !important;
+  }
+
+  /* Enhanced story image border */
+  .story-image {
+    border-width: 3px !important;
+  }
+
+  /* Enhanced register button */
+  .btn-register {
+    border: 2px solid var(--color-primary) !important;
+  }
+
+  /* Enhanced statistics items */
+  .statistics-item {
+    border: 2px solid rgba(255, 255, 255, 0.4) !important;
+  }
+
+  /* Enhanced FAQ target highlighting */
+  #faq:target {
+    border: 3px solid var(--color-primary) !important;
+    background-color: rgba(50, 130, 184, 0.15) !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  /* Enhanced hero overlay for better text contrast */
+  .hero-overlay {
+    background: rgba(0, 0, 0, 0.7) !important;
+  }
+
+  /* Enhanced statistics background */
+  .statistics-item {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border: 2px solid rgba(255, 255, 255, 0.4) !important;
+  }
+
+  /* Enhanced text shadows */
+  .hero-title,
+  .hero-description {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8) !important;
+  }
+}
+
+/*
+=================================
+FOCUS MANAGEMENT
+=================================
+Enhanced focus indicators for keyboard navigation
+*/
+
+/* Enhanced global focus styles */
+*:focus {
+  outline: 2px solid var(--color-accent) !important;
+  outline-offset: 2px !important;
+}
+
+/* Remove outline for mouse users but keep for keyboard users */
+*:focus:not(:focus-visible) {
+  outline: none !important;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--color-accent) !important;
+  outline-offset: 2px !important;
+}
+
+/* Enhanced button focus states */
+button:focus,
+a:focus,
+.btn:focus,
+.button:focus {
+  outline: 2px solid var(--color-accent) !important;
+  outline-offset: 2px !important;
+}
+
+/* Enhanced form control focus */
+.form-control:focus-visible {
+  outline: 2px solid #3b82f6 !important;
+  outline-offset: 2px !important;
+}
+
+/* Password toggle button focus */
+.password-toggle-btn:focus {
+  outline: 2px solid var(--color-primary) !important;
+  outline-offset: 2px !important;
+  color: var(--color-primary) !important;
+}
+
+/*
+=================================
+SKIP NAVIGATION
+=================================
+Skip to main content for keyboard users
+*/
+
+.skip-to-main {
+  position: absolute !important;
+  top: -40px !important;
+  left: 6px !important;
+  background: var(--color-primary) !important;
+  color: var(--color-white) !important;
+  padding: 8px !important;
+  text-decoration: none !important;
+  border-radius: var(--radius-sm) !important;
+  z-index: calc(var(--z-navigation) + 1) !important;
+  transition: var(--transition-fast) !important;
+  font-weight: 600 !important;
+}
+
+.skip-to-main:focus {
+  top: 6px !important;
+}
+
+/*
+=================================
+SCROLL BEHAVIOR
+=================================
+Smooth scrolling with accessibility considerations
+*/
+
+/* Enable smooth scrolling where supported */
+@supports (scroll-behavior: smooth) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Target offset for fixed headers */
+#faq:target {
+  scroll-margin-top: 100px;
+  animation: gentle-faq-highlight 1.5s ease-in-out;
+}
+
+@keyframes gentle-faq-highlight {
+  0% {
+    background-color: rgba(50, 130, 184, 0.08);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+/*
+=================================
+TEXT RENDERING OPTIMIZATION
+=================================
+Improved text rendering for better readability
+*/
+
+.text-render-optimize {
+  text-rendering: optimizeLegibility !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Apply to all text elements */
+body,
+h1, h2, h3, h4, h5, h6,
+p, span, div, a, button,
+input, textarea, select {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/*
+=================================
+COLOR CONTRAST UTILITIES
+=================================
+High contrast text utilities for better readability
+*/
+
+.text-high-contrast {
+  color: #000000 !important;
+  background-color: #ffffff !important;
+}
+
+.bg-high-contrast {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+/*
+=================================
+SCREEN READER SUPPORT
+=================================
+Hidden content for screen readers
+*/
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.sr-only-focusable:focus {
+  position: static !important;
+  width: auto !important;
+  height: auto !important;
+  padding: inherit !important;
+  margin: inherit !important;
+  overflow: visible !important;
+  clip: auto !important;
+  white-space: normal !important;
+}
+
+/*
+=================================
+TOUCH TARGET SIZE
+=================================
+Minimum touch target sizes for mobile accessibility
+*/
+
+@media (pointer: coarse) {
+  /* Ensure minimum 44px touch targets on mobile */
+  button,
+  .btn,
+  .button,
+  a[role="button"],
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"] {
+    min-height: 44px !important;
+    min-width: 44px !important;
+  }
+
+  /* Ensure form controls are large enough */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="date"],
+  input[type="time"],
+  select,
+  textarea {
+    min-height: 44px !important;
+    padding: 12px !important;
+  }
+}
+
+/*
+=================================
+PRINT ACCESSIBILITY
+=================================
+Ensure content is accessible when printed
+*/
+
+@media print {
+  /* Remove navigation and interactive elements */
+  #header-fragment,
+  #footer-fragment,
+  .hamburger-menu,
+  .mobile-nav,
+  .btn,
+  .button,
+  .back-link,
+  .btn-calculate,
+  .button-group,
+  .map-actions {
+    display: none !important;
+  }
+
+  /* Reset layout for print */
+  body {
+    display: block !important;
+    min-height: auto !important;
+    color: black !important;
+    background: white !important;
+  }
+
+  main {
+    flex: none !important;
+    padding: 0 !important;
+  }
+
+  /* Ensure good contrast for print */
+  .text-white,
+  .hero-title,
+  .hero-description,
+  .section-heading,
+  .form-heading,
+  .info-heading {
+    color: black !important;
+    text-shadow: none !important;
+  }
+
+  /* Remove shadows and effects for print */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    background-image: none !important;
+  }
+
+  /* Ensure containers have borders for print */
+  .contact-form-container,
+  .contact-info-container,
+  .contact-item,
+  .faq-item,
+  .value-card {
+    box-shadow: none !important;
+    border: 1px solid black !important;
+  }
+
+  /* Page break utilities */
+  .page-break-before {
+    page-break-before: always !important;
+  }
+
+  .page-break-after {
+    page-break-after: always !important;
+  }
+
+  .page-break-inside-avoid {
+    page-break-inside: avoid !important;
+  }
+
+  /* Map replacement for print */
+  .map-container iframe {
+    display: none !important;
+  }
+
+  .map-container::after {
+    content: "Map: Sea Strasse 0, 0000 Oceanside, Switzerland - Visit maps.google.com for directions" !important;
+    display: block !important;
+    padding: var(--space-lg) !important;
+    text-align: center !important;
+    border: 1px solid black !important;
+    font-weight: bold !important;
+    border-radius: var(--radius-sm) !important;
+  }
+}
+
+/*
+=================================
+KEYBOARD NAVIGATION ENHANCEMENTS
+=================================
+Enhanced keyboard navigation support
+*/
+
+/* Tab index management */
+[tabindex="-1"]:focus {
+  outline: none !important;
+}
+
+/* Enhanced link focus for better keyboard navigation */
+a:focus,
+a:focus-visible {
+  outline: 2px solid var(--color-accent) !important;
+  outline-offset: 2px !important;
+  text-decoration: underline !important;
+}
+
+/* Enhanced modal focus management */
+.modal:focus,
+.message-modal:focus {
+  outline: none !important;
+}
+
+.modal-close:focus,
+.password-toggle-btn:focus {
+  outline: 2px solid var(--color-primary) !important;
+  outline-offset: 2px !important;
+}
+
+/*
+=================================
+ARIA LIVE REGIONS
+=================================
+For dynamic content announcements
+*/
+
+.live-region {
+  position: absolute !important;
+  left: -10000px !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+}
+
+[aria-live] {
+  position: relative !important;
+}
+
+/*
+=================================
+COLOR BLIND SUPPORT
+=================================
+Additional support for color vision deficiencies
+*/
+
+/* Use patterns and shapes in addition to color */
+.error,
+.alert-danger,
+.alert-error {
+  position: relative;
+}
+
+.error::before,
+.alert-danger::before,
+.alert-error::before {
+  content: "⚠ ";
+  font-weight: bold;
+}
+
+.success,
+.alert-success {
+  position: relative;
+}
+
+.success::before,
+.alert-success::before {
+  content: "✓ ";
+  font-weight: bold;
+}
+
+/*
+=================================
+FORCED COLORS MODE SUPPORT
+=================================
+Support for Windows High Contrast mode
+*/
+
+@media (forced-colors: active) {
+  /* Ensure interactive elements are visible */
+  .btn,
+  .button,
+  button,
+  input,
+  select,
+  textarea {
+    forced-color-adjust: none;
+    border: 1px solid ButtonText;
+  }
+
+  /* Ensure focus indicators work in forced colors */
+  *:focus,
+  *:focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+
+  /* Ensure links are distinguishable */
+  a {
+    forced-color-adjust: none;
+    color: LinkText;
+  }
+
+  a:visited {
+    color: VisitedText;
+  }
+}
