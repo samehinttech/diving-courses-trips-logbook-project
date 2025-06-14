@@ -3,21 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Admin Dashboard for OceanDive - Manage courses, trips, users and bookings.">
+  <meta name="description"
+        content="Admin Dashboard for OceanDive - Manage courses, trips, users and bookings.">
   <meta name="keywords" content="admin, dashboard, courses, trips, users, bookings, OceanDive">
   <meta name="author" content="OceanDive Team">
   <title th:text="${pageTitle}">Admin Dashboard - OceanDive</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" th:href="@{/css/main.css}">
   <link rel="stylesheet" th:href="@{/css/courses.css}">
   <link rel="stylesheet" th:href="@{/css/admin-dashboard.css}">
+  <link rel="stylesheet" th:href="@{/css/register.css}">
 </head>
 <body>
 <div id="header-fragment" th:replace="~{fragments/header :: header}"></div>
 
+<!-- Main content of the admin dashboard -->
 <main>
   <div class="dashboard-container">
-    <!-- Dashboard Header -->
     <div class="dashboard-header">
       <div class="container">
         <h1 class="section-title">ADMIN DASHBOARD</h1>
@@ -25,13 +28,36 @@
       </div>
     </div>
 
+    <!-- Admin registration success or error messages -->
     <div class="container">
-      <!-- Messages -->
-      <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
-      <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
-      <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+      <div th:if="${adminRegisterSuccess}" class="message-modal-overlay">
+        <div class="message-modal success">
+          <div class="message-modal-icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <h3 class="message-modal-title">Admin Registered Successfully!</h3>
+          <p class="message-modal-content" th:text="${adminRegisterSuccess}"></p>
+          <button class="message-modal-close" onclick="closeMessageModal(this)">
+            Continue
+          </button>
+        </div>
+      </div>
 
-      <!-- Statistics Overview -->
+      <div th:if="${adminRegisterError}" class="message-modal-overlay">
+        <div class="message-modal error">
+          <div class="message-modal-icon">
+            <i class="fas fa-exclamation-circle"></i>
+          </div>
+          <h3 class="message-modal-title">Registration Error</h3>
+          <p class="message-modal-content" th:text="${adminRegisterError}"></p>
+          <button class="message-modal-close" onclick="closeMessageModal(this)">
+            Try Again
+          </button>
+        </div>
+      </div>
+
+      <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+      <!-- Dashboard statistics and quick actions -->
       <div class="dashboard-stats">
         <div class="stat-card">
           <i class="fa fa-graduation-cap stat-icon"></i>
@@ -54,13 +80,12 @@
           <div class="stat-label">Total Bookings</div>
         </div>
       </div>
-
-      <!-- Quick Actions -->
+      <!-- Quick actions and recent courses/trips -->
       <div class="dashboard-section">
         <div class="section-header-admin">
           <h2 class="section-title-admin">Quick Actions</h2>
         </div>
-        <div class="quick-actions">
+        <div class="quick-actions"> <!--fallback for non-implemented actions-->
           <a th:href="@{/not-available}" class="quick-action-card">
             <i class="fa fa-plus stat-icon"></i>
             <div class="quick-action-title">Add Course</div>
@@ -70,6 +95,11 @@
             <i class="fa fa-globe stat-icon"></i>
             <div class="quick-action-title">Add Trip</div>
             <div class="quick-action-desc">Plan new diving trips</div>
+          </a>
+          <a href="#" data-modal-target="#admin-registration-modal" class="quick-action-card">
+            <i class="fa fa-user-shield stat-icon"></i>
+            <div class="quick-action-title">Register Admin</div>
+            <div class="quick-action-desc">Add new administrator</div>
           </a>
           <a th:href="@{/not-available}" class="quick-action-card">
             <i class="fa fa-users stat-icon"></i>
@@ -84,7 +114,6 @@
         </div>
       </div>
 
-      <!-- Recent Courses -->
       <div class="dashboard-section">
         <div class="section-header-admin">
           <h2 class="section-title-admin">Recent Courses</h2>
@@ -94,14 +123,12 @@
           </div>
         </div>
 
-        <!-- Empty state for courses -->
         <div th:if="${#lists.isEmpty(recentCourses)}" class="empty-state">
           <div class="empty-state-icon"></div>
           <h3>No Courses</h3>
           <a th:href="@{/not-available}" class="button">Create Course</a>
         </div>
-
-        <!-- Courses grid -->
+        <!-- Display recent courses -->
         <div th:if="${!#lists.isEmpty(recentCourses)}" class="admin-grid">
           <div th:each="course, iterStat : ${recentCourses}"
                th:if="${iterStat.index < 3}"
@@ -129,13 +156,15 @@
                   <span class="price-amount" th:text="'$' + ${course.price}"></span>
                 </div>
               </div>
-              <p class="course-description" th:text="${course.description ?: 'No description available'}">
+              <p class="course-description"
+                 th:text="${course.description ?: 'No description available'}">
                 Course description...
               </p>
               <div class="course-meta">
                 <div class="course-meta-item">
                   <i class="fa fa-calendar"></i>
-                  <span th:text="${course.startDate != null ? #temporals.format(course.startDate, 'MMM d, yyyy') : 'No date'}">Start Date</span>
+                  <span
+                      th:text="${course.startDate != null ? #temporals.format(course.startDate, 'MMM d, yyyy') : 'No date'}">Start Date</span>
                 </div>
                 <div class="course-meta-item">
                   <i class="fa fa-users"></i>
@@ -143,7 +172,8 @@
                 </div>
                 <div class="course-meta-item">
                   <i class="fa fa-certificate"></i>
-                  <span th:text="${course.minCertificationRequired?.displayName ?: 'No Prerequisites'}">Level</span>
+                  <span
+                      th:text="${course.minCertificationRequired?.displayName ?: 'No Prerequisites'}">Level</span>
                 </div>
               </div>
             </div>
@@ -154,7 +184,6 @@
         </div>
       </div>
 
-      <!-- Recent Trips -->
       <div class="dashboard-section">
         <div class="section-header-admin">
           <h2 class="section-title-admin">Recent Trips</h2>
@@ -163,14 +192,12 @@
             <a th:href="@{/not-available}" class="button">Add Trip</a>
           </div>
         </div>
-
-        <!-- Empty state for trips -->
+        <!-- Display recent trips -->
         <div th:if="${#lists.isEmpty(recentTrips)}" class="empty-state">
           <h3>No Trips</h3>
           <a th:href="@{/not-available}" class="button">Create Trip</a>
         </div>
 
-        <!-- Trips grid -->
         <div th:if="${!#lists.isEmpty(recentTrips)}" class="admin-grid">
           <div th:each="trip, iterStat : ${recentTrips}"
                th:if="${iterStat.index < 3}"
@@ -197,21 +224,25 @@
                   <span class="price-amount" th:text="'$' + ${trip.price}"></span>
                 </div>
               </div>
-              <p class="course-description" th:text="${trip.description ?: 'No description available'}">
+              <p class="course-description"
+                 th:text="${trip.description ?: 'No description available'}">
                 Trip description...
               </p>
               <div class="course-meta">
                 <div class="course-meta-item">
                   <i class="fa fa-calendar"></i>
-                  <span th:text="${trip.startDate != null ? #temporals.format(trip.startDate, 'MMM d, yyyy') : 'No date'}">Start Date</span>
+                  <span
+                      th:text="${trip.startDate != null ? #temporals.format(trip.startDate, 'MMM d, yyyy') : 'No date'}">Start Date</span>
                 </div>
                 <div class="course-meta-item">
                   <i class="fa fa-users"></i>
-                  <span th:text="${trip.currentBookings ?: 0} + '/' + ${trip.capacity ?: 0}">0/15</span>
+                  <span
+                      th:text="${trip.currentBookings ?: 0} + '/' + ${trip.capacity ?: 0}">0/15</span>
                 </div>
                 <div class="course-meta-item">
                   <i class="fa fa-certificate"></i>
-                  <span th:text="${trip.minCertificationRequired?.displayName}">Required Level</span>
+                  <span
+                      th:text="${trip.minCertificationRequired?.displayName}">Required Level</span>
                 </div>
               </div>
             </div>
@@ -221,8 +252,7 @@
           </div>
         </div>
       </div>
-
-      <!-- Operation Overview-->
+      <!-- Operation overview with statistics -->
       <div class="dashboard-section">
         <div class="section-header-admin">
           <h2 class="section-title-admin">Operation Overview</h2>
@@ -252,8 +282,153 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal for registering new administrator -->
+  <div id="admin-registration-modal" class="message-modal-overlay" style="display: none;">
+    <div class="message-modal admin-modal">
+      <div class="modal-header">
+        <h3 class="message-modal-title">Register New Administrator</h3>
+        <span class="modal-close" data-modal-close>&times;</span>
+      </div>
+
+      <div class="modal-content">
+        <form th:action="@{/admin/register}"
+              th:object="${registrationRequest}"
+              method="post">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName" class="form-label">First Name</label>
+              <input type="text"
+                     id="firstName"
+                     th:field="*{firstName}"
+                     class="form-input"
+                     th:class="${#fields.hasErrors('firstName')} ? 'form-input error' : 'form-input'"
+                     placeholder="Enter first name"
+                     required>
+              <span th:if="${#fields.hasErrors('firstName')}"
+                    th:errors="*{firstName}"
+                    class="field-error"></span>
+            </div>
+            <div class="form-group">
+              <label for="lastName" class="form-label">Last Name</label>
+              <input type="text"
+                     id="lastName"
+                     th:field="*{lastName}"
+                     class="form-input"
+                     th:class="${#fields.hasErrors('lastName')} ? 'form-input error' : 'form-input'"
+                     placeholder="Enter last name"
+                     required>
+              <span th:if="${#fields.hasErrors('lastName')}"
+                    th:errors="*{lastName}"
+                    class="field-error"></span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email" class="form-label">Email Address</label>
+              <input type="email"
+                     id="email"
+                     th:field="*{email}"
+                     class="form-input"
+                     th:class="${#fields.hasErrors('email')} ? 'form-input error' : 'form-input'"
+                     placeholder="admin@oceandive.com"
+                     required>
+              <span th:if="${#fields.hasErrors('email')}"
+                    th:errors="*{email}"
+                    class="field-error"></span>
+            </div>
+            <div class="form-group">
+              <label for="mobile" class="form-label">Mobile Number</label>
+              <input type="tel"
+                     id="mobile"
+                     th:field="*{mobile}"
+                     class="form-input"
+                     th:class="${#fields.hasErrors('mobile')} ? 'form-input error' : 'form-input'"
+                     placeholder="+41 XX XXX XX XX">
+              <span th:if="${#fields.hasErrors('mobile')}"
+                    th:errors="*{mobile}"
+                    class="field-error"></span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="username" class="form-label">Username</label>
+              <input type="text"
+                     id="username"
+                     th:field="*{username}"
+                     class="form-input"
+                     th:class="${#fields.hasErrors('username')} ? 'form-input error' : 'form-input'"
+                     placeholder="Choose a username"
+                     required>
+              <span th:if="${#fields.hasErrors('username')}"
+                    th:errors="*{username}"
+                    class="field-error"></span>
+            </div>
+            <div class="form-group">
+              <label for="password" class="form-label">Password</label>
+              <div class="password-input-container">
+                <input type="password"
+                       id="password"
+                       th:field="*{password}"
+                       class="form-input password-input"
+                       th:class="${#fields.hasErrors('password')} ? 'form-input password-input error' : 'form-input password-input'"
+                       placeholder="Create a secure password"
+                       required>
+                <button type="button"
+                        class="password-toggle-btn"
+                        data-password-toggle="password"
+                        aria-label="Show password"
+                        title="Show password">
+                  <i class="fas fa-eye" data-password-icon="password"></i>
+                </button>
+              </div>
+              <span th:if="${#fields.hasErrors('password')}"
+                    th:errors="*{password}"
+                    class="field-error"></span>
+            </div>
+          </div>
+
+          <div class="form-group form-group-full">
+            <label for="roleLimitation" class="form-label">Admin Role</label>
+            <select id="roleLimitation"
+                    th:field="*{roleLimitation}"
+                    class="form-input"
+                    th:class="${#fields.hasErrors('roleLimitation')} ? 'form-input error' : 'form-input'"
+                    required>
+              <option value="">Select admin role</option>
+              <option value="Super admin">Super admin</option>
+              <option value="Groups Admin">Groups Admin</option>
+              <option value="Help Desk Admin">Help Desk Admin</option>
+              <option value="Services Admin">Services Admin</option>
+              <option value="Mobile Admin">Mobile Admin</option>
+              <option value="Storage Admin">Storage Admin</option>
+            </select>
+            <span th:if="${#fields.hasErrors('roleLimitation')}"
+                  th:errors="*{roleLimitation}"
+                  class="field-error"></span>
+          </div>
+
+          <button type="submit" class="submit-btn button">
+            <i class="fas fa-user-plus"></i>
+            Register Administrator
+          </button>
+
+          <button type="button" data-modal-close class="button">
+            <i class="fas fa-times"></i>
+            Cancel
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
 </main>
 
+<script th:src="@{/js/PasswordToggle.js}"></script>
+<script th:src="@{/js/admin-registration-modal.js}"></script>
+
 <div id="footer-fragment" th:replace="~{fragments/footer :: footer}"></div>
+
 </body>
 </html>

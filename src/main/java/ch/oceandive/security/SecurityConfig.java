@@ -62,7 +62,8 @@ public class SecurityConfig {
                 "/api/auth/user/login",
                 "/api/auth/user/register",
                 "/api/auth/refresh",
-                "/api/auth/admin/login"
+                "/api/auth/admin/login",
+                "/api/auth/admin/register"
             ).permitAll()
             .requestMatchers(
                 "/api/about",
@@ -154,7 +155,7 @@ public class SecurityConfig {
             .requestMatchers("/user-profile/**", "/profile-edit", "/my-profile/",
                 "/my-profile/update").hasAnyRole("PREMIUM", "ADMIN")
             .requestMatchers("/admin-dashboard", "/dive-log", "/admin-profile",
-                "/admin-profile/edit", "/admin-profile/update").hasRole("ADMIN")
+                "/admin-profile/edit", "/admin/register", "/admin-profile/update").hasRole("ADMIN")
             .anyRequest().authenticated()
         )
         .formLogin(form -> form
