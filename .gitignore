@@ -40,8 +40,5 @@ mydocs/
 ## Sensitivity files ###
 .env/
 
-## Database files ###
-data/
-
-
 ## data/* #!data/oceandivedb.mv.db#####
+data/*.trace.db
