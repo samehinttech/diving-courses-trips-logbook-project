@@ -31,7 +31,6 @@ import java.util.List;
  * Admin dashboard controller
  */
 @Controller
-@PreAuthorize("hasRole('ADMIN')")
 public class AdminDashboardController {
 
   private static final Logger logger = LoggerFactory.getLogger(AdminDashboardController.class);
@@ -57,6 +56,7 @@ public class AdminDashboardController {
 
   // Added for admin dashboard(Admin registration)
   @GetMapping("/admin-dashboard")
+  @PreAuthorize("hasRole('ADMIN')")
   public String showDashboard(Model model) {
     // Registration form
     model.addAttribute("registrationRequest", new RegistrationRequest());

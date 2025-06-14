@@ -1,6 +1,7 @@
 package ch.oceandive.security;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +21,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -32,6 +34,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -43,6 +46,9 @@ public class SecurityConfig {
 
   @Value("${JWT_SECRET}")
   private String jwtKey;
+
+  @Value("${APP_BASE_URL}")
+  private String appBaseUrl;
 
   private final JwtAuthenticationConverter jwtAuthenticationConverter;
 
@@ -57,7 +63,17 @@ public class SecurityConfig {
         .securityMatcher("/api/**")
         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .csrf(AbstractHttpConfigurer::disable)
+        .headers(headers -> headers
+            .frameOptions(FrameOptionsConfig::deny) // Disable frame options for API, enable to use H2 console
+            .contentTypeOptions(contentTypeOptionsConfig -> {})
+            .httpStrictTransportSecurity(hstsConfig -> hstsConfig
+                .maxAgeInSeconds(31536000) // 1 year
+                .includeSubDomains(true)
+                .preload(true))
+            .referrerPolicy(referrerPolicyConfig -> referrerPolicyConfig.policy(ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
+        )
         .authorizeHttpRequests(auth -> auth
+            // Authentication endpoints
             .requestMatchers(
                 "/api/auth/user/login",
                 "/api/auth/user/register",
@@ -65,13 +81,16 @@ public class SecurityConfig {
                 "/api/auth/admin/login",
                 "/api/auth/admin/register"
             ).permitAll()
+            // Public content endpoints
             .requestMatchers(
                 "/api/about",
                 "/api/contact",
                 "/api/privacy",
                 "/api/terms",
-                "/api/index"
+                "/api/index",
+                "/api/health" // Health check endpoint
             ).permitAll()
+            // Public course endpoints
             .requestMatchers(HttpMethod.GET,
                 "/api/courses",
                 "/api/courses/{id}",
@@ -80,6 +99,7 @@ public class SecurityConfig {
                 "/api/courses/name/{name}",
                 "/api/courses/date-range"
             ).permitAll()
+            // Public trip endpoints
             .requestMatchers(HttpMethod.GET,
                 "/api/trips",
                 "/api/trips/{id}",
@@ -98,6 +118,7 @@ public class SecurityConfig {
                 "/api/trips/active",
                 "/api/trips/past"
             ).permitAll()
+            // API documentation (disable in production if needed)
             .requestMatchers(
                 "/v3/api-docs/**",
                 "/swagger-ui/**",
@@ -105,13 +126,15 @@ public class SecurityConfig {
                 "/swagger-resources/**",
                 "/webjars/**"
             ).permitAll()
-            .requestMatchers("/api/debug/**").permitAll()
+            // Protected endpoints
             .requestMatchers("/api/dive-logs/**").hasAnyRole("PREMIUM", "ADMIN")
             .requestMatchers(HttpMethod.POST, "/api/trips/{id}/book").hasAnyRole("PREMIUM", "ADMIN")
             .requestMatchers(HttpMethod.POST, "/api/trips/{id}/cancel-booking")
             .hasAnyRole("PREMIUM", "ADMIN")
             .requestMatchers(HttpMethod.GET, "/api/trips/{id}/can-book")
             .hasAnyRole("PREMIUM", "ADMIN")
+
+            // Admin-only endpoints
             .requestMatchers(HttpMethod.POST, "/api/courses/**").hasRole("ADMIN")
             .requestMatchers(HttpMethod.PUT, "/api/courses/**").hasRole("ADMIN")
             .requestMatchers(HttpMethod.DELETE, "/api/courses/**").hasRole("ADMIN")
@@ -122,6 +145,7 @@ public class SecurityConfig {
             .requestMatchers("/api/trips/statistics").hasRole("ADMIN")
             .requestMatchers("/api/trips/analytics/most-booked").hasRole("ADMIN")
             .requestMatchers("/api/trips/analytics/low-bookings").hasRole("ADMIN")
+
             .anyRequest().authenticated()
         )
         .oauth2ResourceServer(oauth2 -> oauth2.jwt(
@@ -138,18 +162,32 @@ public class SecurityConfig {
     http
         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .csrf(csrf -> csrf
-            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-            .csrfTokenRequestHandler(requestHandler)
-            .ignoringRequestMatchers("/h2-console/**")
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .csrfTokenRequestHandler(requestHandler)
         )
-        .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+        .headers(headers -> headers
+            .frameOptions(HeadersConfigurer.FrameOptionsConfig::deny)
+            .contentTypeOptions(ContentTypeOptionsConfig-> {})
+            .httpStrictTransportSecurity(hstsConfig -> hstsConfig
+                .maxAgeInSeconds(31536000)
+                .includeSubDomains(true)
+                .preload(true))
+            .referrerPolicy(referrerPolicyConfig -> referrerPolicyConfig.policy(ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
+        )
         .authorizeHttpRequests(auth -> auth
+            // Static resources
             .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
+            // Public pages
             .requestMatchers("/", "/courses", "/trips", "/about", "/contact/**", "/privacy",
-                "/terms",
-                "/error/**", "/not-available", "/400", "/403", "/404", "/409", "/500").permitAll()
+                "/terms", "/error/**", "/not-available", "/400", "/403", "/404", "/409", "/500").permitAll()
+            // Authentication pages
             .requestMatchers("/register", "/login", "/forgot-password", "/reset-password",
-                "/reset/**", "/h2-console/**").permitAll()
+                "/reset/**").permitAll()
+           // .requestMatchers("/h2-console/**").permitAll() // uncomment if you need H2 console
+            // Health check endpoints
+            .requestMatchers("/health", "/actuator/health").permitAll()
+
+            // Protected areas
             .requestMatchers("/admin/**").hasRole("ADMIN")
             .requestMatchers("/dive-log/**").hasAnyRole("PREMIUM", "ADMIN")
             .requestMatchers("/user-profile/**", "/profile-edit", "/my-profile/",
@@ -191,13 +229,14 @@ public class SecurityConfig {
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOriginPatterns(java.util.Arrays.asList(
-        "http://localhost:*",
-        "https://localhost:*",
-        "http://127.0.0.1:*",
-        "https://127.0.0.1:*",
-        "https://editor.swagger.io"
+
+
+    configuration.setAllowedOriginPatterns(Arrays.asList(
+        appBaseUrl,
+        "https://*.onrender.com" // Render
+        // "https://editor.swagger.io" // Uncomment if using Swagger UI
     ));
+
     configuration.setAllowedMethods(java.util.Arrays.asList(
         "GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"
     ));
@@ -225,7 +264,8 @@ public class SecurityConfig {
 
   @Bean
   public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
+    // Increased strength for production
+    return new BCryptPasswordEncoder(12);
   }
 
   @Bean
