@@ -40,3 +40,5 @@ mydocs/
 ## Sensitivity files ###
 .env/
 
+## Database files ###
+data/
