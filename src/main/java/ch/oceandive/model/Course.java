@@ -1,5 +1,7 @@
 package ch.oceandive.model;
 
+import ch.oceandive.utils.DiveCertification;
+import ch.oceandive.utils.PublicationStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.persistence.*;

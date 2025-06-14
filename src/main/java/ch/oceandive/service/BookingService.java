@@ -3,6 +3,7 @@ package ch.oceandive.service;
 import ch.oceandive.exceptionHandler.BusinessRuleViolationException;
 import ch.oceandive.model.*;
 import ch.oceandive.repository.*;
+import ch.oceandive.utils.DiveCertificationHolder;
 import ch.oceandive.validation.ValidationResult;
 import java.security.SecureRandom;
 import org.slf4j.Logger;

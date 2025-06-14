@@ -2,8 +2,8 @@ package ch.oceandive.service;
 
 import ch.oceandive.exceptionHandler.ResourceNotFoundException;
 import ch.oceandive.model.Course;
-import ch.oceandive.model.PublicationStatus;
-import ch.oceandive.model.DiveCertification;
+import ch.oceandive.utils.PublicationStatus;
+import ch.oceandive.utils.DiveCertification;
 import ch.oceandive.repository.CourseRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

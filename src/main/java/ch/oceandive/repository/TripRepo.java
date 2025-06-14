@@ -1,7 +1,7 @@
 package ch.oceandive.repository;
 
-import ch.oceandive.model.PublicationStatus;
-import ch.oceandive.model.DiveCertification;
+import ch.oceandive.utils.PublicationStatus;
+import ch.oceandive.utils.DiveCertification;
 import ch.oceandive.model.Trip;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

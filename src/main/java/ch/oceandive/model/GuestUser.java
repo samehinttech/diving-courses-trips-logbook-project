@@ -1,5 +1,7 @@
 package ch.oceandive.model;
 
+import ch.oceandive.utils.DiveCertificationHolder;
+import ch.oceandive.utils.DiveCertification;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

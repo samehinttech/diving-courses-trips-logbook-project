@@ -1,7 +1,7 @@
 package ch.oceandive.dto;
 
-import ch.oceandive.model.PublicationStatus;
-import ch.oceandive.model.DiveCertification;
+import ch.oceandive.utils.PublicationStatus;
+import ch.oceandive.utils.DiveCertification;
 import ch.oceandive.model.Trip;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

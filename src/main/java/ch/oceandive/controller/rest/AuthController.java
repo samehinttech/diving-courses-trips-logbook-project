@@ -6,7 +6,7 @@ import ch.oceandive.dto.LoginRequest;
 import ch.oceandive.dto.PremiumUserDTO;
 import ch.oceandive.dto.RegistrationRequest;
 import ch.oceandive.exceptionHandler.DuplicateResourceException;
-import ch.oceandive.model.UserDetailsServiceImpl;
+import ch.oceandive.service.UserDetailsServiceImpl;
 import ch.oceandive.security.TokenService;
 import ch.oceandive.service.AdminService;
 import ch.oceandive.service.PremiumUserService;
@@ -325,7 +325,7 @@ public class AuthController {
   }
 
   // Periodically clean up expired lockouts and stale login attempt records Runs every hour by default
-  @Scheduled(fixedRateString = "${oceandive.security.lockout-cleanup-interval:3600000}")
+  @Scheduled(fixedRateString = "${lock_out_cleanup_interval}")
   // Default to 1 hour
   public void cleanupLockouts() {
     Instant now = Instant.now();

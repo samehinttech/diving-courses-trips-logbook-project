@@ -31,14 +31,13 @@ public class TokenService {
   private final JwtEncoder encoder;
   private final JwtDecoder decoder;
 
-  // FIXED: Changed default from 900 (15 min) to 7200 (2 hours) for better UX
-  @Value("${oceandive.security.jwt.access-token.expiration:7200}")
+  @Value("${jwt_access_token_expiration}")
   private long accessTokenExpirationSeconds;
 
-  @Value("${oceandive.security.jwt.refresh-token.expiration:86400}")
+  @Value("${jwt_refresh_token_expiration}")
   private long refreshTokenExpirationSeconds;
 
-  @Value("${oceandive.security.jwt.issuer:oceandive-api}")
+  @Value("${jwt_issuer}")
   private String jwtIssuer;
 
   private final Map<String, Instant> blacklistedTokens = new ConcurrentHashMap<>();
@@ -57,14 +56,10 @@ public class TokenService {
     Instant now = Instant.now();
     String tokenId = UUID.randomUUID().toString();
 
-    // FIXED: Remove ROLE_ prefix from roles for cleaner JWT storage
     List<String> roles = authentication.getAuthorities().stream()
         .map(GrantedAuthority::getAuthority)
         .map(role -> role.startsWith("ROLE_") ? role.substring(5) : role) // Remove ROLE_ prefix
         .collect(Collectors.toList());
-
-    logger.debug("Generating JWT for user '{}' with clean roles: {} (removed ROLE_ prefix)",
-        authentication.getName(), roles);
 
     JwtClaimsSet claims = JwtClaimsSet.builder()
         .issuer(jwtIssuer)
@@ -79,13 +74,8 @@ public class TokenService {
         JwsHeader.with(MacAlgorithm.HS512).build(),
         claims
     );
-
-    String token = this.encoder.encode(encoderParameters).getTokenValue();
-    logger.info("Generated access token for user '{}' with roles: {}, expires in {} seconds ({} hours)",
-        authentication.getName(), roles, accessTokenExpirationSeconds, accessTokenExpirationSeconds / 3600.0);
-    return token;
+    return this.encoder.encode(encoderParameters).getTokenValue();
   }
-
   /**
    * Generate a JWT refresh token.
    */
@@ -100,16 +90,11 @@ public class TokenService {
         .id(tokenId)
         .claim("token_type", "refresh")
         .build();
-
     JwtEncoderParameters encoderParameters = JwtEncoderParameters.from(
         JwsHeader.with(MacAlgorithm.HS512).build(),
         claims
     );
-
-    String token = this.encoder.encode(encoderParameters).getTokenValue();
-    logger.debug("Generated refresh token for user '{}', expires in {} hours",
-        username, refreshTokenExpirationSeconds / 3600.0);
-    return token;
+    return this.encoder.encode(encoderParameters).getTokenValue();
   }
 
   /**
@@ -121,10 +106,7 @@ public class TokenService {
       Instant expiration = jwt.getExpiresAt();
       if (expiration != null) {
         Duration duration = Duration.between(Instant.now(), expiration);
-        long remainingTime = Math.max(0, duration.getSeconds());
-        logger.debug("Token '{}' has {} seconds ({} minutes) remaining",
-            jwt.getId(), remainingTime, remainingTime / 60.0);
-        return remainingTime;
+        return Math.max(0, duration.getSeconds());
       }
     } catch (Exception e) {
       logger.warn("Failed to get token validity: {}", e.getMessage());
@@ -138,9 +120,7 @@ public class TokenService {
   public String getUsernameFromToken(String token) {
     try {
       Jwt jwt = decoder.decode(token);
-      String username = jwt.getSubject();
-      logger.debug("Extracted username '{}' from token '{}'", username, jwt.getId());
-      return username;
+      return jwt.getSubject();
     } catch (Exception e) {
       logger.warn("Failed to extract username from token: {}", e.getMessage());
     }
@@ -152,27 +132,16 @@ public class TokenService {
    */
   public boolean validateToken(String token) {
     if (isTokenBlacklisted(token)) {
-      logger.warn("Token validation failed: token is blacklisted.");
       return false;
     }
-
     try {
       Jwt jwt = decoder.decode(token);
       Instant expiresAt = jwt.getExpiresAt();
       if (expiresAt == null || expiresAt.isBefore(Instant.now())) {
-        logger.warn("Token validation failed: token '{}' is expired.", jwt.getId());
         return false;
       }
-
       String issuer = String.valueOf(jwt.getIssuer());
-      if (!jwtIssuer.equals(issuer)) {
-        logger.warn("Token validation failed: invalid issuer '{}', expected '{}'.", issuer, jwtIssuer);
-        return false;
-      }
-
-      logger.debug("Token '{}' validation successful for user '{}'", jwt.getId(), jwt.getSubject());
-      return true;
-
+      return jwtIssuer.equals(issuer);
     } catch (Exception e) {
       logger.error("Token validation failed. Error: {}", e.getMessage());
       return false;
@@ -186,8 +155,6 @@ public class TokenService {
     try {
       Jwt jwt = decoder.decode(token);
       blacklistedTokens.put(token, jwt.getExpiresAt());
-      logger.info("Token '{}' blacklisted for user '{}'. Total blacklisted tokens: {}",
-          jwt.getId(), jwt.getSubject(), blacklistedTokens.size());
     } catch (Exception e) {
       logger.error("Failed to blacklist token. Error: {}", e.getMessage());
     }
@@ -203,7 +170,7 @@ public class TokenService {
   /**
    * Clean up expired tokens in the blacklist.
    */
-  @Scheduled(fixedRateString = "${oceandive.security.jwt.blacklist-cleanup-interval:3600000}")
+  @Scheduled(fixedRateString = "${jwt_blackList_cleanup_interval}")
   public void cleanupBlacklist() {
     Instant now = Instant.now();
     int originalSize = blacklistedTokens.size();

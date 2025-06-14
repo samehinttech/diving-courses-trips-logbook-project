@@ -2,7 +2,7 @@ package ch.oceandive.controller.web;
 
 
 import ch.oceandive.model.Admin;
-import ch.oceandive.model.DiveCertification;
+import ch.oceandive.utils.DiveCertification;
 import ch.oceandive.model.PremiumUser;
 import ch.oceandive.repository.AdminRepo;
 import ch.oceandive.repository.PremiumUserRepo;

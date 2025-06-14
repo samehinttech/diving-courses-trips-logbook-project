@@ -18,9 +18,6 @@ import org.springframework.stereotype.Component;
 /**
  * Custom JWT authentication converter that extracts roles from the JWT token
  * and converts them into Spring Security GrantedAuthority objects.
- *
- * IMPORTANT: This converter expects clean role names in JWT (e.g., ["ADMIN", "USER"])
- * and adds the ROLE_ prefix for Spring Security compatibility.
  */
 @Component
 public class JwtAuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {

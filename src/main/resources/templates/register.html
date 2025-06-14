@@ -132,7 +132,7 @@
                     class="form-input"
                     required>
               <option value="">Select your certification level</option>
-              <option th:each="cert : ${T(ch.oceandive.model.DiveCertification).values()}"
+              <option th:each="cert : ${T(ch.oceandive.utils.DiveCertification).values()}"
                       th:value="${cert.name()}"
                       th:text="${cert.fullDisplayName}"
                       th:classappend="'cert-option-' + ${cert.name().toLowerCase()}">

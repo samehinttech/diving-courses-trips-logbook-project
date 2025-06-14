@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
-/*
+/**
   * MVC Controller for handling password reset functionality.
   * The users will add their email to receive a reset link.
   * Then they will have to validate their email address to reset their password.

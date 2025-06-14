@@ -147,7 +147,7 @@ public class SecurityConfig {
             .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
             .requestMatchers("/", "/courses", "/trips", "/about", "/contact/**", "/privacy",
                 "/terms",
-                "/error/**", "/not-available", "/400", "/403", "/404", "/409", "500").permitAll()
+                "/error/**", "/not-available", "/400", "/403", "/404", "/409", "/500").permitAll()
             .requestMatchers("/register", "/login", "/forgot-password", "/reset-password",
                 "/reset/**", "/h2-console/**").permitAll()
             .requestMatchers("/admin/**").hasRole("ADMIN")

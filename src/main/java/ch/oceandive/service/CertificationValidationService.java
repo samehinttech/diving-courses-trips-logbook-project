@@ -1,8 +1,8 @@
 package ch.oceandive.service;
 
 import ch.oceandive.model.Course;
-import ch.oceandive.model.DiveCertification;
-import ch.oceandive.model.DiveCertificationHolder;
+import ch.oceandive.utils.DiveCertification;
+import ch.oceandive.utils.DiveCertificationHolder;
 import ch.oceandive.model.Trip;
 import ch.oceandive.validation.ValidationResult;
 import org.slf4j.Logger;

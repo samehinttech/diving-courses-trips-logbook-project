@@ -2,8 +2,8 @@ package ch.oceandive.service;
 
 import ch.oceandive.dto.TripDTO;
 import ch.oceandive.exceptionHandler.ResourceNotFoundException;
-import ch.oceandive.model.PublicationStatus;
-import ch.oceandive.model.DiveCertification;
+import ch.oceandive.utils.PublicationStatus;
+import ch.oceandive.utils.DiveCertification;
 import ch.oceandive.model.Trip;
 import ch.oceandive.repository.TripRepo;
 import java.util.ArrayList;

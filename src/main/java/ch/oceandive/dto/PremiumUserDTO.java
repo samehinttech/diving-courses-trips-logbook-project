@@ -1,6 +1,6 @@
 package ch.oceandive.dto;
 
-import ch.oceandive.model.DiveCertification;
+import ch.oceandive.utils.DiveCertification;
 import ch.oceandive.validation.PasswordPattern;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;

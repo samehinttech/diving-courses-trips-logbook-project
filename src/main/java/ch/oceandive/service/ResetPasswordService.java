@@ -27,10 +27,10 @@ public class ResetPasswordService {
   private final PasswordEncoder passwordEncoder;
   private final JavaMailSender mailSender;
 
-  @Value("${app.base-url:http://localhost:8080}")
+  @Value("${app.base-url}")
   private String baseUrl;
 
-  @Value("${app.password-reset.token-validity-hours:2}")
+  @Value("${app.password-reset.token-validity-hours}")
   private int tokenValidityHours;
 
   // Rate limiting for password reset requests

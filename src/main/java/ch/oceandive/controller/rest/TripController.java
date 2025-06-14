@@ -1,15 +1,10 @@
 package ch.oceandive.controller.rest;
 
 import ch.oceandive.dto.TripDTO;
-import ch.oceandive.model.DiveCertification;
+import ch.oceandive.utils.DiveCertification;
 import ch.oceandive.model.Trip;
 import ch.oceandive.service.TripService;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
