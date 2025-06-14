@@ -44,10 +44,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-  @Value("${JWT_SECRET}")
+  @Value("${jwt_secret}")
   private String jwtKey;
 
-  @Value("${APP_BASE_URL}")
+  @Value("${app.base-url}")
   private String appBaseUrl;
 
   private final JwtAuthenticationConverter jwtAuthenticationConverter;
@@ -183,7 +183,7 @@ public class SecurityConfig {
             // Authentication pages
             .requestMatchers("/register", "/login", "/forgot-password", "/reset-password",
                 "/reset/**").permitAll()
-           // .requestMatchers("/h2-console/**").permitAll() // uncomment if you need H2 console
+            .requestMatchers("/h2-console/**").permitAll() // uncomment if you need H2 console
             // Health check endpoints
             .requestMatchers("/health", "/actuator/health").permitAll()
 
