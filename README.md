@@ -127,10 +127,28 @@ Use Case Diagram illustrating OceanDive Web Application system interactions.
 <!-- Repo Owner Notes: 
  Keep in mind the Corporate Identity (CI); you shall decide appropriately the color schema, graphics, typography, layout, UserEntity Experience (UX), and so on. -->
 
-### Wireframe Design
+### Wireframe Designs
 
-![Wireframe Design](assets/wireframe-design.png)
+Welcome Page
+![Wireframe Design - Welcome Page](assets/welcomePage.jpg)
 
+About Us
+![Wireframe Design - About Us](assets/AboutUs.jpg)
+
+Create Your Account
+![Wireframe Design - Create Your Account](assets/CreateYourAccount.jpg)
+
+Log In
+![Wireframe Design - Log In](assets/LogIn.jpg)
+
+Dive Log
+![Wireframe Design - Dive Log](assets/DiveLog.jpg)
+
+Contact Us
+![Wireframe Design - Contact Us](assets/ContactUs.jpg)
+
+Account View
+![Wireframe Design - ActView](assets/ActView.jpg)
 <!-- Repo Owner Notes:
 It is suggested to start with a wireframe. The wireframe focuses on the website structure (Sitemap planning), sketching the pages using Wireframe components (e.g., header, menu, footer) and UX. You can create a wireframe already with draw.io or similar tools.-->
 
