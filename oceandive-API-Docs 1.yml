@@ -1,0 +1,1930 @@
+openapi: 3.0.3
+info:
+    title: "OceanDive API"
+    description: "Professional diving course and trip management platform"
+    version: "1.0.0"
+    contact:
+        name: "OceanDive Team"
+servers:
+    - url: "http://localhost:8080"
+      description: "Development server"
+tags:
+    - name: "Admin - User Management"
+      description: "Administrative operations for managing users and bookings"
+    - name: "Admin - Content Management"
+      description: "Administrative operations for creating and managing courses and trips"
+    - name: "Admin - Analytics"
+      description: "Administrative analytics, operation overview and statistics"
+    - name: "Authentication"
+      description: "Authentication and authorization operations for all user types"
+    - name: "Public - Courses"
+      description: "Public course browsing and information (no authentication required)"
+    - name: "Public - Trips"
+      description: "Public trip browsing, search and information (no authentication required)"
+    - name: "User Types - Profile"
+      description: "User profile management operations"
+    - name: "Dive Log Service"
+      description: "Personal dive log management and tracking operations"
+
+paths:
+    # ======================
+    # ADMIN USER MANAGEMENT
+    # ======================
+    /api/admin/view-users:
+        get:
+            tags:
+                - "Admin - User Management"
+            summary: "Get all users with pagination (Admin only)"
+            description: "Retrieve paginated list of all premium users and guest users. Requires admin role."
+            operationId: "viewUsers"
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: "page"
+                  in: "query"
+                  required: false
+                  description: "Page number (0-based)"
+                  schema:
+                      type: "integer"
+                      format: "int32"
+                      minimum: 0
+                      default: 0
+                - name: "size"
+                  in: "query"
+                  required: false
+                  description: "Number of items per page"
+                  schema:
+                      type: "integer"
+                      format: "int32"
+                      minimum: 1
+                      maximum: 100
+                      default: 20
+            responses:
+                "200":
+                    description: "Users retrieved successfully"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Response"
+                            example:
+                                success: true
+                                message: "Users retrieved successfully"
+                                data:
+                                    premiumUsers:
+                                        content: []
+                                        totalElements: 0
+                                    guestUsers:
+                                        content: []
+                                        totalElements: 0
+                                    currentPage: 0
+                                    pageSize: 20
+                "403":
+                    description: "Access denied - Admin role required"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+                "500":
+                    description: "Internal server error"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+
+    /api/admin/view-bookings:
+        get:
+            tags:
+                - "Admin - User Management"
+            summary: "Get all bookings information (Admin only)"
+            description: "Retrieve paginated booking information for courses and trips"
+            operationId: "viewBookings"
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: "page"
+                  in: "query"
+                  required: false
+                  description: "Page number (0-based)"
+                  schema:
+                      type: "integer"
+                      format: "int32"
+                      minimum: 0
+                      default: 0
+                - name: "size"
+                  in: "query"
+                  required: false
+                  description: "Number of items per page"
+                  schema:
+                      type: "integer"
+                      format: "int32"
+                      minimum: 1
+                      maximum: 100
+                      default: 20
+            responses:
+                "200":
+                    description: "Booking information retrieved successfully"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Response"
+                "403":
+                    description: "Access denied - Admin role required"
+                "500":
+                    description: "Internal server error"
+
+    # ======================
+    # ADMIN COURSE MANAGEMENT
+    # ======================
+    /api/admin/courses:
+        get:
+            tags:
+                - "Admin - Content Management"
+            summary: "Get all courses for admin management"
+            description: "Retrieve all courses including draft and archived for admin management"
+            operationId: "adminGetAllCourses"
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: "status"
+                  in: "query"
+                  required: false
+                  description: "Filter by course status"
+                  schema:
+                      $ref: "#/components/schemas/CourseStatus"
+                - name: "page"
+                  in: "query"
+                  required: false
+                  schema:
+                      type: "integer"
+                      minimum: 0
+                      default: 0
+                - name: "size"
+                  in: "query"
+                  required: false
+                  schema:
+                      type: "integer"
+                      minimum: 1
+                      maximum: 100
+                      default: 20
+            responses:
+                "200":
+                    description: "Courses retrieved successfully"
+                    content:
+                        application/json:
+                            schema:
+                                type: "array"
+                                items:
+                                    $ref: "#/components/schemas/Course"
+                "403":
+                    description: "Access denied - Admin role required"
+
+    /api/admin/add-course:
+        post:
+            tags:
+                - "Admin - Content Management"
+            summary: "Create new diving course (Admin only)"
+            description: "Create a new diving course with full details and validation"
+            operationId: "createCourse"
+            security:
+                - bearerAuth: []
+            requestBody:
+                required: true
+                description: "Course details"
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/CourseInput"
+                        example:
+                            name: "Course name"
+                            description: "Course description"
+                            shortDescription: "Short course description"
+                            startDate: "2024-07-15"
+                            endDate: "2024-07-19"
+                            imageUrl: "Image URL"
+                            capacity: 8
+                            minCertificationRequired: "NON_DIVER"
+                            price: 450.00
+                            status: "PUBLISHED"
+                            featured: false
+            responses:
+                "201":
+                    description: "Course created successfully"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Response"
+                            example:
+                                success: true
+                                message: "Course created successfully"
+                                data:
+                                    id: 1
+                                    name: "Course name"
+                                    slug: "course-slug"
+                "400":
+                    description: "Invalid input data"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ValidationErrorResponse"
+                "403":
+                    description: "Access denied - Admin role required"
+                "500":
+                    description: "Internal server error"
+
+    /api/admin/courses/{id}:
+        get:
+            tags:
+                - "Admin - Content Management"
+            summary: "Get course by ID for editing (Admin only)"
+            description: "Retrieve course details by ID for admin editing interface"
+            operationId: "adminGetCourseById"
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: "id"
+                  in: "path"
+                  required: true
+                  schema:
+                      type: "integer"
+                      format: "int64"
+                      minimum: 1
+            responses:
+                "200":
+                    description: "Course retrieved successfully"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Course"
+                "403":
+                    description: "Access denied - Admin role required"
+                "404":
+                    description: "Course not found"
+
+        put:
+            tags:
+                - "Admin - Content Management"
+            summary: "Update existing course (Admin only)"
+            description: "Modify course details with validation"
+            operationId: "adminUpdateCourse"
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: "id"
+                  in: "path"
+                  required: true
+                  schema:
+                      type: "integer"
+                      format: "int64"
+                      minimum: 1
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/CourseInput"
+            responses:
+                "200":
+                    description: "Course updated successfully"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Course"
+                "400":
+                    description: "Invalid input data"
+                "403":
+                    description: "Access denied - Admin role required"
+                "404":
+                    description: "Course not found"
+
+        delete:
+            tags:
+                - "Admin - Content Management"
+            summary: "Delete course (Admin only)"
+            description: "Remove course from system"
+            operationId: "adminDeleteCourse"
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: "id"
+                  in: "path"
+                  required: true
+                  schema:
+                      type: "integer"
+                      format: "int64"
+                      minimum: 1
+            responses:
+                "204":
+                    description: "Course deleted successfully"
+                "403":
+                    description: "Access denied - Admin role required"
+                "404":
+                    description: "Course not found"
+                "409":
+                    description: "Cannot delete course with existing bookings"
+
+    # ======================
+    # ADMIN TRIP MANAGEMENT
+    # ======================
+    /api/admin/trips:
+        get:
+            tags:
+                - "Admin - Content Management"
+            summary: "Get all trips for admin management"
+            description: "Retrieve all trips including draft and archived for admin management"
+            operationId: "adminGetAllTrips"
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: "status"
+                  in: "query"
+                  required: false
+                  description: "Filter by trip status"
+                  schema:
+                      $ref: "#/components/schemas/CourseStatus"
+                - name: "page"
+                  in: "query"
+                  required: false
+                  schema:
+                      type: "integer"
+                      minimum: 0
+                      default: 0
+                - name: "size"
+                  in: "query"
+                  required: false
+                  schema:
+                      type: "integer"
+                      minimum: 1
+                      maximum: 100
+                      default: 20
+            responses:
+                "200":
+                    description: "Trips retrieved successfully"
+                    content:
+                        application/json:
+                            schema:
+                                type: "array"
+                                items:
+                                    $ref: "#/components/schemas/Trip"
+                "403":
+                    description: "Access denied - Admin role required"
+
+    /api/admin/add-trip:
+        post:
+            tags:
+                - "Admin - Content Management"
+            summary: "Create new diving trip (Admin only)"
+            description: "Create a new diving trip with location, dates, and requirements"
+            operationId: "createTrip"
+            security:
+                - bearerAuth: []
+            requestBody:
+                required: true
+                description: "Trip details"
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/TripInput"
+                        example:
+                            location: "Trip location"
+                            description: "Trip description"
+                            shortDescription: "Short trip description"
+                            startDate: "2024-08-10"
+                            endDate: "2024-08-17"
+                            imageUrl: "Image URL"
+                            capacity: 12
+                            minCertificationRequired: "OPEN_WATER"
+                            price: 2500.00
+                            status: "PUBLISHED"
+                            featured: true
+            responses:
+                "201":
+                    description: "Trip created successfully"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Response"
+                "400":
+                    description: "Invalid input data"
+                "403":
+                    description: "Access denied - Admin role required"
+                "500":
+                    description: "Internal server error"
+
+    /api/admin/trips/{id}:
+        get:
+            tags:
+                - "Admin - Content Management"
+            summary: "Get trip by ID for editing (Admin only)"
+            description: "Retrieve trip details by ID for admin editing interface"
+            operationId: "adminGetTripById"
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: "id"
+                  in: "path"
+                  required: true
+                  description: "Trip identifier"
+                  schema:
+                      type: "integer"
+                      format: "int64"
+                      minimum: 1
+            responses:
+                "200":
+                    description: "Trip retrieved successfully"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Trip"
+                "403":
+                    description: "Access denied - Admin role required"
+                "404":
+                    description: "Trip not found"
+
+        put:
+            tags:
+                - "Admin - Content Management"
+            summary: "Update trip (Admin only)"
+            description: "Modify existing trip details with validation"
+            operationId: "adminUpdateTrip"
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: "id"
+                  in: "path"
+                  required: true
+                  description: "Trip identifier"
+                  schema:
+                      type: "integer"
+                      format: "int64"
+                      minimum: 1
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/TripInput"
+            responses:
+                "200":
+                    description: "Trip updated successfully"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Trip"
+                "400":
+                    description: "Invalid input data"
+                "403":
+                    description: "Access denied - Admin role required"
+                "404":
+                    description: "Trip not found"
+
+        delete:
+            tags:
+                - "Admin - Content Management"
+            summary: "Delete trip (Admin only)"
+            description: "Remove trip from system (only if no active bookings)"
+            operationId: "adminDeleteTrip"
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: "id"
+                  in: "path"
+                  required: true
+                  description: "Trip identifier"
+                  schema:
+                      type: "integer"
+                      format: "int64"
+                      minimum: 1
+            responses:
+                "204":
+                    description: "Trip deleted successfully"
+                "403":
+                    description: "Access denied - Admin role required"
+                "404":
+                    description: "Trip not found"
+                "409":
+                    description: "Cannot delete trip with existing bookings"
+
+    /api/admin/trips/{id}/archive:
+        put:
+            tags:
+                - "Admin - Content Management"
+            summary: "Archive trip (Admin only)"
+            description: "Mark trip as archived without deleting"
+            operationId: "adminArchiveTrip"
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: "id"
+                  in: "path"
+                  required: true
+                  description: "Trip identifier"
+                  schema:
+                      type: "integer"
+                      format: "int64"
+                      minimum: 1
+            responses:
+                "200":
+                    description: "Trip archived successfully"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Trip"
+                "403":
+                    description: "Access denied - Admin role required"
+                "404":
+                    description: "Trip not found"
+    # ======================
+    # ADMIN ANALYTICS
+    # ======================
+    /api/admin/analytics/popular-destinations:
+        get:
+            tags:
+                - "Admin - Analytics"
+            summary: "Get popular destinations analytics"
+            description: "Retrieve statistics on most popular trip destinations"
+            operationId: "getPopularDestinations"
+            security:
+                - bearerAuth: []
+            responses:
+                "200":
+                    description: "Popular destinations retrieved successfully"
+                    content:
+                        application/json:
+                            schema:
+                                type: "array"
+                                items:
+                                    type: "object"
+                                    properties:
+                                        location:
+                                            type: "string"
+                                            example: "Trip location"
+                                        tripCount:
+                                            type: "integer"
+                                            example: 15
+
+    /api/admin/analytics/most-booked:
+        get:
+            tags:
+                - "Admin - Analytics"
+            summary: "Get most booked trips (Admin only)"
+            description: "Retrieve trips with highest booking numbers for business analysis"
+            operationId: "getMostBookedTrips"
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: "limit"
+                  in: "query"
+                  required: false
+                  description: "Maximum number of results to return"
+                  schema:
+                      type: "integer"
+                      format: "int32"
+                      minimum: 1
+                      maximum: 50
+                      default: 10
+            responses:
+                "200":
+                    description: "Most booked trips retrieved successfully"
+                    content:
+                        application/json:
+                            schema:
+                                type: "array"
+                                items:
+                                    $ref: "#/components/schemas/Trip"
+                "403":
+                    description: "Access denied - Admin role required"
+
+    /api/admin/analytics/low-bookings:
+        get:
+            tags:
+                - "Admin - Analytics"
+            summary: "Get trips with low bookings (Admin only)"
+            description: "Identify trips that need marketing attention or should be cancelled"
+            operationId: "getLowBookingTrips"
+            security:
+                - bearerAuth: []
+            responses:
+                "200":
+                    description: "Low booking trips retrieved successfully"
+                    content:
+                        application/json:
+                            schema:
+                                type: "array"
+                                items:
+                                    $ref: "#/components/schemas/Trip"
+                "403":
+                    description: "Access denied - Admin role required"
+
+    /api/admin/statistics:
+        get:
+            tags:
+                - "Admin - Analytics"
+            summary: "Get comprehensive statistics (Admin only)"
+            description: "Retrieve dashboard statistics for business intelligence"
+            operationId: "getStatistics"
+            security:
+                - bearerAuth: []
+            responses:
+                "200":
+                    description: "Statistics retrieved successfully"
+                    content:
+                        application/json:
+                            schema:
+                                type: "object"
+                                properties:
+                                    totalTrips:
+                                        type: "integer"
+                                    activeTrips:
+                                        type: "integer"
+                                    totalCourses:
+                                        type: "integer"
+                                    activeCourses:
+                                        type: "integer"
+                                    totalBookings:
+                                        type: "integer"
+                                    revenue:
+                                        type: "number"
+                                        format: "double"
+                "403":
+                    description: "Access denied - Admin role required"
+
+    # ======================
+    # AUTHENTICATION
+    # ======================
+    /api/auth/user/login:
+        post:
+            tags:
+                - "Authentication"
+            summary: "Premium user login"
+            description: "Authenticate premium user and return access/refresh tokens"
+            operationId: "userLogin"
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/LoginRequest"
+                        example:
+                            username: "username"
+                            password: "password"
+            responses:
+                "200":
+                    description: "Login successful"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/AuthResponse"
+                            example:
+                                success: true
+                                message: "User logged in successfully"
+                                data:
+                                    accessToken: "Access token"
+                                    refreshToken: "Refresh token"
+                                    expiresIn: 900
+                "401":
+                    description: "Invalid credentials"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+                "403":
+                    description: "User account not premium or access denied"
+                "429":
+                    description: "Account temporarily locked due to failed attempts"
+
+    /api/auth/admin/login:
+        post:
+            tags:
+                - "Authentication"
+            summary: "Admin login"
+            description: "Authenticate admin user and return access/refresh tokens"
+            operationId: "adminLogin"
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/LoginRequest"
+            responses:
+                "200":
+                    description: "Admin login successful"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/AuthResponse"
+                "401":
+                    description: "Invalid credentials"
+                "403":
+                    description: "User is not an admin"
+                "429":
+                    description: "Account temporarily locked"
+
+    /api/auth/user/register:
+        post:
+            tags:
+                - "Authentication"
+            summary: "Register new premium user"
+            description: "Create new premium user account with automatic login"
+            operationId: "registerUser"
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/RegistrationRequest"
+                        example:
+                            firstName: "First name"
+                            lastName: "Last name"
+                            email: "Email address"
+                            mobile: "Mobile number"
+                            diveCertification: "OPEN_WATER"
+                            username: "Username"
+                            password: "Password"
+            responses:
+                "201":
+                    description: "User registered successfully"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Response"
+                            example:
+                                success: true
+                                message: "User registered successfully"
+                                data:
+                                    user:
+                                        id: 1
+                                        username: "Username"
+                                        email: "Email address"
+                                    accessToken: "Access token"
+                                    refreshToken: "Refresh token"
+                "409":
+                    description: "User with email or username already exists"
+                "400":
+                    description: "Invalid registration data"
+
+    /api/auth/admin/register:
+        post:
+            tags:
+                - "Authentication"
+            summary: "Register new admin (Admin only)"
+            description: "Create new admin account - requires existing admin authentication"
+            operationId: "registerAdmin"
+            security:
+                - bearerAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/AdminRegistrationRequest"
+            responses:
+                "201":
+                    description: "Admin registered successfully"
+                "403":
+                    description: "Access denied - Admin role required"
+                "409":
+                    description: "Admin already exists"
+
+    /api/auth/logout:
+        post:
+            tags:
+                - "Authentication"
+            summary: "Logout user (All roles)"
+            description: "Invalidate current access token and logout user"
+            operationId: "logoutUser"
+            security:
+                - bearerAuth: []
+            responses:
+                "200":
+                    description: "Logged out successfully"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Response"
+                "400":
+                    description: "Invalid token"
+
+    /api/auth/refresh:
+        post:
+            tags:
+                - "Authentication"
+            summary: "Refresh access token"
+            description: "Generate new access token using valid refresh token. Refresh tokens expire after 24 hours."
+            operationId: "refreshToken"
+            parameters:
+                - name: "refreshToken"
+                  in: "query"
+                  required: true
+                  description: "Valid refresh token (expires in 24 hours)"
+                  schema:
+                      type: "string"
+                      minLength: 10
+            responses:
+                "201":
+                    description: "Token refreshed successfully - new access token valid for 15 minutes"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/AuthResponse"
+                "401":
+                    description: "Invalid or expired refresh token (refresh tokens expire after 24 hours)"
+
+    /api/auth/user/my-profile:
+        get:
+            tags:
+                - "User Types - Profile"
+            summary: "Get premium user profile"
+            description: "Retrieve authenticated user's profile information"
+            operationId: "getUserProfile"
+            security:
+                - bearerAuth: []
+            responses:
+                "200":
+                    description: "Profile retrieved successfully"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Response"
+                            example:
+                                success: true
+                                message: "Profile retrieved successfully"
+                                data:
+                                    id: 1
+                                    firstName: "First name"
+                                    lastName: "Last name"
+                                    email: "Email address"
+                                    diveCertification: "OPEN_WATER"
+                                    username: "Username"
+                "403":
+                    description: "Access denied - Premium user role required"
+                "404":
+                    description: "Profile not found"
+
+    /api/auth/admin/my-profile:
+        get:
+            tags:
+                - "User Types - Profile"
+            summary: "Get admin profile"
+            description: "Retrieve authenticated admin's profile information"
+            operationId: "getAdminProfile"
+            security:
+                - bearerAuth: []
+            responses:
+                "200":
+                    description: "Admin profile retrieved successfully"
+                "403":
+                    description: "Access denied - Admin role required"
+                "404":
+                    description: "Profile not found"
+
+    # ======================
+    # PUBLIC COURSES
+    # ======================
+    /api/courses:
+        get:
+            tags:
+                - "Public - Courses"
+            summary: "Get all published courses"
+            description: "Retrieve list of all published courses available for viewing"
+            operationId: "getAllCourses"
+            responses:
+                "200":
+                    description: "Courses retrieved successfully"
+                    content:
+                        application/json:
+                            schema:
+                                type: "array"
+                                items:
+                                    $ref: "#/components/schemas/PublicCourse"
+
+    /api/courses/available:
+        get:
+            tags:
+                - "Public - Courses"
+            summary: "Get available courses"
+            description: "Retrieve courses that are published and have future start dates"
+            operationId: "getAvailableCourses"
+            responses:
+                "200":
+                    description: "Available courses retrieved successfully"
+                    content:
+                        application/json:
+                            schema:
+                                type: "array"
+                                items:
+                                    $ref: "#/components/schemas/PublicCourse"
+
+    /api/courses/upcoming:
+        get:
+            tags:
+                - "Public - Courses"
+            summary: "Get upcoming courses"
+            description: "Retrieve courses starting after today's date"
+            operationId: "getUpcomingCourses"
+            responses:
+                "200":
+                    description: "Upcoming courses retrieved successfully"
+                    content:
+                        application/json:
+                            schema:
+                                oneOf:
+                                    - type: "array"
+                                      items:
+                                          $ref: "#/components/schemas/PublicCourse"
+                                    - type: "string"
+                                      example: "coming soon"
+
+    /api/courses/date-range:
+        get:
+            tags:
+                - "Public - Courses"
+            summary: "Get courses by date range"
+            description: "Filter courses by start date within specified range"
+            operationId: "getCoursesByDateRange"
+            parameters:
+                - name: "startDate"
+                  in: "query"
+                  required: true
+                  description: "Range start date (inclusive)"
+                  schema:
+                      type: "string"
+                      format: "date"
+                      example: "2024-07-01"
+                - name: "endDate"
+                  in: "query"
+                  required: true
+                  description: "Range end date (inclusive)"
+                  schema:
+                      type: "string"
+                      format: "date"
+                      example: "2024-07-31"
+            responses:
+                "200":
+                    description: "Courses retrieved successfully"
+                    content:
+                        application/json:
+                            schema:
+                                type: "array"
+                                items:
+                                    $ref: "#/components/schemas/PublicCourse"
+                "400":
+                    description: "Invalid date format or range"
+
+    /api/courses/name/{name}:
+        get:
+            tags:
+                - "Public - Courses"
+            summary: "Search courses by name"
+            description: "Find courses with names containing the search term"
+            operationId: "getCoursesByName"
+            parameters:
+                - name: "name"
+                  in: "path"
+                  required: true
+                  description: "Course name search term"
+                  schema:
+                      type: "string"
+                      minLength: 2
+                      maxLength: 100
+            responses:
+                "200":
+                    description: "Courses matching name retrieved successfully"
+                    content:
+                        application/json:
+                            schema:
+                                type: "array"
+                                items:
+                                    $ref: "#/components/schemas/PublicCourse"
+
+    # ======================
+    # PUBLIC TRIPS
+    # ======================
+    /api/trips:
+        get:
+            tags:
+                - "Public - Trips"
+            summary: "Get all published trips with optional pagination"
+            description: "Retrieve published trips with flexible pagination options"
+            operationId: "getAllTrips"
+            parameters:
+                - name: "page"
+                  in: "query"
+                  required: false
+                  description: "Page number (0-based)"
+                  schema:
+                      type: "integer"
+                      format: "int32"
+                      minimum: 0
+                      default: 0
+                - name: "size"
+                  in: "query"
+                  required: false
+                  description: "Items per page"
+                  schema:
+                      type: "integer"
+                      format: "int32"
+                      minimum: 1
+                      maximum: 100
+                      default: 20
+                - name: "paginated"
+                  in: "query"
+                  required: false
+                  description: "Enable pagination response format"
+                  schema:
+                      type: "boolean"
+                      default: false
+            responses:
+                "200":
+                    description: "Trips retrieved successfully"
+                    content:
+                        application/json:
+                            schema:
+                                oneOf:
+                                    - type: "array"
+                                      items:
+                                          $ref: "#/components/schemas/PublicTrip"
+                                    - $ref: "#/components/schemas/PaginatedTripsResponse"
+
+    /api/trips/search:
+        get:
+            tags:
+                - "Public - Trips"
+            summary: "Search trips with advanced filters"
+            description: "Powerful trip search with multiple filter options"
+            operationId: "searchTrips"
+            parameters:
+                - name: "location"
+                  in: "query"
+                  required: false
+                  description: "Destination location filter"
+                  schema:
+                      type: "string"
+                      maxLength: 100
+                - name: "startDate"
+                  in: "query"
+                  required: false
+                  description: "Earliest start date"
+                  schema:
+                      type: "string"
+                      format: "date"
+                - name: "endDate"
+                  in: "query"
+                  required: false
+                  description: "Latest start date"
+                  schema:
+                      type: "string"
+                      format: "date"
+                - name: "certification"
+                  in: "query"
+                  required: false
+                  description: "Required certification level"
+                  schema:
+                      $ref: "#/components/schemas/DiveCertification"
+                - name: "availableOnly"
+                  in: "query"
+                  required: false
+                  description: "Show only trips with available spots"
+                  schema:
+                      type: "boolean"
+                      default: false
+                - name: "minPrice"
+                  in: "query"
+                  required: false
+                  description: "Minimum price filter"
+                  schema:
+                      type: "number"
+                      format: "double"
+                      minimum: 0
+                - name: "maxPrice"
+                  in: "query"
+                  required: false
+                  description: "Maximum price filter"
+                  schema:
+                      type: "number"
+                      format: "double"
+                      minimum: 0
+            responses:
+                "200":
+                    description: "Trips matching search criteria"
+                    content:
+                        application/json:
+                            schema:
+                                type: "array"
+                                items:
+                                    $ref: "#/components/schemas/PublicTrip"
+
+    # ======================
+    # DIVE LOG SERVICE
+    # ======================
+    /api/dive-logs:
+        get:
+            tags:
+                - "Dive Log Service"
+            summary: "Get user's dive logs with statistics"
+            description: "Retrieve authenticated user's dive logs with optional location filtering and statistics"
+            operationId: "getUserDiveLogs"
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: "location"
+                  in: "query"
+                  required: false
+                  description: "Filter dive logs by location"
+                  schema:
+                      type: "string"
+                      maxLength: 255
+            responses:
+                "200":
+                    description: "Dive logs retrieved successfully"
+                    content:
+                        application/json:
+                            schema:
+                                type: "object"
+                                properties:
+                                    diveLogs:
+                                        type: "array"
+                                        items:
+                                            $ref: "#/components/schemas/DiveLogDTO"
+                                    filteredLocation:
+                                        type: "string"
+                                        nullable: true
+                                    totalResults:
+                                        type: "integer"
+                                    totalDives:
+                                        type: "integer"
+                                    totalDiveTime:
+                                        type: "integer"
+                                        description: "Total dive time in minutes"
+                                    averageDiveTime:
+                                        type: "number"
+                                        format: "double"
+                                    uniqueLocations:
+                                        type: "integer"
+                "403":
+                    description: "Access denied - Premium user role required"
+                "500":
+                    description: "Internal server error"
+
+        post:
+            tags:
+                - "Dive Log Service"
+            summary: "Create new dive log entry"
+            description: "Add new dive log entry for authenticated user"
+            operationId: "createDiveLog"
+            security:
+                - bearerAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/DiveLogInput"
+                        example:
+                            location: "Dive location"
+                            diveDate: "2024-06-15"
+                            startTime: "09:30:00"
+                            endTime: "10:15:00"
+                            diveNumber: 25
+                            duration: 45
+                            waterTemperature: 26.5
+                            airTemperature: 32.0
+                            notes: "Dive notes"
+            responses:
+                "201":
+                    description: "Dive log created successfully"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/DiveLogDTO"
+                "400":
+                    description: "Invalid input data"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ValidationErrorResponse"
+                "403":
+                    description: "Access denied - Premium user role required"
+                "500":
+                    description: "Internal server error"
+
+    /api/dive-logs/{id}:
+        get:
+            tags:
+                - "Dive Log Service"
+            summary: "Get specific dive log by ID"
+            description: "Retrieve single dive log entry belonging to authenticated user"
+            operationId: "getDiveLogById"
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: "id"
+                  in: "path"
+                  required: true
+                  description: "Dive log identifier"
+                  schema:
+                      type: "integer"
+                      format: "int64"
+                      minimum: 1
+            responses:
+                "200":
+                    description: "Dive log retrieved successfully"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/DiveLogDTO"
+                "403":
+                    description: "Access denied or dive log belongs to different user"
+                "404":
+                    description: "Dive log not found"
+
+        put:
+            tags:
+                - "Dive Log Service"
+            summary: "Update existing dive log"
+            description: "Modify dive log entry belonging to authenticated user"
+            operationId: "updateDiveLog"
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: "id"
+                  in: "path"
+                  required: true
+                  description: "Dive log identifier"
+                  schema:
+                      type: "integer"
+                      format: "int64"
+                      minimum: 1
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/DiveLogInput"
+            responses:
+                "200":
+                    description: "Dive log updated successfully"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/DiveLogDTO"
+                "400":
+                    description: "Invalid input data"
+                "403":
+                    description: "Access denied or dive log belongs to different user"
+                "404":
+                    description: "Dive log not found"
+
+        delete:
+            tags:
+                - "Dive Log Service"
+            summary: "Delete dive log entry"
+            description: "Remove dive log entry belonging to authenticated user"
+            operationId: "deleteDiveLog"
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: "id"
+                  in: "path"
+                  required: true
+                  description: "Dive log identifier"
+                  schema:
+                      type: "integer"
+                      format: "int64"
+                      minimum: 1
+            responses:
+                "200":
+                    description: "Dive log deleted successfully"
+                    content:
+                        application/json:
+                            schema:
+                                type: "object"
+                                properties:
+                                    message:
+                                        type: "string"
+                                        example: "Dive log deleted successfully"
+                "403":
+                    description: "Access denied or dive log belongs to different user"
+                "404":
+                    description: "Dive log not found"
+
+    /api/dive-logs/locations:
+        get:
+            tags:
+                - "Dive Log Service"
+            summary: "Get user's dive locations"
+            description: "Retrieve list of unique locations from user's dive logs"
+            operationId: "filterDiveLogsByLocation"
+            security:
+                - bearerAuth: []
+            responses:
+                "200":
+                    description: "Locations retrieved successfully"
+                    content:
+                        application/json:
+                            schema:
+                                type: "array"
+                                items:
+                                    type: "string"
+                                example: ["Dive location 1", "Dive location 2", "Dive location 3"]
+                "403":
+                    description: "Access denied - Premium user role required"
+
+components:
+    securitySchemes:
+        bearerAuth:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
+            description: "JWT access token obtained from login endpoint. Token expires in 15 minutes. Include as: 'Authorization: Bearer {your_access_token}'. Use refresh token to get new access token when expired."
+
+    schemas:
+        # ======================
+        # CORE ENTITIES
+        # ======================
+        Course:
+            $ref: "#/components/schemas/Course"
+        PublicCourse:
+            type: "object"
+            description: "Public course view without sensitive admin data"
+            properties:
+                name:
+                    type: "string"
+                    description: "Course name"
+                    example: "Course name"
+                description:
+                    type: "string"
+                    description: "Detailed course description"
+                shortDescription:
+                    type: "string"
+                    description: "Brief description for cards/previews"
+                    nullable: true
+                startDate:
+                    type: "string"
+                    format: "date"
+                    description: "Course start date"
+                    example: "2024-07-15"
+                endDate:
+                    type: "string"
+                    format: "date"
+                    description: "Course end date"
+                    example: "2024-07-19"
+                imageUrl:
+                    type: "string"
+                    format: "uri"
+                    description: "Course image URL"
+                    nullable: true
+                capacity:
+                    type: "integer"
+                    format: "int32"
+                    description: "Maximum number of participants"
+                    example: 8
+                availableSpots:
+                    type: "integer"
+                    format: "int32"
+                    description: "Available spots remaining"
+                minCertificationRequired:
+                    description: "Minimum certification level required"
+                price:
+                    type: "number"
+                    format: "double"
+                    description: "Course price"
+                    example: 450.00
+                    nullable: true
+                featured:
+                    type: "boolean"
+                    description: "Whether course is featured"
+
+        CourseInput:
+            type: "object"
+            required: [ "name", "description", "startDate", "endDate", "capacity", "minCertificationRequired", "status" ]
+            properties:
+                name:
+                    type: "string"
+                    minLength: 1
+                    maxLength: 255
+                    description: "Course name"
+                description:
+                    type: "string"
+                    minLength: 1
+                    maxLength: 1000
+                    description: "Detailed course description"
+                shortDescription:
+                    type: "string"
+                    maxLength: 300
+                    description: "Brief description for cards/previews"
+                startDate:
+                    type: "string"
+                    format: "date"
+                    description: "Course start date"
+                endDate:
+                    type: "string"
+                    format: "date"
+                    description: "Course end date"
+                imageUrl:
+                    type: "string"
+                    format: "uri"
+                    description: "Course image URL"
+                capacity:
+                    type: "integer"
+                    format: "int32"
+                    minimum: 1
+                    description: "Maximum number of participants"
+                minCertificationRequired:
+                    $ref: "#/components/schemas/DiveCertification"
+                price:
+                    type: "number"
+                    format: "double"
+                    minimum: 0
+                    description: "Course price"
+                status:
+                    $ref: "#/components/schemas/CourseStatus"
+                featured:
+                    type: "boolean"
+                    default: false
+
+        Trip:
+            $ref: "#/components/schemas/PublicTrip"
+        PublicTrip:
+            type: "object"
+            description: "Public trip view without sensitive admin data"
+            properties:
+                location:
+                    type: "string"
+                    description: "Trip destination"
+                    example: "Trip destination"
+                description:
+                    type: "string"
+                    description: "Detailed trip description"
+                shortDescription:
+                    type: "string"
+                    description: "Brief description for previews"
+                    nullable: true
+                startDate:
+                    type: "string"
+                    format: "date"
+                    description: "Trip start date"
+                endDate:
+                    type: "string"
+                    format: "date"
+                    description: "Trip end date"
+                imageUrl:
+                    type: "string"
+                    format: "uri"
+                    nullable: true
+                capacity:
+                    type: "integer"
+                    format: "int32"
+                    description: "Maximum participants"
+                availableSpots:
+                    type: "integer"
+                    format: "int32"
+                    description: "Available spots remaining"
+                minCertificationRequired:
+                    description: "Minimum certification required"
+                price:
+                    type: "number"
+                    format: "double"
+                    description: "Trip price"
+                    example: 2500.00
+                featured:
+                    type: "boolean"
+                    description: "Whether trip is featured"
+
+        TripInput:
+            type: "object"
+            required: [ "location", "description", "startDate", "endDate", "capacity", "minCertificationRequired", "status" ]
+            properties:
+                location:
+                    type: "string"
+                    minLength: 2
+                    maxLength: 100
+                    description: "Trip destination"
+                description:
+                    type: "string"
+                    minLength: 10
+                    maxLength: 1000
+                    description: "Detailed trip description"
+                shortDescription:
+                    type: "string"
+                    maxLength: 300
+                    description: "Brief description"
+                startDate:
+                    type: "string"
+                    format: "date"
+                    description: "Trip start date (must be future)"
+                endDate:
+                    type: "string"
+                    format: "date"
+                    description: "Trip end date"
+                imageUrl:
+                    type: "string"
+                    format: "uri"
+                capacity:
+                    type: "integer"
+                    format: "int32"
+                    minimum: 1
+                    maximum: 50
+                minCertificationRequired:
+                    $ref: "#/components/schemas/DiveCertification"
+                price:
+                    type: "number"
+                    format: "double"
+                    minimum: 0
+                status:
+                    $ref: "#/components/schemas/CourseStatus"
+                featured:
+                    type: "boolean"
+                    default: false
+
+        # ======================
+        # DIVE LOG SCHEMAS
+        # ======================
+        DiveLogDTO:
+            type: "object"
+            required: [ "diveNumber", "location", "startTime", "endTime", "diveDate" ]
+            properties:
+                id:
+                    type: "integer"
+                    format: "int64"
+                    readOnly: true
+                    description: "Unique dive log identifier"
+                diveNumber:
+                    type: "integer"
+                    format: "int32"
+                    minimum: 1
+                    description: "Sequential dive number (required)"
+                    example: 25
+                location:
+                    type: "string"
+                    minLength: 1
+                    maxLength: 255
+                    description: "Dive location (required)"
+                    example: "Dive location"
+                startTime:
+                    type: "string"
+                    format: "time"
+                    description: "Dive start time (required)"
+                    example: "09:30:00"
+                endTime:
+                    type: "string"
+                    format: "time"
+                    description: "Dive end time (required)"
+                    example: "10:15:00"
+                diveDate:
+                    type: "string"
+                    format: "date"
+                    description: "Date of the dive (required)"
+                    example: "2024-06-15"
+                duration:
+                    type: "integer"
+                    format: "int32"
+                    minimum: 0
+                    description: "Dive duration in minutes (can be calculated or manual)"
+                    example: 45
+                    nullable: true
+                waterTemperature:
+                    type: "number"
+                    format: "double"
+                    minimum: -5
+                    maximum: 40
+                    description: "Water temperature in Celsius"
+                    example: 26.5
+                    nullable: true
+                airTemperature:
+                    type: "number"
+                    format: "double"
+                    minimum: -20
+                    maximum: 50
+                    description: "Air temperature in Celsius"
+                    example: 32.0
+                    nullable: true
+                notes:
+                    type: "string"
+                    maxLength: 2000
+                    description: "Dive notes and observations"
+                    example: "Dive notes and observations"
+                    nullable: true
+
+        DiveLogInput:
+            type: "object"
+            required: [ "diveNumber", "location", "startTime", "endTime", "diveDate" ]
+            properties:
+                diveNumber:
+                    type: "integer"
+                    format: "int32"
+                    minimum: 1
+                    description: "Sequential dive number"
+                location:
+                    type: "string"
+                    minLength: 1
+                    maxLength: 255
+                    description: "Dive location"
+                startTime:
+                    type: "string"
+                    format: "time"
+                    description: "Dive start time"
+                endTime:
+                    type: "string"
+                    format: "time"
+                    description: "Dive end time"
+                diveDate:
+                    type: "string"
+                    format: "date"
+                    description: "Date of the dive"
+                duration:
+                    type: "integer"
+                    format: "int32"
+                    minimum: 0
+                    description: "Dive duration in minutes (optional - can be calculated)"
+                    nullable: true
+                waterTemperature:
+                    type: "number"
+                    format: "double"
+                    minimum: -5
+                    maximum: 40
+                    description: "Water temperature in Celsius"
+                    nullable: true
+                airTemperature:
+                    type: "number"
+                    format: "double"
+                    minimum: -20
+                    maximum: 50
+                    description: "Air temperature in Celsius"
+                    nullable: true
+                notes:
+                    type: "string"
+                    maxLength: 2000
+                    description: "Dive notes and observations"
+                    nullable: true
+
+        # ======================
+        # BOOKING SCHEMAS
+        # ======================
+        BookingRequest:
+            type: "object"
+            required: [ "userType" ]
+            properties:
+                userType:
+                    type: "string"
+                    enum: [ "PREMIUM", "GUEST" ]
+                    description: "Type of user for booking"
+                userId:
+                    type: "integer"
+                    format: "int64"
+                    description: "User ID (required for PREMIUM bookings)"
+                    nullable: true
+                guestDetails:
+                    description: "Guest details (required for GUEST bookings)"
+                    nullable: true
+
+        GuestBookingDetails:
+            type: "object"
+            required: [ "firstName", "lastName", "email", "diveCertification" ]
+            properties:
+                firstName:
+                    type: "string"
+                    minLength: 2
+                    maxLength: 50
+                lastName:
+                    type: "string"
+                    minLength: 2
+                    maxLength: 50
+                email:
+                    type: "string"
+                    format: "email"
+                    maxLength: 100
+                mobile:
+                    type: "string"
+                    pattern: "^\\+?[0-9]{8,15}$"
+                    nullable: true
+                diveCertification:
+                    $ref: "#/components/schemas/DiveCertification"
+
+        # ======================
+        # AUTHENTICATION SCHEMAS
+        # ======================
+        LoginRequest:
+            type: "object"
+            required: [ "username", "password" ]
+            properties:
+                username:
+                    type: "string"
+                    minLength: 3
+                    maxLength: 50
+                    description: "Username (required)"
+                    example: "username"
+                password:
+                    type: "string"
+                    minLength: 8
+                    description: "Password (required, min 8 characters)"
+                    format: "password"
+                    example: "password"
+
+        RegistrationRequest:
+            type: "object"
+            required: [ "firstName", "lastName", "email", "username", "password" ]
+            properties:
+                firstName:
+                    type: "string"
+                    minLength: 2
+                    maxLength: 50
+                    description: "First name (required)"
+                    example: "First name"
+                lastName:
+                    type: "string"
+                    minLength: 2
+                    maxLength: 50
+                    description: "Last name (required)"
+                    example: "Last name"
+                email:
+                    type: "string"
+                    format: "email"
+                    maxLength: 100
+                    description: "Email address (required)"
+                    example: "email@example.com"
+                mobile:
+                    type: "string"
+                    pattern: "^\\+?[0-9]{8,15}$"
+                    description: "Mobile number (8-15 digits, optional + prefix)"
+                    example: "+1234567890"
+                    nullable: true
+                diveCertification:
+                    description: "Current dive certification level"
+                username:
+                    type: "string"
+                    minLength: 3
+                    maxLength: 50
+                    pattern: "^[a-zA-Z0-9._-]{3,50}$"
+                    description: "Username (required, alphanumeric with ._- allowed)"
+                    example: "username"
+                password:
+                    type: "string"
+                    minLength: 8
+                    description: "Password (required, min 8 chars, must meet security requirements)"
+                    format: "password"
+                    example: "password"
+
+        AdminRegistrationRequest:
+            type: "object"
+            required: [ "firstName", "lastName", "email", "username", "password" ]
+            properties:
+                firstName:
+                    type: "string"
+                    minLength: 2
+                    maxLength: 50
+                lastName:
+                    type: "string"
+                    minLength: 2
+                    maxLength: 50
+                email:
+                    type: "string"
+                    format: "email"
+                    maxLength: 100
+                mobile:
+                    type: "string"
+                    pattern: "^\\+?[0-9]{8,15}$"
+                    nullable: true
+                username:
+                    type: "string"
+                    minLength: 3
+                    maxLength: 50
+                    pattern: "^[a-zA-Z0-9._-]{3,50}$"
+                password:
+                    type: "string"
+                    minLength: 8
+                    format: "password"
+                roleLimitation:
+                    type: "string"
+                    description: "Admin role limitations/permissions"
+                    nullable: true
+
+        # ======================
+        # RESPONSE SCHEMAS
+        # ======================
+        Response:
+            type: "object"
+            required: [ "success", "message" ]
+            properties:
+                success:
+                    type: "boolean"
+                    description: "Operation success status"
+                message:
+                    type: "string"
+                    description: "Human-readable message"
+                data:
+                    type: "object"
+                    description: "Response payload (structure varies by endpoint)"
+                    nullable: true
+
+        AuthResponse:
+            type: "object"
+            required: [ "success", "message", "data" ]
+            properties:
+                success:
+                    type: "boolean"
+                    example: true
+                message:
+                    type: "string"
+                    example: "Authentication successful"
+                data:
+                    type: "object"
+                    required: [ "accessToken", "refreshToken", "expiresIn" ]
+                    properties:
+                        accessToken:
+                            type: "string"
+                            description: "JWT access token (expires in 15 minutes)"
+                            example: "access_token_here"
+                        refreshToken:
+                            type: "string"
+                            description: "JWT refresh token (expires in 24 hours / 1 day)"
+                            example: "refresh_token_here"
+                        expiresIn:
+                            type: "integer"
+                            description: "Access token expiry time in seconds (900 = 15 minutes)"
+                            example: 900
+
+        ErrorResponse:
+            type: "object"
+            required: [ "success", "message" ]
+            properties:
+                success:
+                    type: "boolean"
+                    example: false
+                message:
+                    type: "string"
+                    description: "Error description"
+                    example: "Access denied"
+                data:
+                    type: "object"
+                    nullable: true
+
+        ValidationErrorResponse:
+            type: "object"
+            required: [ "success", "message" ]
+            properties:
+                success:
+                    type: "boolean"
+                    example: false
+                message:
+                    type: "string"
+                    example: "Validation failed"
+                data:
+                    type: "object"
+                    properties:
+                        errors:
+                            type: "object"
+                            additionalProperties:
+                                type: "string"
+                            example:
+                                name: "Field name is required"
+                                capacity: "Capacity must be at least 1"
+
+        PaginatedTripsResponse:
+            type: "object"
+            properties:
+                content:
+                    type: "array"
+                    items:
+                        $ref: "#/components/schemas/PublicTrip"
+                totalElements:
+                    type: "integer"
+                    format: "int64"
+                totalPages:
+                    type: "integer"
+                    format: "int32"
+                size:
+                    type: "integer"
+                    format: "int32"
+                number:
+                    type: "integer"
+                    format: "int32"
+                first:
+                    type: "boolean"
+                last:
+                    type: "boolean"
+                empty:
+                    type: "boolean"
+
+        # ======================
+        # ENUMS
+        # ======================
+        DiveCertification:
+            type: "string"
+            enum:
+                - "NON_DIVER"
+                - "OPEN_WATER"
+                - "ADVANCED_OPEN_WATER"
+                - "RESCUE_DIVER"
+                - "DIVEMASTER"
+                - "INSTRUCTOR"
+            description: "Dive certification levels (ordered by experience)"
+            example: "OPEN_WATER"
+
+        CourseStatus:
+            type: "string"
+            enum:
+                - "DRAFT"
+                - "PUBLISHED"
+                - "ARCHIVED"
+            description: "Course/Trip publication status"
+            example: "PUBLISHED"
