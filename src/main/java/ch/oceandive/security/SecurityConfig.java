@@ -233,7 +233,11 @@ public class SecurityConfig {
 
     configuration.setAllowedOriginPatterns(Arrays.asList(
         appBaseUrl,
-        "https://*.onrender.com" // Render
+        "https://*.onrender.com", // Render
+        "https://*.app.github.dev", // GitHub Codespaces
+        "https://*.github.dev", // GitHub Codespaces alternative
+        "https://localhost:*", // Local development
+        "http://localhost:*"   // Local development
         // "https://editor.swagger.io" // Uncomment if using Swagger UI
     ));
 
