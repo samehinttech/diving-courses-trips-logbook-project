@@ -304,16 +304,16 @@ mvn spring-boot:run
 ### Deployment to a PaaS
 The application has been successfully deployed to [Render](https://render.com/), though, with some limitations and challenges encountered during the deployment process.
 
-- **Successfully Deployed**:
-* Application builds and starts correctly on Render
-* Basic web server functionality is working
-* Database connections are established
+**Successfully Deployed**:
+- Application builds and starts correctly on Render
+- Basic web server functionality is working
+- Database connections are established
 
-- **Challenges**:
-* Some features are not working as intended in the production environment
-* Potential CORS configuration issues affecting frontend functionality
-* Database persistence limitations with an H2 file database
-* Static resource serving may have path resolution issues
+**Challenges**:
+- Some features are not working as intended in the production environment
+- Potential CORS configuration issues affecting frontend functionality
+- Database persistence limitations with an H2 file database
+- Static resource serving may have path resolution issues
 
 - **WEBSITE URL**: [OceanDive on Render](https://oceandive.onrender.com/) (Note: May experience cold start delays on free tier)
 
@@ -369,7 +369,6 @@ The project is managed by a team of students, each taking on specific roles to e
 - **Backend Developer**: Sameh Ahmed focuses on backend development, including API design, database management, and server-side logic.
 - **Frontend Developer**: Iulia Mara Udrea, Mehak Khan, Asim Rasheed, and Sameh Ahmed work on the frontend, ensuring a responsive and user-friendly interface.
 - **Project Representative**: Asim Rasheed.
-- 
 
 ### Milestones
 1. Analysis & Planning (Week 1–2): Requirements gathering, user story definition, and use case analysis
