@@ -98,7 +98,7 @@ including the ability to delete dive logs permanently.
 <div style="text-align: center;">
 Use Case Diagram illustrating OceanDive Web Application system interactions.
 
-![Use Case Diagram](assets/use-case-diagram.png)
+![Use Case Diagram](assets/wireframe/use-case-diagram.png)
 </div>
 
 ---
@@ -123,74 +123,268 @@ Use Case Diagram illustrating OceanDive Web Application system interactions.
     their data.
 
 ## Design
-
-<!-- Repo Owner Notes: 
- Keep in mind the Corporate Identity (CI); you shall decide appropriately the color schema, graphics, typography, layout, UserEntity Experience (UX), and so on. -->
-
 ### Wireframe Designs
 
-Welcome Page
-![Wireframe Design - Welcome Page](assets/welcomePage.jpg)
+- **Home Page**
+![Wireframe Design - Welcome Page](assets/wireframe/welcomePage.jpg)
 
-About Us
-![Wireframe Design - About Us](assets/AboutUs.jpg)
 
-Create Your Account
-![Wireframe Design - Create Your Account](assets/CreateYourAccount.jpg)
+- **About Us**
+![Wireframe Design - About Us](assets/wireframe/AboutUs.jpg)
 
-Log In
-![Wireframe Design - Log In](assets/LogIn.jpg)
 
-Dive Log
-![Wireframe Design - Dive Log](assets/DiveLog.jpg)
+- **Contact Us**
+![Wireframe Design - Contact Us](assets/wireframe/ContactUs.jpg)
 
-Contact Us
-![Wireframe Design - Contact Us](assets/ContactUs.jpg)
 
-Account View
-![Wireframe Design - ActView](assets/ActView.jpg)
-<!-- Repo Owner Notes:
-It is suggested to start with a wireframe. The wireframe focuses on the website structure (Sitemap planning), sketching the pages using Wireframe components (e.g., header, menu, footer) and UX. You can create a wireframe already with draw.io or similar tools.-->
+- **Create Your Account**
+![Wireframe Design - Create Your Account](assets/wireframe/CreateYourAccount.jpg)
+
+
+- **Log In**
+![Wireframe Design - Log In](assets/wireframe/LogIn.jpg)
+
+
+- **Account View**
+![Wireframe Design - ActView](assets/wireframe/ActView.jpg)
+
+
+- **Dive Log Management**
+![Wireframe Design - Dive Log](assets/wireframe/DiveLog.jpg)
+
 
 ### Prototype Design
+The prototype demonstrates the core user flows including guest browsing, user registration, dive log management, and admin functionality. Interactive prototypes were developed to validate user experience and interface design decisions.
 
-<!-- Repo Owner Notes:
-A prototype can be designed using placeholder text/figures in Budibase. You don't need to connect the front-end to back-end in the early stages of the project development.
--->
+
+The prototype includes:
+- **Home Page**: The landing page with navigation to various sections.
+![Prototype Design](assets/prototype/home-page.jpeg)
+
+
+- **About Us**: Information about the platform and its mission.
+![About Us](assets/prototype/about-us.jpeg)
+
+
+- **Contact Us**: Contact form for inquiries.
+![Contact Us](assets/prototype/contact-us.jpeg)
+
+
+- **Create Your Account**: User registration form.
+![Create Your Account](assets/prototype/register.jpeg)
+
+
+- **Log In**: User login interface.
+![Log In](assets/prototype/login-page.jpeg)
+
+
+- **Account View**: Interface for view / update / delete / and managing dive logs.
+![Account View](assets/prototype/account-view.jpeg)
+
+
+- **Dive-Log Management**: Interface for users log new dives.
+![Dive Log Management](assets/prototype/log-adive.jpeg)
+
 
 ### Domain Design
+The application follows a layered architecture with clear separation between presentation, business, and data access layers. The domain model includes entities for Users, Courses, Trips, DiveLogs, and Bookings with appropriate relationships and constraints.
 
-<!-- Repo Owner Notes:
-Provide a picture and describe your domain model; you may use Entity-Relationship Model or UML class diagram. Both can be created in Visual Paradigm - we have an academic license for it.
-The ch.fhnw.pizza.data.domain package contains the following domain objects / entities including getters and setters:
--->
+![Domain Design](assets/wireframe/relationship-diagram.png)
+
 
 ### Business Logic
+- **Dive Log Management**
+  - Users can create, view, update, and delete their dive logs.
+  - Each dive log entry must include required fields such as dive number, date, start and end time, location, air temperature, surface temperature, and notes.
+  - The system validates user input to ensure data integrity.:
+
+
+```java
+Path:/api/dive-logs
+Methods: GET, POST, PUT, DELETE
+```
+Security: Requires user authentication and ownership validation
+
+```
+Path:/api/auth/user/register
+Methods: POST
+```
+```
+Path:/api/auth/user/login
+Methods: POST
+```
 
 ## Implementation
-
 ### Backend Technology
+This web application is built using Spring Boot and includes the following key dependencies:
+- **Java 21**: The programming language used for backend development.
+- **H2 Database**: AS file database for development and production.
+- **Spring Boot**: A framework for building Java applications with ease.
+- **Spring Boot Starter Web**: For building web applications, including RESTful services.
+- **Spring Boot Starter Data JPA**: For database access and ORM support.
+- **Spring Boot Starter Security**: For securing the application with authentication and authorization.
 
 ### Frontend Technology
+- **Thymeleaf**: A modern server-side Java template engine for web and standalone environments.
+- **CSS**: For styling the web application.
+- **JavaScript**: For client-side scripting and interactivity.
 
+The frontend is designed to be responsive and user-friendly, ensuring a seamless experience across devices.
+The following dependencies been part of what we used to develop the application:
+
+```xml
+<!-- Spring Boot Starter Dependencies -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+<!-- Thymeleaf for server-side rendering -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-thymeleaf</artifactId>
+</dependency>
+  <!-- Spring Boot Starter for Data JPA -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+<!-- Spring Boot Starter for Security -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+<!-- H2 Database -->
+<dependency>
+    <groupId>com.h2database</groupId>
+    <artifactId>h2</artifactId>
+    <scope>runtime</scope>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-test</artifactId>
+    <scope>test</scope>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-validation</artifactId>
+</dependency>
+```
+- **Swagger**: For API documentation and testing.
+
+```xml
+<dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+</dependency>
+```
 ## Execution
+1- Clone the repository:
+```bash
+git clone https://github.com/samehinttech/diving-courses-trips-logbook-project.git
+```
+2- Add your own credentials to the `application.properties` file if needed.
+3- Navigate to the project directory:
+```bash
+cd diving-courses-trips-logbook-project
+```
+4- Build the project using Maven:
+```bash
+mvn clean install
+```
+5- Run the application:
+```bash
+mvn spring-boot:run
+```
+6- Access the application in your web browser at `http://localhost:8080`.
+7- For API documentation, visit `http://localhost:8080/swagger-ui.html`.
 
-### Deployment to a Paas
+
+
+### Deployment to a PaaS
+The application has been successfully deployed to [Render](https://render.com/), though, with some limitations and challenges encountered during the deployment process.
+
+- **Successfully Deployed**:
+* Application builds and starts correctly on Render
+* Basic web server functionality is working
+* Database connections are established
+
+- **Challenges**:
+* Some features are not working as intended in the production environment
+* Potential CORS configuration issues affecting frontend functionality
+* Database persistence limitations with an H2 file database
+* Static resource serving may have path resolution issues
+
+- **WEBSITE URL**: [OceanDive on Render](https://oceandive.onrender.com/) (Note: May experience cold start delays on free tier)
+
+- **Render service setup**:
+    - **Service Type**: Web Service
+    - **Environment**: Java
+    - **Build Command**: `mvn clean install`
+    - **Start Command**: `java -jar target/*.jar`
+    - **Port**: 8080 (fixed port)
+    - **Health Check Path**: `api/actuator/health` or `api/health`
+  
+- **Deployment configuration**:
+
+```docker
+# Build stage
+FROM maven:3.9.9-eclipse-temurin-21 AS build
+
+WORKDIR /app
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
+COPY src ./src
+RUN mvn clean package -DskipTests
+
+# Runtime stage
+FROM eclipse-temurin:21
+
+WORKDIR /app
+
+# Install curl for health checks
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
+# Copy JAR
+COPY --from=build /app/target/*.jar app.jar
+
+# Create upload directory
+RUN mkdir -p /app/uploads
+
+# Expose port 8080 (your fixed port)
+EXPOSE 8080
+
+# Health check on port 8080 - try actuator endpoint
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8080/actuator/health || curl -f http://localhost:8080/ || exit 1
+
+# Start application
+ENTRYPOINT ["java", "-jar", "app.jar"]
+```
 
 ## Project Management
-
 ### Roles
+The project is managed by a team of students, each taking on specific roles to ensure smooth development and deployment:
+- **Project Manager**: Iulia Mara Udrea, responsible for overall project coordination, timeline management, and communication with stakeholders.
+- **Backend Developer**: Sameh Ahmed focuses on backend development, including API design, database management, and server-side logic.
+- **Frontend Developer**: Iulia Mara Udrea, Mehak Khan, Asim Rasheed, and Sameh Ahmed work on the frontend, ensuring a responsive and user-friendly interface.
+- **Project Representative**: Asim Rasheed.
+- 
 
 ### Milestones
+1. Analysis & Planning (Week 1–2): Requirements gathering, user story definition, and use case analysis
+2. Design Phase (Week 3–4): Wireframe creation, domain modeling, and API design
+3. Core Implementation (Week 5–7): Backend development, database setup, and basic frontend
+4. Feature Development (Week 8–10): Advanced features, security implementation, and user interface polish
+5. Testing & Integration (Week 11–12): Quality assurance, performance testing, and bug fixes
+6. Deployment & Documentation (Week 13–14): Production deployment and final documentation
 
 ## Maintainers
-
 - Iulia Mara Udrea
 - Mehak Khan
 - Sameh Ahmed
+- Asim Rasheed
 
 ## Contributors
-
 - Charuta Pande
 - Devid Montecchiari
 
