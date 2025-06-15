@@ -366,8 +366,8 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 ### Roles
 The project is managed by a team of students, each taking on specific roles to ensure smooth development and deployment:
 - **Project Manager**: Iulia Mara Udrea, responsible for overall project coordination, timeline management, and communication with stakeholders.
-- **Backend Developer**: Sameh Ahmed focuses on backend development, including API design, database management, and server-side logic.
-- **Frontend Developer**: Iulia Mara Udrea, Mehak Khan, Asim Rasheed, and Sameh Ahmed work on the frontend, ensuring a responsive and user-friendly interface.
+- **Backend Developer**: Sameh Ahmed focused on backend development, including API design, database management, and server-side logic.
+- **Frontend Developer**: Iulia Mara Udrea, Mehak Khan, Asim Rasheed, and Sameh Ahmed worked on the frontend, ensuring a responsive and user-friendly interface.
 - **Project Representative**: Asim Rasheed.
 
 ### Milestones
