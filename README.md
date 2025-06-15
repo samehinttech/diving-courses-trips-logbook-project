@@ -129,7 +129,7 @@ Use Case Diagram illustrating OceanDive Web Application system interactions.
 
 ### Wireframe Design
 
-![Wireframe Design](assets/WelcomePage.png)
+![Wireframe Design](assets/welcomePage.png)
 
 <!-- Repo Owner Notes:
 It is suggested to start with a wireframe. The wireframe focuses on the website structure (Sitemap planning), sketching the pages using Wireframe components (e.g., header, menu, footer) and UX. You can create a wireframe already with draw.io or similar tools.-->
