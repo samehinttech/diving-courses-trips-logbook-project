@@ -48,6 +48,7 @@ For **full documentation** (analysis, design, implementation, execution, project
 git clone https://github.com/samehinttech/diving-courses-trips-logbook-project.git
 ```
 2- Add your own credentials to the `application.properties` file if needed.
+
 3- Navigate to the project directory:
 ```bash
 cd diving-courses-trips-logbook-project
