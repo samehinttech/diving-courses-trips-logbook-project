@@ -108,7 +108,7 @@ This project is developed for **educational purposes** as part of the Internet T
 - **Not intended for commercial use**
 - **A learning exercise** demonstrating web development concepts
 
-## 🙏 Acknowledgments
+## Acknowledgments
 - **FHNW—** University of Applied Sciences Northwestern Switzerland
 - **Internet Technology Module** - Course Lecturer and peers
 - **Spring Framework Team** - For excellent documentation
@@ -124,4 +124,4 @@ Made with ❤️ by FHNW students | [Report Bug](https://github.com/samehinttech
 
 *P.S. We are still students, so improvements and updates may continue! 🌟*
 
-**⭐ If you find this project helpful, please consider giving it a star!**
+**If you find this project helpful, please consider giving it a star!**
