@@ -1,2 +1,57 @@
+# -----------------------------
+# Maven wrapper
 /mvnw text eol=lf
 *.cmd text eol=crlf
+
+# -----------------------------
+# Java source files
+*.java text eol=lf
+
+# -----------------------------
+# Gradle / Maven build files
+*.gradle text eol=lf
+*.properties text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+pom.xml text eol=lf
+
+# -----------------------------
+# Markdown and text files
+*.md text eol=lf
+*.txt text eol=lf
+
+# -----------------------------
+# JSON files (e.g., application config)
+*.json text eol=lf
+
+# -----------------------------
+# SQL / H2 database files
+*.h2.db binary
+*.mv.db binary
+*.trace.db binary
+*.lock.db binary
+
+# -----------------------------
+# Binary files (images, PDFs, archives, JARs)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
+*.zip binary
+*.tar binary
+*.gz binary
+*.jar binary
+
+# -----------------------------
+# Compiled Java classes
+*.class binary
+
+# -----------------------------
+# IDE / tool-specific files
+.idea/* export-ignore
+*.iml export-ignore
+
+# -----------------------------
+# Logs
+*.log text eol=lf
