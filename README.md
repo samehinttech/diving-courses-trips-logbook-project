@@ -87,6 +87,15 @@ The application has been successfully deployed to [Render](https://render.com/) 
 
 This project is licensed under the **Apache License 2.0** - see [LICENSE](http://www.apache.org/licenses/LICENSE-2.0.html) for more details.
 
+### Disclaimer
+This project is developed for **educational purposes** as part of the Internet Technology module at FHNW.
+
+### Important Notes
+- **Not production-ready** without significant modifications
+- **Provided without warranty** of any kind
+- **Not intended for commercial use**
+- **A learning exercise** demonstrating web development concepts
+  
 ### What This Means
 **You CAN:**
 - Use this project for educational purposes
@@ -99,14 +108,6 @@ This project is licensed under the **Apache License 2.0** - see [LICENSE](http:/
 - Hold the authors liable for any issues
 - Remove or modify copyright notices
 - Claim this work as your own
-
-### Disclaimer
-This project is developed for **educational purposes** as part of the Internet Technology module at FHNW.
-### Important Notes
-- **Not production-ready** without significant modifications
-- **Provided without warranty** of any kind
-- **Not intended for commercial use**
-- **A learning exercise** demonstrating web development concepts
 
 ## Acknowledgments
 - **FHNW—** University of Applied Sciences Northwestern Switzerland
