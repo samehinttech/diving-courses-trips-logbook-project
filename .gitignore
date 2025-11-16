@@ -41,7 +41,13 @@ mydocs/
 .env
 
 ## data/* #!data/oceandivedb.mv.db#####
-data/*.trace.db
+data/
+
+# Database
+/Database Script.sql
+
+# API Doc
+/oceandive-API-Docs 1.yml
 
 # Personal Data
 myData/
