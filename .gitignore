@@ -42,3 +42,6 @@ mydocs/
 
 ## data/* #!data/oceandivedb.mv.db#####
 data/*.trace.db
+
+# Personal Data
+myData/
