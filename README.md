@@ -4,10 +4,13 @@ A website that offers dive courses, trips, and digital dive logs, designed to
 meet the requirements of the **Internet Technology module** at
 **FHNW**.
 
-[![License](https://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+[![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://www.oracle.com/java/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen.svg)](https://spring.io/projects/spring-boot)
+[![Status](https://img.shields.io/badge/Status-Completed-success.svg)]()
+[![FHNW](https://img.shields.io/badge/FHNW-Internet%20Technology-blue.svg)]()
 
 ---
-
 ## Overview
 
 OceanDive enables users to:
@@ -70,18 +73,53 @@ The application has been successfully deployed to [Render](https://render.com/) 
 
 
 ## Maintainers
-- Iulia Mara Udrea
-- Mehak Khan
-- Sameh Ahmed
-- Asim Rasheed
+- Iulia Mara Udrea - Project Manager & WireFrame Design [IuliaU](https://github.com/IuliaU)
+- Mehak Khan - Use Cases Design  [Mehak-Khan9](https://github.com/Mehak-Khan9)
+- Sameh Ahmed - Backend & Front Developer, API design, database management, server-side logic [samehinttech](https://github.com/samehinttech)
+- Asim Rasheed - Project Representative
 
 ## Contributors
 - Devid Montecchiari
 
-## Notes
-- Built for learning purposes, not for commercial use.
-- Open to feedback from peers or instructors.
-- Some features may be limited in production (H2 database, free-tier deployment).
-- The project is part of the Internet Technology module at FHNW.
+## License
+
+This project is licensed under the **Apache License 2.0** - see [LICENSE](http://www.apache.org/licenses/LICENSE-2.0.html) for more details.
+
+### What This Means
+**You CAN:**
+- Use this project for educational purposes
+- Modify and distribute the code
+- Use it in your portfolio or resume
+- Learn from the implementation
+
+**You CANNOT:**
+- Use this for commercial purposes without permission
+- Hold the authors liable for any issues
+- Remove or modify copyright notices
+- Claim this work as your own
+
+### Disclaimer
+This project is developed for **educational purposes** as part of the Internet Technology module at FHNW.
+### Important Notes
+- **Not production-ready** without significant modifications
+- **Provided without warranty** of any kind
+- **Not intended for commercial use**
+- **A learning exercise** demonstrating web development concepts
+
+## 🙏 Acknowledgments
+- **FHNW—** University of Applied Sciences Northwestern Switzerland
+- **Internet Technology Module** - Course Lecturer and peers
+- **Spring Framework Team** - For excellent documentation
+- **H2 Database** - For a lightweight database solution
+- **Render** - For free hosting platform
+
+---
+
+Made with ❤️ by FHNW students | [Report Bug](https://github.com/samehinttech/diving-courses-trips-logbook-project/issues) | [Request Feature](https://github.com/samehinttech/diving-courses-trips-logbook-project/issues)
+
+
+**Have a feature idea?** [Suggest it here →](https://github.com/samehinttech/diving-courses-trips-logbook-project/issues/new?template=feature_request.md)
 
 *P.S. We are still students, so improvements and updates may continue! 🌟*
+
+**⭐ If you find this project helpful, please consider giving it a star!**
