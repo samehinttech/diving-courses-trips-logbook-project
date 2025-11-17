@@ -4,10 +4,10 @@
 
 We are committed to maintaining security updates for the following versions:
 
-| Version | Supported          |
-| ------- | ------------------ |
+| Version                 | Supported          |
+|-------------------------|--------------------|
 | 0.0.1-SNAPSHOT (Latest) | :white_check_mark: |
-| Older versions | :x:                |
+| Older versions          | :x:                |
 
 **Note:** As this is an educational project, we support only the latest development version. For production use, please ensure you're using the most recent release.
 
@@ -18,7 +18,7 @@ We take security vulnerabilities seriously. If you discover a security issue, pl
 ### How to Report
 
 1. **Do NOT** open a public GitHub issue for security vulnerabilities
-2. Email the maintainer directly at: **samehinttech@gmail.com**
+2. **Email:** Contact the project maintainer (see [Team](https://github.com/samehinttech/diving-courses-trips-logbook-project/wiki/Team) page)
 3. Include the following information:
    - Description of the vulnerability
    - Steps to reproduce the issue
@@ -49,12 +49,12 @@ When deploying this application:
 - Use strong credentials for database and email services
 - Enable HTTPS in production
 - Regularly review security advisories for dependencies
-- Follow the principle of least privilege for user accounts
+- Follow the principle of the least privilege for user accounts
 
 ## Known Security Considerations
 
 This is an **educational project** developed for the Internet Technology module at FHNW:
-- Uses H2 in-memory database (not suitable for production without modifications)
+- Uses H2 as an in-memory database (not suitable for production without modifications)
 - May contain educational shortcuts not appropriate for production use
 - Requires security hardening before production deployment
 
