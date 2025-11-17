@@ -33,7 +33,7 @@ jobs:
                   cache: maven
 
             - name: Initialize CodeQL
-              uses: github/codeql-action/init@v3
+              uses: github/codeql-action/init@v4
               with:
                   languages: ${{ matrix.language }}
                   queries: security-extended
@@ -42,4 +42,4 @@ jobs:
               run: mvn clean install -DskipTests
 
             - name: Perform CodeQL Analysis
-              uses: github/codeql-action/analyze@v3
+              uses: github/codeql-action/analyze@v4
