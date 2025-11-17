@@ -9,6 +9,8 @@ meet the requirements of the **Internet Technology module** at
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![Status](https://img.shields.io/badge/Status-Completed-success.svg)]()
 [![FHNW](https://img.shields.io/badge/FHNW-Internet%20Technology-blue.svg)]()
+[![Security Policy](https://img.shields.io/badge/security-policy-blue)](https://github.com/samehinttech/diving-courses-trips-logbook-project/security/policy)
+[![Known Vulnerabilities](https://img.shields.io/badge/vulnerabilities-0-brightgreen)](https://github.com/samehinttech/diving-courses-trips-logbook-project/security)
 
 ---
 ## Features
@@ -72,9 +74,9 @@ The application has been successfully deployed to [Render](https://render.com/)
 
 
 ## Maintainers
-- Iulia Mara Udrea - Project Manager & WireFrame Design [IuliaU](https://github.com/IuliaU)
-- Mehak Khan - Use Cases Design  [Mehak-Khan9](https://github.com/Mehak-Khan9)
-- Sameh Ahmed - Backend & Front Developer, API design, database management, server-side logic [samehinttech](https://github.com/samehinttech)
+- [Iulia Mara Udrea](https://github.com/IuliaU) - Project Manager & WireFrame Designer
+- [Mehak Khan](https://github.com/Mehak-Khan9) - Use Cases Design 
+- [Sameh Ahmed](https://github.com/samehinttech) - Backend & Front Developer, API design, database management, server-side logic 
 - Asim Rasheed - Project Representative
 
 ## Contributors
