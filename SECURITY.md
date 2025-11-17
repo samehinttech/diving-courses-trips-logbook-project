@@ -4,10 +4,10 @@
 
 We are committed to maintaining security updates for the following versions:
 
-| Version                 | Supported          |
-|-------------------------|--------------------|
-| 0.0.1-SNAPSHOT (Latest) | ☑️
-| Older versions          | 0️⃣                | 
+| Version                 | Supported |
+|-------------------------|-----------|
+| 0.0.1-SNAPSHOT (Latest) | ☑️        |
+| Older versions          | 0️⃣       | 
 
 **Note:** As this is an educational project, we support only the latest development version. For production use, please ensure you're using the most recent release.
 
