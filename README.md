@@ -32,33 +32,38 @@ For **full documentation** (analysis, design, implementation, execution, project
 
 ## Quick Start
 
-1- Clone the repository:
+1. Clone the repository:
 ```bash
 git clone https://github.com/samehinttech/diving-courses-trips-logbook-project.git
 ```
-2- Add your own credentials to the 
-`application.properties` file if needed.
 
-3- Navigate to the project directory:
+2. Navigate to the project directory:
 ```bash
 cd diving-courses-trips-logbook-project
 ```
-4- Build the project using Maven:
+
+3. Add your own credentials to the `application.properties` file if needed.
+
+4. Build and run the application using Maven Wrapper:
 ```bash
-mvn clean install
+# On Windows
+.\mvnw spring-boot:run
+
+# On macOS/Linux
+./mvnw spring-boot:run
 ```
-5- Run the application:
-```bash
-mvn spring-boot:run
+
+5. Access the application in your web browser:
 ```
-6- Access the application in your web browser 
-```bash
 http://localhost:8080
 ```
-7- For API documentation, visit 
-```bash
+
+6. For API documentation, visit:
+```
 http://localhost:8080/swagger-ui.html
 ```
+
+**Note:** This project uses Maven Wrapper (`mvnw`), so you don't need to install Maven separately.
 ## Deployment
 The application has been successfully deployed to [Render](https://render.com/)
 *Note: Free-tier hosting may result in occasional cold-start delays.*
