@@ -28,6 +28,12 @@ public class TripService {
 
     private static final Logger logger = LoggerFactory.getLogger(TripService.class);
 
+    // Sanitize input to remove control/non-printable characters and trim spaces
+    private static String sanitizeForLog(String input) {
+    if (input == null) return "";
+    // Replace all non-printable ASCII characters (below 0x20 except space, and DEL), plus Unicode line/paragraph separators
+    return input.replaceAll("[\\p{Cntrl}\\p{Zl}\\p{Zp}]", "").trim();
+  }
     private final TripRepo tripRepo;
     private final CertificationValidationService certificationValidator;
 
@@ -92,9 +98,8 @@ public class TripService {
      */
     @Transactional
     public Trip createTrip(Trip trip) {
-        String sanitizedLocation = trip.getLocation() != null ? trip.getLocation().replaceAll("[\\r\\n]", "") : "";
-        logger.info("Creating new trip: {}", sanitizedLocation);
-
+      String sanitizedLocation = sanitizeForLog(trip.getLocation());
+      logger.info("Creating new trip with location: \"{}\"", sanitizedLocation);
         // Validate trip data
         validateTripData(trip);
 

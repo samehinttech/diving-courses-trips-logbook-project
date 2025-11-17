@@ -37,6 +37,13 @@ public class AdminController {
 
   private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
+  // Sanitize input to remove control/non-printable characters and trim spaces
+  private static String sanitizeForLog(String input) {
+    if (input == null) return "";
+    // Replace all non-printable ASCII characters (below 0x20 except space, and DEL), plus Unicode line/paragraph separators
+    return input.replaceAll("[\\p{Cntrl}\\p{Zl}\\p{Zp}]", "").trim();
+  }
+
   private final AdminService adminService;
   private final CourseService courseService;
   private final TripService tripService;
@@ -75,8 +82,9 @@ public class AdminController {
       Authentication authentication) {
     try {
       String adminUsername = authentication.getName();
-      String sanitizedLocation = trip.getLocation() != null ? trip.getLocation().replaceAll("[\\r\\n]", "") : "";
-      logger.info("Admin {} is creating a new trip: {}", adminUsername, sanitizedLocation);
+      String sanitizedLocation = sanitizeForLog(trip.getLocation());
+      logger.info("Admin {} is creating a new trip with location: \"{}\"", adminUsername, sanitizedLocation);
+
       Trip createdTrip = tripService.createTrip(trip);
       return ResponseEntity.status(HttpStatus.CREATED)
           .body(new Response(true, "Trip created successfully", createdTrip));
