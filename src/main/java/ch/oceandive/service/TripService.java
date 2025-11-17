@@ -92,7 +92,8 @@ public class TripService {
      */
     @Transactional
     public Trip createTrip(Trip trip) {
-        logger.info("Creating new trip: {}", trip.getLocation());
+        String sanitizedLocation = trip.getLocation() != null ? trip.getLocation().replaceAll("[\\r\\n]", "") : "";
+        logger.info("Creating new trip: {}", sanitizedLocation);
 
         // Validate trip data
         validateTripData(trip);

@@ -75,7 +75,8 @@ public class AdminController {
       Authentication authentication) {
     try {
       String adminUsername = authentication.getName();
-      logger.info("Admin {} is creating a new trip: {}", adminUsername, trip.getLocation());
+      String sanitizedLocation = trip.getLocation() != null ? trip.getLocation().replaceAll("[\\r\\n]", "") : "";
+      logger.info("Admin {} is creating a new trip: {}", adminUsername, sanitizedLocation);
       Trip createdTrip = tripService.createTrip(trip);
       return ResponseEntity.status(HttpStatus.CREATED)
           .body(new Response(true, "Trip created successfully", createdTrip));
