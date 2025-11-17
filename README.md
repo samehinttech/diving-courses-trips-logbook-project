@@ -11,7 +11,7 @@ meet the requirements of the **Internet Technology module** at
 [![FHNW](https://img.shields.io/badge/FHNW-Internet%20Technology-blue.svg)]()
 [![Security Policy](https://img.shields.io/badge/security-policy-blue)](https://github.com/samehinttech/diving-courses-trips-logbook-project/security/policy)
 [![Known Vulnerabilities](https://img.shields.io/badge/vulnerabilities-0-brightgreen)](https://github.com/samehinttech/diving-courses-trips-logbook-project/security)
-[![workflow.yml](https://github.com/samehinttech/diving-courses-trips-logbook-project/actions/workflows/workflow.yml/badge.svg?branch=main)](https://github.com/samehinttech/diving-courses-trips-logbook-project/actions/workflows/workflow.yml)
+[![workflow](https://github.com/samehinttech/diving-courses-trips-logbook-project/actions/workflows/workflow.yml/badge.svg?branch=main)](https://github.com/samehinttech/diving-courses-trips-logbook-project/actions/workflows/workflow.yml)
 
 ---
 ## Features
