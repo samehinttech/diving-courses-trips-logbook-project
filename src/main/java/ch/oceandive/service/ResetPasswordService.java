@@ -54,12 +54,12 @@ public class ResetPasswordService {
     String normalizedEmail = email.toLowerCase().trim();
     // Rate limiting: max 3 attempts per hour per email
     if (isRateLimited(normalizedEmail)) {
-      logger.warn("Rate limit exceeded for password reset: {}", normalizedEmail);
+      logger.warn("Rate limit exceeded for password reset");
       return; // Don't reveal rate limiting to user for security
     }
     PremiumUser user = premiumUserRepo.findByEmail(normalizedEmail);
     if (user == null) {
-      logger.info("Password reset requested for non-existent email: {}", normalizedEmail);
+      logger.info("Password reset requested for non-existent email address");
       return; // Don't reveal that email doesn't exist
     }
     // Generate and store reset token
@@ -77,7 +77,7 @@ public class ResetPasswordService {
   /**
    * Validates a password reset token
    * @param token Reset token
-   * @return true if token is valid and not expired
+   * @return true if the token is valid and not expired
    */
   public boolean validateResetToken(String token) {
     if (token == null || token.trim().isEmpty()) {
@@ -130,8 +130,8 @@ public class ResetPasswordService {
    * Resets password using a valid token (single-use)
    * @param token Reset token
    * @param newPassword New password
-   * @throws ResourceNotFoundException if token is invalid
-   * @throws IllegalArgumentException if token is expired or password invalid
+   * @throws ResourceNotFoundException if the token is invalid
+   * @throws IllegalArgumentException if the token is expired or password invalid
    */
   @Transactional
   public void resetPassword(String token, String newPassword) {
@@ -158,7 +158,7 @@ public class ResetPasswordService {
    * Verifies that the provided email matches the token owner's email
    * @param token Reset token
    * @param email Email to verify
-   * @return true if email matches token owner
+   * @return true if email matches a token owner
    */
   public boolean verifyEmailForToken(String token, String email) {
     if (token == null || email == null) {
@@ -172,7 +172,7 @@ public class ResetPasswordService {
     return normalizedEmail.equals(user.getEmail().toLowerCase());
   }
   /**
-   * Checks if email is rate limited for password reset requests
+   * Checks if email is rate-limited for password reset requests
    */
   private boolean isRateLimited(String email) {
     LocalDateTime now = LocalDateTime.now();
