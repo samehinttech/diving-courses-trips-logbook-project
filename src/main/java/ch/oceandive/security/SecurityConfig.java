@@ -62,7 +62,7 @@ public class SecurityConfig {
     http
         .securityMatcher("/api/**")
         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-        .csrf(AbstractHttpConfigurer::disable)
+        // .csrf(AbstractHttpConfigurer::disable) // CSRF protection enabled (default)
         .headers(headers -> headers
             .frameOptions(FrameOptionsConfig::deny) // Disable frame options for API, enable to use H2 console
             .contentTypeOptions(contentTypeOptionsConfig -> {})
