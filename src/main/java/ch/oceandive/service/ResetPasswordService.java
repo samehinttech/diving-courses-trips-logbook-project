@@ -59,7 +59,7 @@ public class ResetPasswordService {
     }
     PremiumUser user = premiumUserRepo.findByEmail(normalizedEmail);
     if (user == null) {
-      logger.info("Password reset requested for non-existent email: {}", normalizedEmail);
+      logger.info("Password reset requested for non-existent email address");
       return; // Don't reveal that email doesn't exist
     }
     // Generate and store reset token
