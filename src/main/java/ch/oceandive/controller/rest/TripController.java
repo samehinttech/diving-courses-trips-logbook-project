@@ -94,7 +94,7 @@ public class TripController {
     // End point to get a trip by its slug (stored in the database) for Admin Level
     @GetMapping("/slug/{slug}")
     public ResponseEntity<?> getTripBySlug(@Parameter(description = "Trip slug") @PathVariable String slug) {
-        logger.debug("Getting trip by slug: {}", slug);
+        logger.debug("Getting trip by slug: {}", sanitizeForLog(slug));
         try {
             Trip trip = tripService.getTripBySlug(slug);
             return ResponseEntity.ok(trip);
