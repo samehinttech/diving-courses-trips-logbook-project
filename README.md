@@ -126,3 +126,5 @@ Made with ❤️ by FHNW students | [Report Bug](https://github.com/samehinttech
 *P.S. We are still students, so improvements and updates may continue! 🌟*
 
 **If you find this project helpful, please consider giving it a star!**
+
+---
