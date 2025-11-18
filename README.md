@@ -123,7 +123,7 @@ Made with ❤️ by FHNW students | [Report Bug](https://github.com/samehinttech
 
 **Have a feature idea?** [Suggest it here →](https://github.com/samehinttech/diving-courses-trips-logbook-project/issues/new?template=feature_request.md)
 
-*P.S. We are still students, so improvements and updates may continue! 🌟*
+> *P.S. We are still students, so improvements and updates may continue! 🌟*
 
 **If you find this project helpful, please consider giving it a star!**
 
