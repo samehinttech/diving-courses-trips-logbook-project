@@ -34,6 +34,15 @@ import java.util.stream.Collectors;
 public class TripController {
 
     private static final Logger logger = LoggerFactory.getLogger(TripController.class);
+  /**
+   * Sanitizes user input to remove characters that may be used for log injection,
+   * such as newlines and carriage returns.
+   */
+  private String sanitizeForLog(String input) {
+    if (input == null) return null;
+    // Remove \n, \r and optionally other non-printable characters
+    return input.replaceAll("[\\r\\n]", "");
+  }
     private final TripService tripService;
 
     @Autowired
@@ -179,9 +188,11 @@ public class TripController {
         @Parameter(description = "Minimum price") @RequestParam(required = false) BigDecimal minPrice,
         @Parameter(description = "Maximum price") @RequestParam(required = false) BigDecimal maxPrice) {
 
+        // Sanitize user-provided input before logging to prevent log injection attacks
+        String sanitizedLocation = sanitizeForLog(location);
         logger.debug("Searching trips with filters - location: {}, startDate: {}, endDate: {}, " +
-                "certification: {}, availableOnly: {}, minPrice: {}, maxPrice: {}",
-            location, startDate, endDate, certification, availableOnly, minPrice, maxPrice);
+                "certification: {}, availableOnly: {}, minPrice: {}, maxPrice: {}"
+            ,sanitizedLocation, startDate, endDate, certification, availableOnly, minPrice, maxPrice);
 
         List<Trip> trips = tripService.searchTrips(location, startDate, endDate,
             certification, availableOnly, minPrice, maxPrice);
