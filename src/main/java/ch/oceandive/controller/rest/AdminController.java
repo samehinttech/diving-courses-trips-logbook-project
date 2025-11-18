@@ -66,7 +66,8 @@ public class AdminController {
       Authentication authentication) {
     try {
       String adminUsername = authentication.getName();
-      logger.info("{} created a new course: {}", adminUsername, course.getName());
+      String sanitizedCourseName = sanitizeForLog(course.getName());
+      logger.info("{} created a new course: {}", adminUsername, sanitizedCourseName);
       Course createdCourse = courseService.createCourse(course);
       return ResponseEntity.status(HttpStatus.CREATED)
           .body(new Response(true, "Course created successfully", createdCourse));
