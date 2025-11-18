@@ -4,7 +4,7 @@ A website that offers dive courses, trips, and digital dive logs, designed to
 meet the requirements of the **Internet Technology module** at
 **FHNW**.
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://www.oracle.com/java/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![Status](https://img.shields.io/badge/Status-Completed-success.svg)]()
@@ -86,7 +86,7 @@ The application has been successfully deployed to [Render](https://render.com/)
 
 ## License
 
-This project is licensed under the **Apache License 2.0** - see [LICENSE](http://www.apache.org/licenses/LICENSE-2.0.html) for more details.
+This project is licensed under the **Apache License 2.0**—see [LICENSE](LICENSE) for more details.
 
 ### Disclaimer
 This project is developed for **educational purposes** as part of the Internet Technology module at FHNW.
