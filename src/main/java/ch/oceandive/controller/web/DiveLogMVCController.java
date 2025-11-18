@@ -122,8 +122,10 @@ public class DiveLogMVCController {
               : currentUser.getUsername());
       model.addAttribute("isAdmin", isCurrentUserAdmin());
 
+      // Sanitize the location string to prevent log injection
+      String sanitizedDiveLocation = diveLocation.replaceAll("[\\r\\n]", "");
       logger.debug("Loaded {} dive logs for user: {} with location filter: '{}'",
-          diveLogs.size(), currentUser.getUsername(), diveLocation);
+          diveLogs.size(), currentUser.getUsername(), sanitizedDiveLocation);
     } catch (Exception e) {
       logger.error("Error loading dive logs with location filter: {}", location, e);
       model.addAttribute("errorMessage", "Failed to load dive logs. Please try again.");
