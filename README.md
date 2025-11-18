@@ -70,9 +70,9 @@ http://localhost:8080/swagger-ui.html
 ## Deployment
 The application has been successfully deployed to [Render](https://render.com/)
 
-> *Note: Free-tier hosting may result in occasional cold-start delays.*
+> **Note:** Free-tier hosting may result in occasional cold-start delays.
 
-**Important:** The deployed version may no longer be active, but you can still run the application locally.
+> **Important:** The deployed version may no longer be active, but you can still run the application locally.
 
 
 ## Maintainers
