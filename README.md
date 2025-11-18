@@ -21,7 +21,7 @@ meet the requirements of the **Internet Technology module** at
 - **Admin users**: Manage courses, trips, content, and user accounts
 - Responsive and user-friendly frontend
 
-For **full documentation** (analysis, design, implementation, execution, project management, and more), visit the [Wiki](https://github.com/samehinttech/diving-courses-trips-logbook-project/wiki).
+For **full documentation** (analysis, design, implementation, execution, project management, and development journey), visit [Wiki](https://github.com/samehinttech/diving-courses-trips-logbook-project/wiki).
 
 ---
 
