@@ -8,6 +8,7 @@
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>3.3.6</version>
+    <relativePath/> <!-- Always resolve parent from repository -->
   </parent>
 
   <groupId>ch.oceandive</groupId>
