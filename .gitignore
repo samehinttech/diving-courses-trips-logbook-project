@@ -51,3 +51,6 @@ data/
 
 # Personal Data
 myData/
+
+# GitHub Actions
+.github/
