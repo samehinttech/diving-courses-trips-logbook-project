@@ -17,7 +17,7 @@ updates:
       commit-message:
           prefix: "build"
           include: "scope"
-        # Group similar updates to reduce PR noise
+          # Group similar updates to reduce PR noise
       groups:
           spring-framework:
               patterns:
@@ -28,5 +28,5 @@ updates:
                   - "ch.qos.logback*"
                   - "org.apache.commons*"
       ignore:
-          - dependency-name: "com.H2Database:h2"
+          - dependency-name: "com.h2database:h2"
             update-types: ["version-update:semver-major"]
