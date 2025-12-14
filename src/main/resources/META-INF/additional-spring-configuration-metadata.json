@@ -1,0 +1,18 @@
+{
+  "properties": [
+    {
+      "name": "jwt.secret",
+      "type": "java.lang.String",
+      "description": "Description for jwt.secret."
+    },
+    {
+      "name": "app.base.url",
+      "type": "java.lang.String",
+      "description": "Description for app.base.url."
+    },
+    {
+      "name": "server.tomcat.app.enabled",
+      "type": "java.lang.String",
+      "description": "Description for server.tomcat.app.enabled."
+    }
+  ] }
