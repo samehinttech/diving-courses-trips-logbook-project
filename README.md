@@ -8,7 +8,6 @@ meet the requirements of the **Internet Technology module** at
 [![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://www.oracle.com/java/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![Status](https://img.shields.io/badge/Status-Completed-success.svg)]()
-[![FHNW](https://img.shields.io/badge/FHNW-Internet%20Technology-blue.svg)]()
 [![Security Policy](https://img.shields.io/badge/security-policy-blue)](https://github.com/samehinttech/diving-courses-trips-logbook-project/security/policy)
 [![Known Vulnerabilities](https://img.shields.io/badge/vulnerabilities-0-brightgreen)](https://github.com/samehinttech/diving-courses-trips-logbook-project/security)
 [![Last Commit](https://img.shields.io/github/last-commit/samehinttech/diving-courses-trips-logbook-project?color=purple)](https://github.com/samehinttech/diving-courses-trips-logbook-project/commits/main)
